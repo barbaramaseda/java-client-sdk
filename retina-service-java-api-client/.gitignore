@@ -1,0 +1,14 @@
+/bin
+/.checkstyle
+/.classpath
+/.project
+/.settings
+/target
+/targets
+/build
+.DS_Store
+.DS_Store?
+/target
+*.iml
+.project
+pom.xml.versionsBackup

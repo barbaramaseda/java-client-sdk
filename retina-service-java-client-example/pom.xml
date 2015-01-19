@@ -1,0 +1,29 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <artifactId>retina-service-java-client-example</artifactId>
+    <packaging>jar</packaging>
+    <name>retina-service-java-client-example</name>
+
+    <parent>
+        <groupId>io.cortical</groupId>
+        <artifactId>retina-service-client-build</artifactId>
+        <relativePath>../retina-service-client-build</relativePath>
+        <version>2.1.0</version>
+    </parent>
+
+    <dependencies>
+        <dependency>
+            <groupId>io.cortical</groupId>
+            <artifactId>retina-service-java-api-client</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${version-lombok}</version>
+        </dependency>
+    </dependencies>
+
+</project>
