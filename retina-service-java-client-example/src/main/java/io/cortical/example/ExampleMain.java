@@ -54,6 +54,7 @@ public class ExampleMain {
     private static final String RETINA_NAME = "en_associative";    
     private static final String RETINA_IP = "api.cortical.io";
     private static final Short RETINA_PORT = 80;
+    /* TODO: You will need to replace this api key with your api key. */
     private static final String API_KEY = "c08ae380-47c3-11e4-bfdc-093e6ff0e97c";
     
     private static final Text TEXT_1 = new Text("the first text to use");
