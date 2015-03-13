@@ -7,6 +7,7 @@
  ******************************************************************************/
 package io.cortical.example;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cortical.rest.model.Context;
 import io.cortical.rest.model.Fingerprint;
 import io.cortical.rest.model.Image;
@@ -14,13 +15,8 @@ import io.cortical.rest.model.Metric;
 import io.cortical.rest.model.Retina;
 import io.cortical.rest.model.Term;
 import io.cortical.rest.model.Text;
-import static io.cortical.rest.model.ExpressionFactory.and;
-import static io.cortical.rest.model.ExpressionFactory.or;
-import static io.cortical.rest.model.ExpressionFactory.sub;
-import static io.cortical.rest.model.ExpressionFactory.term;
-import static io.cortical.rest.model.ExpressionFactory.text;
-import static io.cortical.rest.model.ExpressionFactory.xor;
 import io.cortical.services.Compare;
+import io.cortical.services.Compare.CompareModels;
 import io.cortical.services.Expressions;
 import io.cortical.services.Images;
 import io.cortical.services.Pagination;
@@ -32,12 +28,17 @@ import io.cortical.services.Terms;
 import io.cortical.services.Texts;
 import io.cortical.services.api.client.ApiException;
 import io.cortical.services.api.client.api.ExpressionsApi;
-import static io.cortical.services.RetinaApis.getInfo;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.List;
 import org.apache.commons.logging.Log;
+import static io.cortical.rest.model.ExpressionFactory.and;
+import static io.cortical.rest.model.ExpressionFactory.or;
+import static io.cortical.rest.model.ExpressionFactory.sub;
+import static io.cortical.rest.model.ExpressionFactory.term;
+import static io.cortical.rest.model.ExpressionFactory.text;
+import static io.cortical.rest.model.ExpressionFactory.xor;
+import static io.cortical.services.RetinaApis.getInfo;
 import static org.apache.commons.logging.LogFactory.getLog;
 
 
@@ -52,10 +53,10 @@ public class ExampleMain {
      */
     private static final Log LOG = getLog(ExampleMain.class);
     private static final String RETINA_NAME = "en_associative";    
-    private static final String RETINA_IP = "api.cortical.io";
+    private static final String RETINA_IP = "s_api.cortical.io";
     private static final Short RETINA_PORT = 80;
     /* TODO: You will need to replace this api key with your api key. */
-    private static final String API_KEY = "c08ae380-47c3-11e4-bfdc-093e6ff0e97c";
+    private static final String API_KEY = "4faf0e50-e8b0-45b5-8783-e31f84a1dce5";
     
     private static final Text TEXT_1 = new Text("the first text to use");
     private static final Text TEXT_2 = text("the second text to use");
@@ -97,12 +98,7 @@ public class ExampleMain {
         
         LOG.info("Compare API: compare");
         Metric metric = compareApiInstance.compare(new Term("apple"), new Term("banana"));
-        LOG.info("Metric: Cosine Similarity: " + metric.getCosineSimilarity() + "  Euclidean Distance: "
-                + metric.getEuclideanDistance() + "  Jaccard Distance: " + metric.getJaccardDistance()
-                + "  Over lappingAll: " + metric.getOverlappingAll() + "  Over lapping Left Right: "
-                + metric.getOverlappingLeftRight() + "  Over lapping Right Left: " + metric.getOverlappingRightLeft()
-                + "  Size Left: " + metric.getSizeLeft() + "  Size Right: " + metric.getSizeRight()
-                + "  Weighted Scoring: " + metric.getWeightedScoring());
+        logMetric(metric);
         
         String inputText =
                 "Gustav Klimt (July 14, 1862 – February 6, 1918) was an Austrian symbolist painter and one "
@@ -111,6 +107,29 @@ public class ExampleMain {
                         + "his works are marked by a frank eroticism.[2]";
         metric = compareApiInstance.compare(new Term("painter"), new Text(inputText));
         
+        logMetric(metric);
+        
+        
+        LOG.info("Compare API: compareBulk");
+        
+        CompareModels toCompare1 = new CompareModels(new Term("apple"), new Term("banana"));
+        CompareModels toCompare2 = new CompareModels(new Term("banana"), new Term("fruit"));
+        CompareModels toCompare3 = new CompareModels(new Term("apple"), new Term("orange"));
+        
+        CompareModels[] toCompareBulk = {
+                toCompare1,
+                toCompare2,
+                toCompare3
+        };
+        
+        Metric[] metrics = compareApiInstance.compareBulk(toCompareBulk);
+        for (Metric metricFromBulk: metrics) {
+            logMetric(metricFromBulk);
+        }
+        
+    }
+    
+    private void logMetric(Metric metric) {
         LOG.info("Metric: Cosine Similarity: " + metric.getCosineSimilarity() + "  Euclidean Distance: "
                 + metric.getEuclideanDistance() + "  Jaccard Distance: " + metric.getJaccardDistance()
                 + "  Over lappingAll: " + metric.getOverlappingAll() + "  Over lapping Left Right: "
