@@ -2,18 +2,8 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>retina-service-client-build</artifactId>
-    <groupId>io.cortical</groupId>
-    <version>2.1.0</version>
-    <packaging>pom</packaging>
-
-    <modules>
-        <module>../retina-service-rest-model</module>
-        <module>../retina-service-java-api-client</module>
-        <module>../retina-service-java-client-example</module>
-    </modules>
-
     <properties>
+	<corticalio.version>2.1.0</corticalio.version>
         <maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.7</java-version>
@@ -28,6 +18,18 @@
         <version-lombok>1.12.6</version-lombok>
         <surefire.version>2.16</surefire.version>
     </properties>
+    
+    <artifactId>retina-service-client-build</artifactId>
+    <groupId>io.cortical</groupId>
+    <version>2.1.0</version>
+    <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
+
+    <modules>
+        <module>../retina-service-rest-model</module>
+        <module>../retina-service-java-api-client</module>
+        <module>../retina-service-java-client-example</module>
+    </modules>
 
     <build>
         <plugins>

@@ -2,16 +2,42 @@
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/maven-v4_0_0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>retina-service-java-api-client</artifactId>
-    <packaging>jar</packaging>
-    <name>retina-service-java-api-client</name>
-
     <parent>
         <groupId>io.cortical</groupId>
         <artifactId>retina-service-client-build</artifactId>
         <relativePath>../retina-service-client-build</relativePath>
         <version>2.1.0</version>
     </parent>
+    
+    <artifactId>retina-service-java-api-client</artifactId>
+    <packaging>jar</packaging>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>cortical.io's java client - a simple java http client which simplifies communication between any java application and the Retina server using the Retina's REST API.</description>
+    
+    <url>https://github.com/cortical-io/java-client-sdk</url>
+    
+    <licenses>
+	<license>
+		<name>Terms of Service</name>
+		<url>http://www.cortical.io/terms.html</url>
+	</license>
+    </licenses>
+    
+    <developers>
+	<developer>
+	    <name>cortical.io Team</name>
+	    <email>support@cortical.io</email>
+	    <organization>cortical.io</organization>
+	    <organizationUrl>www.cortical.io</organizationUrl>
+	</developer>
+    </developers>
+    
+    <scm>
+	<connection>https://github.com/cortical-io/java-client-sdk.git</connection>
+	<developerConnection>https://github.com/cortical-io/java-client-sdk.git</developerConnection>
+	<url>https://github.com/cortical-io/java-client-sdk.git</url>
+    </scm>
 
     <build>
         <plugins>
@@ -89,7 +115,7 @@
         <dependency>
             <artifactId>retina-service-rest-model</artifactId>
             <groupId>io.cortical</groupId>
-            <version>${project.version}</version>
+            <version>${corticalio.version}</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -111,5 +137,82 @@
             <scope>test</scope>
         </dependency>
     </dependencies>
+
+    <profiles>
+        <profile>
+            <id>sonatype-repo</id>
+
+            <activation>
+                <activeByDefault>false</activeByDefault>
+            </activation>
+
+	    <distributionManagement>
+		<snapshotRepository>
+		    <id>ossrh</id>
+		    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</snapshotRepository>
+		<repository>
+		    <id>ossrh</id>
+		    <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+		</repository>
+	    </distributionManagement>
+	    
+	    <build>
+		<plugins>
+		    <plugin>
+		      <groupId>org.sonatype.plugins</groupId>
+		      <artifactId>nexus-staging-maven-plugin</artifactId>
+		      <version>1.6.3</version>
+		      <extensions>true</extensions>
+		      <configuration>
+			<serverId>ossrh</serverId>
+			<nexusUrl>https://oss.sonatype.org/</nexusUrl>
+			<autoReleaseAfterClose>true</autoReleaseAfterClose>
+		      </configuration>
+		    </plugin>
+		    <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-source-plugin</artifactId>
+		      <version>2.2.1</version>
+		      <executions>
+			<execution>
+			  <id>attach-sources</id>
+			  <goals>
+			    <goal>jar-no-fork</goal>
+			  </goals>
+			</execution>
+		      </executions>
+		    </plugin>
+		    <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-javadoc-plugin</artifactId>
+		      <version>2.9.1</version>
+		      <executions>
+			<execution>
+			  <id>attach-javadocs</id>
+			  <goals>
+			    <goal>jar</goal>
+			  </goals>
+			</execution>
+		      </executions>
+		    </plugin>
+		    <plugin>
+		      <groupId>org.apache.maven.plugins</groupId>
+		      <artifactId>maven-gpg-plugin</artifactId>
+		      <version>1.5</version>
+		      <executions>
+			<execution>
+			  <id>sign-artifacts</id>
+			  <phase>verify</phase>
+			  <goals>
+			    <goal>sign</goal>
+			  </goals>
+			</execution>
+		      </executions>
+		    </plugin>
+		</plugins>
+	    </build>
+        </profile>
+    </profiles>
 
 </project>
