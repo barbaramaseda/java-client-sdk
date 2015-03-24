@@ -23,6 +23,7 @@
     <groupId>io.cortical</groupId>
     <version>2.1.0</version>
     <packaging>pom</packaging>
+    <name>${project.groupId}:${project.artifactId}</name>
 
     <modules>
         <module>../retina-service-rest-model</module>
