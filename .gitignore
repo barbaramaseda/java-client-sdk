@@ -5,3 +5,5 @@
 retina-service-java-client-example/.classpath
 
 retina-service-rest-model/.classpath
+.idea
+*.iml

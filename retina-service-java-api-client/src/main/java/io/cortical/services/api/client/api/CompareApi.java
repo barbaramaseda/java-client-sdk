@@ -98,7 +98,8 @@ public class CompareApi {
         return null;
     }
     
-    /** Generated. 
+    /** Generated.
+     * @param retina_name : name of retina.
      *@throws ApiException if an error occurs during querying of the API.
      *@return Metric **/
     public Metric[] compareBulk(String body, String retina_name) throws ApiException {
