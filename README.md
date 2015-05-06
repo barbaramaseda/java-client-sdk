@@ -53,10 +53,10 @@ Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.
    * The example project
     
 For further documentation about the Retina-API and information on cortical.io's 'Retina' technology please see: 
-http://www.cortical.io/developers_tutorials.html
+http://www.cortical.io/resources_tutorials.html
 
 If you have any questions or problems please visit our forum:
-http://www.cortical.io/developers_forum.html
+http://www.cortical.io/resources_forum.html
 
 ### Change Log
 <B>v 2.2.0</B>
