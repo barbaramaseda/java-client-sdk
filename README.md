@@ -64,6 +64,9 @@ http://www.cortical.io/developers_forum.html
 * new /text/detect_language endpoint
 * new /compare/bulk endpoint
 
+<B>v 2.1.0</B>
+* initial release
+
     
 ### License
 Copyright 2014 cortical.io GmbH.
