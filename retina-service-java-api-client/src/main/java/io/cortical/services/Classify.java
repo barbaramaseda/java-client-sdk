@@ -15,9 +15,7 @@ public interface Classify {
 
     /**
      * Endpoint for creating a category filter from text inputs.
-     * The request was well-formed but was unable to be followed due to semantic errors." model: <none>
-     * error info- code: 500 reason: "Indicates a possible database or I/O error.
-     * Returns a JSON object with a detailed error message and a description of a possible resolution." model: <none>
+     *
      * @param filter_name : the category name.
      * @param body : an object representing the positive and negative training samples.
      * @return : CategoryFilter an object representing the category to be filtered for.
