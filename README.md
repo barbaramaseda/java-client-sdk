@@ -60,7 +60,7 @@ http://www.cortical.io/resources_forum.html
 
 ### Change Log
 <B>v 2.2.0</B>
-* new Classfiy tab with /classify/create_category_filter
+* new Classfiy api with /classify/create_category_filter
 * new /text/detect_language endpoint
 * new /compare/bulk endpoint
 
