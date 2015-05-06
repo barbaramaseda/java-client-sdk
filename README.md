@@ -2,9 +2,9 @@ cortical.io
 ===========
 Welcome to the cortical.io Retina java client source code page.
 
-Release Version: 2.1.0
+Release Version: 2.2.0
 
-If you just need the JAR file, this can be downloaded directly from this repo (retina-service-java-api-client-2.1.0-jar-with-dependencies.jar) or you can build the project using Maven.
+If you just need the JAR file, this can be downloaded directly from this repo (retina-service-java-api-client-2.2.0-jar-with-dependencies.jar) or you can build the project using Maven.
 
 This page contains
 <UL>
@@ -42,7 +42,7 @@ Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.
 <dependency>
     <groupId>io.cortical</groupId>
     <artifactId>retina-service-java-api-client</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -59,8 +59,10 @@ If you have any questions or problems please visit our forum:
 http://www.cortical.io/developers_forum.html
 
 ### Change Log
-<B>v 2.1.0</B>
-* Initial release version.
+<B>v 2.2.0</B>
+* new Classfiy tab with /classify/create_category_filter
+* new /text/detect_language endpoint
+* new /compare/bulk endpoint
 
     
 ### License
