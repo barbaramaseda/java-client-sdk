@@ -11,9 +11,7 @@ import io.cortical.rest.model.CategoryFilter;
 import io.cortical.rest.model.FilterTrainingObject;
 import io.cortical.services.api.client.ApiException;
 import io.cortical.services.api.client.api.ClassifyApi;
-import io.cortical.services.api.client.api.TextApi;
 import org.apache.commons.logging.Log;
-
 import static io.cortical.rest.RestServiceConstants.NULL_API_KEY_MSG;
 import static io.cortical.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
 import static io.cortical.rest.RestServiceConstants.NULL_TEXT_MSG;
@@ -43,7 +41,7 @@ public class ClassifyRetinaApiImpl extends BaseRetinaApi implements Classify {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Text Retina Api with retina: " + retinaName);
+        LOG.info("Initialize Classify Retina Api with retina: " + retinaName);
         this.api = new ClassifyApi(apiKey);
         this.api.setBasePath(basePath);
     }

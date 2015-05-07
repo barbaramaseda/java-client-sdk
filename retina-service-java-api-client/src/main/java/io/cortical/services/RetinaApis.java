@@ -33,6 +33,7 @@ public class RetinaApis {
     private final Images imageApi;
     private final Terms termsApi;
     private final Texts textApi;
+    private final Classify classifyApi;
     
     /**
      * Creates a new instance of {@link RetinaApis}.
@@ -55,6 +56,7 @@ public class RetinaApis {
         imageApi = new ImageRetinaApiImpl(apiKey, basePath, retinaName);
         termsApi = new TermsRetinaApiImpl(apiKey, basePath, retinaName);
         textApi = new TextRetinaApiImpl(apiKey, basePath, retinaName);
+        classifyApi = new ClassifyRetinaApiImpl(apiKey, basePath, retinaName);
     }
     
     
@@ -80,6 +82,7 @@ public class RetinaApis {
         imageApi = new ImageRetinaApiImpl(apiKey, basePath, retinaName);
         termsApi = new TermsRetinaApiImpl(apiKey, basePath, retinaName);
         textApi = new TextRetinaApiImpl(apiKey, basePath, retinaName);
+        classifyApi = new ClassifyRetinaApiImpl(apiKey, basePath, retinaName);
     }
     
     
@@ -101,6 +104,10 @@ public class RetinaApis {
     
     public final Texts textApi() {
         return textApi;
+    }
+    
+    public final Classify classifyApi() {
+        return classifyApi;
     }
     
     public static Retinas getInfo(final String ip, final String apiKey) {

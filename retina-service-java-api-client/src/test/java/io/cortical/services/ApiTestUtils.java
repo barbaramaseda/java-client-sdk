@@ -68,6 +68,22 @@ public abstract class ApiTestUtils {
     }
     
     /**
+     * Prepare Api's POST mocked method. 
+     * 
+     * @param requestBody : request body.
+     * @param responseJson : response body.
+     * @param apiInvoker : apiInvoker mock.
+     * @throws ApiException : should never be thrown.
+     */
+    @SuppressWarnings("unchecked")
+    public static void prepareApiObjectPostMethod(Object requestBody, Object responseJson, ApiInvoker apiInvoker)
+            throws ApiException {
+        when(
+                apiInvoker.invokeAPI(eq(NOT_NULL_BASE_PATH), any(String.class), any(String.class), any(Map.class),
+                        eq(requestBody), any(Map.class), any(String.class))).thenReturn(responseJson);
+    }
+    
+    /**
      * Prepare Api's GET mocked method. 
      * 
      * @param requestArguments : request's arguments.
@@ -120,6 +136,7 @@ public abstract class ApiTestUtils {
             @SuppressWarnings("rawtypes")
             @Override
             public boolean matches(Object argument) {
+                @SuppressWarnings("unchecked")
                 Map<String, String> agrumentThat = (Map) argument;
                 boolean isEquals = true;
                 for (Entry<String, String> entryThat : agrumentThat.entrySet()) {

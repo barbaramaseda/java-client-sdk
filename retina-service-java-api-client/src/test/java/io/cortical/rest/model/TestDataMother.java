@@ -46,7 +46,7 @@ public abstract class TestDataMother {
         while (positionSet.size() <= FINGERPRINT_LENGTH) {
             positionSet.add(random.nextInt(MAX_POSITION));
         }
-       
+        
         Integer[] positionsInteger = new Integer[FINGERPRINT_LENGTH];
         positionsInteger = positionSet.toArray(positionsInteger);
         sort(positionsInteger);
@@ -66,6 +66,7 @@ public abstract class TestDataMother {
         }
         return fingerprints;
     }
+    
     /**
      * Create dummy {@link Text}. 
      * 
@@ -75,6 +76,7 @@ public abstract class TestDataMother {
         String randomString = RandomStringUtils.random(FINGERPRINT_LENGTH);
         return new Text(randomString);
     }
+    
     /**
      * Create dummy list of {@link Text}. 
      * 
@@ -88,6 +90,7 @@ public abstract class TestDataMother {
         }
         return texts;
     }
+    
     /**
      * 
      * Create random strings.
@@ -101,6 +104,7 @@ public abstract class TestDataMother {
         }
         return strings;
     }
+    
     /**
      * Create dummy {@link Context}.
      * 
@@ -114,6 +118,7 @@ public abstract class TestDataMother {
         context.setFingerprint(createFingerprint());
         return context;
     }
+    
     /**
      * Create list of dummy {@link Context}s.
      * 
@@ -127,6 +132,7 @@ public abstract class TestDataMother {
         }
         return contexts;
     }
+    
     /**
      * Create dummy {@link Term}.
      * 
@@ -136,12 +142,13 @@ public abstract class TestDataMother {
         Term term = new Term();
         term.setFingerprint(createFingerprint());
         term.setDf(0.4);
-        String[] posTypes = {PosType.ADJECTIVE.name(), PosType.NOUN.name()};
+        String[] posTypes = { PosType.ADJECTIVE.name(), PosType.NOUN.name() };
         term.setPosTypes(posTypes);
         term.setScore(0.2);
         term.setTerm(RandomStringUtils.random(10));
         return term;
     }
+    
     /**
      * 
      * Create list of dummy {@link Term}s.
@@ -178,8 +185,9 @@ public abstract class TestDataMother {
         for (int i = 0; i < count; i++) {
             retinas.add(createRetina(RandomStringUtils.random(10)));
         }
-        return retinas; 
+        return retinas;
     }
+    
     /**
      * 
      * Create dummy image. 
@@ -203,5 +211,5 @@ public abstract class TestDataMother {
             images.add(createImage());
         }
         return images;
-    } 
+    }
 }

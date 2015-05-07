@@ -7,41 +7,27 @@
  ******************************************************************************/
 package io.cortical.services;
 
-import static io.cortical.rest.model.TestDataMother.*;
-import static io.cortical.services.ApiTestUtils.NOT_NULL_RETINA;
-import static java.util.Arrays.asList;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
-import static org.mockito.Matchers.any;
-import static org.mockito.Matchers.eq;
-import static org.mockito.Matchers.isNull;
-import static org.mockito.Mockito.*;
-import static org.mockito.MockitoAnnotations.initMocks;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
 import io.cortical.rest.model.CategoryFilter;
 import io.cortical.rest.model.FilterTrainingObject;
+import io.cortical.rest.model.Text;
+import io.cortical.services.api.client.ApiException;
 import io.cortical.services.api.client.api.ClassifyApi;
+import java.util.ArrayList;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.cortical.rest.model.Fingerprint;
-import io.cortical.rest.model.Text;
-import io.cortical.services.api.client.ApiException;
-import io.cortical.services.api.client.api.TextApi;
+import static io.cortical.services.ApiTestUtils.NOT_NULL_RETINA;
+import static org.junit.Assert.assertTrue;
+import static org.mockito.Matchers.eq;
+import static org.mockito.Mockito.when;
+import static org.mockito.MockitoAnnotations.initMocks;
 
 
 /**
  * 
  * {@link io.cortical.services.TextRetinaApiImpl} test class.
  */
-public class TestClassifyApiImpl {
+public class TestClassifyRetinaApiImpl {
     /**
      *
      */
@@ -50,6 +36,7 @@ public class TestClassifyApiImpl {
         getPositiveExamples().add(new Text("running shoes providing protective cushioning."));
     }};
 
+    @SuppressWarnings("serial")
     private static final CategoryFilter cf = new CategoryFilter(){{
        setCategoryName("12");
         setPositions(new ArrayList<Integer>(){{
@@ -72,6 +59,7 @@ public class TestClassifyApiImpl {
     @Before
     public void before() {
         initMocks(this);
+        //FIXME Add a test method in TestRetinasApi to test for existence of each api
         classifyRetinaApi = new ClassifyRetinaApiImpl(classifyApi, NOT_NULL_RETINA);
     }
 
