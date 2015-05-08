@@ -9,10 +9,10 @@
 package io.cortical.services.api.client.api;
 
 import io.cortical.rest.model.CategoryFilter;
-import io.cortical.rest.model.FilterTrainingObject;
 import io.cortical.services.api.client.ApiException;
 import io.cortical.services.api.client.ApiInvoker;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /** Generated. **/
 public class ClassifyApi {
@@ -48,11 +48,11 @@ public class ClassifyApi {
     public String getBasePath() {
         return basePath;
     }
-
+    
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return CategoryFilter **/
-    public CategoryFilter createCategoryFilter (String filter_name, FilterTrainingObject body, String retina_name) throws ApiException {
+    public CategoryFilter createCategoryFilter (String filter_name, String body, String retina_name) throws ApiException {
         // verify required params are set
         if(retina_name == null || filter_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -90,7 +90,7 @@ public class ClassifyApi {
             }
         } catch (ApiException ex) {
             if(ex.getCode() == 404) {
-            	return null;
+                return null;
             }
             else {
                 throw ex;

@@ -8,18 +8,17 @@
 package io.cortical.services;
 
 import io.cortical.rest.model.CategoryFilter;
-import io.cortical.rest.model.FilterTrainingObject;
 import io.cortical.services.api.client.ApiException;
 
 public interface Classify {
 
     /**
-     * Endpoint for creating a category filter from text inputs.
-     *
-     * @param filter_name : the category name.
-     * @param body : an object representing the positive and negative training samples.
-     * @return : CategoryFilter an object representing the category to be filtered for.
-     * @throws io.cortical.services.api.client.ApiException If the input is null.
+     * Endpoint for creating a {@link CategoryFilter} from text inputs.
+     * 
+     * @param name the name of the category filter
+     * @param ftostring the json representation of a {@link FilterTrainingObject)
+     * @return {@link CategoryFilter}
+     * @throws ApiException 
      */
-    public CategoryFilter createCategoryFilter (String filter_name, FilterTrainingObject body) throws ApiException;
+    public CategoryFilter createCategoryFilter(String name, String ftostring) throws ApiException;
 }

@@ -7,10 +7,8 @@
  ******************************************************************************/
 package io.cortical.services.api.client;
 
-import static io.cortical.services.ApiTestUtils.prepareApiObjectPostMethod;
 import io.cortical.rest.model.CategoryFilter;
 import io.cortical.rest.model.FilterTrainingObject;
-import io.cortical.rest.model.Text;
 import io.cortical.services.api.client.api.ClassifyApi;
 import org.junit.After;
 import org.junit.Assert;
@@ -20,6 +18,7 @@ import org.mockito.Mock;
 import static io.cortical.services.ApiTestUtils.NOT_NULL_API_KEY;
 import static io.cortical.services.ApiTestUtils.NOT_NULL_BASE_PATH;
 import static io.cortical.services.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.services.ApiTestUtils.prepareApiPostMethod;
 import static io.cortical.services.ApiTestUtils.setApiInvoker;
 import static org.mockito.MockitoAnnotations.initMocks;
 
@@ -30,18 +29,18 @@ import static org.mockito.MockitoAnnotations.initMocks;
  */
 public class TestClassifyApi {
     
-    /**
-    * Example {@link FilterTrainingObject}
-    */
-   private static final FilterTrainingObject fto = new FilterTrainingObject(){{
-       getPositiveExamples().add(new Text("Shoe with a lining to help keep your feet dry and comfortable on wet terrain."));
-       getPositiveExamples().add(new Text("running shoes providing protective cushioning."));
-       getNegativeExamples().add(new Text("The most comfortable socks for your feet."));
-       getNegativeExamples().add(new Text("6 feet USB cable basic white"));
-   }};
-    
     /** CategoryFilter to return **/
-    private static final String POS_NEG_FILTER = "{ \"categoryName\": \"pos-neg\", \"positions\": [3,6,7,8,18,19,35,36,47,60,61,77,79,92]}";
+    private static final String POS_NEG_FILTER = "{ \"categoryName\": \"a_filter\", \"positions\": [3,6,7,8,18,19,35,36,47,60,61,77,79,92]}";
+    
+    private static final String ftoString = "{"
+            + " \"positiveExamples\" : ["
+            + "{ \"text\" : \"Shoe with a lining to help keep your feet dry and comfortable on wet terrain.\" },"
+            + "{ \"text\" : \"running shoes providing protective cushioning.\" }"
+            +  "], "
+            + " \"negativeExamples\" : [ "
+            + " { \"text\" : \"The most comfortable socks for your feet.\"}, "
+            + "{ \"text\" : \"6 feet USB cable basic white\"}"
+            + "]}";
 
     
     
@@ -80,8 +79,8 @@ public class TestClassifyApi {
      */
     @Test
     public void testCreateCategoryFilterPosNeg() throws ApiException {
-        prepareApiObjectPostMethod(fto, POS_NEG_FILTER, apiInvoker);
-        cf = classifyApi.createCategoryFilter("pos-neg", fto, NOT_NULL_RETINA);
+        prepareApiPostMethod(ftoString, POS_NEG_FILTER, apiInvoker);
+        cf = classifyApi.createCategoryFilter("a_filter", ftoString, NOT_NULL_RETINA);
         Assert.assertNotNull(cf);
     }
     
@@ -94,7 +93,7 @@ public class TestClassifyApi {
      */
     @Test(expected = ApiException.class)
     public void testCreateCategoryFilter_nullBody() throws ApiException {        
-        classifyApi.createCategoryFilter("null-body", null, NOT_NULL_RETINA);
+        classifyApi.createCategoryFilter("a_filter", null, NOT_NULL_RETINA);
     }
     
     /**
@@ -105,7 +104,7 @@ public class TestClassifyApi {
      */
     @Test(expected = ApiException.class)
     public void testCreateCategoryFilter_nullFilterName() throws ApiException {    
-        classifyApi.createCategoryFilter(null, fto, NOT_NULL_RETINA);
+        classifyApi.createCategoryFilter(null, ftoString, NOT_NULL_RETINA);
     }
     
     /**
@@ -116,7 +115,15 @@ public class TestClassifyApi {
      */
     @Test(expected = ApiException.class)
     public void testCreateCategoryFilter_nullRetinaName() throws ApiException {        
-        classifyApi.createCategoryFilter("null_retina", fto, null);
+        classifyApi.createCategoryFilter("a_filter", ftoString, null);
     }
     
+    @Test
+    public void testCreateCategoryFilterPosNeg2() throws ApiException {
+        prepareApiPostMethod(ftoString, POS_NEG_FILTER, apiInvoker);
+        cf = classifyApi.createCategoryFilter("a_filter", ftoString, NOT_NULL_RETINA);
+        Assert.assertNotNull(cf);
+    }
+    
+ 
 }

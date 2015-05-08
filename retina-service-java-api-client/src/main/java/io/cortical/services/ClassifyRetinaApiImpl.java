@@ -8,7 +8,6 @@
 package io.cortical.services;
 
 import io.cortical.rest.model.CategoryFilter;
-import io.cortical.rest.model.FilterTrainingObject;
 import io.cortical.services.api.client.ApiException;
 import io.cortical.services.api.client.api.ClassifyApi;
 import org.apache.commons.logging.Log;
@@ -51,10 +50,11 @@ public class ClassifyRetinaApiImpl extends BaseRetinaApi implements Classify {
         this.api = api;
     }
 
+    
     /** {@inheritDoc}  */
     @Override
-    public CategoryFilter createCategoryFilter(String filter_name, FilterTrainingObject body) throws ApiException {
-        if (isEmpty(filter_name) || body ==null || (body.getNegativeExamples() == null && body.getPositiveExamples()==null)) {
+    public CategoryFilter createCategoryFilter(String filter_name, String body) throws ApiException {
+        if (isEmpty(filter_name) || body ==null) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
         LOG.debug("Retrieve CategoryFilter: " + body);
