@@ -4,12 +4,11 @@ Welcome to the cortical.io Retina java client source code page.
 
 Release Version: 2.2.0
 
-If you just need the JAR file, this can be downloaded directly from this repo (retina-service-java-api-client-2.2.0-jar-with-dependencies.jar) or you can build the project using Maven.
-
 This page contains
 <UL>
 <LI><B>Introduction</B></LI>
 <LI><B>Dependencies</B></LI>
+<LI><B>Maven Repository</B></LI>
 <LI><B>How to use</B></LI>
 <LI><B>Change Log</B></LI>
 <LI><B>License</B></LI>
@@ -30,6 +29,17 @@ The source code is split into 4 Maven projects:
 cortical.io's Retina java client is compatible with Java version: 1.7. See the respective pom files for each project for details regarding dependencies.
 
 Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.io's api</a>.
+
+### Maven Repository
+If you just need the JAR file, this can be downloaded directly from the <a href="http://https://search.maven.org/#browse|-882754531">Sonatype Central Repository</a> directly or by adding the dependency to a Maven pom:
+
+```
+<dependency>
+    <groupId>io.cortical</groupId>
+    <artifactId>retina-service-java-api-client</artifactId>
+    <version>2.2.0</version>
+</dependency>
+```
 
 ### How to use/build
 * You will need to have Maven 3.x installed.
