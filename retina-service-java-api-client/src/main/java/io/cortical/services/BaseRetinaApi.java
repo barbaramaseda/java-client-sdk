@@ -57,11 +57,22 @@ abstract class BaseRetinaApi {
     /**
      * Returns a JSON representation of the input Models.
      * 
-     * @param models : models going to be converted to a json.
-     * @return the objects' array in the json representation.
+     * @param models : models to be converted to a json array.
+     * @return the array in json format.
      * @throws JsonProcessingException
      */
     protected String toJson(Model... models) throws JsonProcessingException {
         return Model.toJson(models);
+    }
+    
+    /**
+     * Returns the json representation of the input Model(s).
+     * 
+     * @param modelsArrays : arrays of models to be converted to json.
+     * @return the array in json format.
+     * @throws JsonProcessingException
+     */
+    public static String toJsonBulk(Model[]... modelsArrays) throws JsonProcessingException {
+        return Model.toJsonBulk(modelsArrays);
     }
 }

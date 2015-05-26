@@ -7,6 +7,7 @@
  ******************************************************************************/
 package io.cortical.services;
 
+import static io.cortical.rest.RestServiceConstants.NULL_MODEL_MSG;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cortical.rest.model.Metric;
 import io.cortical.rest.model.Model;
@@ -92,5 +93,32 @@ class CompareRetinaApiImpl extends BaseRetinaApi implements Compare {
     public Metric compare(String jsonModel1, String jsonModel2) throws JsonProcessingException, ApiException {
         LOG.debug("Compare models: model1: " + jsonModel1 + "  model: " + jsonModel2);
         return compareApi.compare("[ " + jsonModel1 + ", " + jsonModel2 + " ]", this.retinaName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Metric[] compareBulk(CompareModels... compareModels) throws JsonProcessingException, ApiException {
+        if (LOG.isDebugEnabled()) {
+            LOG.debug("Compare " + compareModels.length + " pairs.");
+        }
+        if (compareModels == null || compareModels.length == 0) {
+            throw new IllegalArgumentException(NULL_MODEL_MSG);
+        }
+        Model[][] toCompare = new Model[compareModels.length][2];
+        int i = 0;
+        for (CompareModels pair: compareModels) {
+            toCompare[i++] = pair.getModels();
+        }
+        return compareApi.compareBulk(toJsonBulk(toCompare), this.retinaName);
+    }
+
+    /** {@inheritDoc} */
+    @Override
+    public Metric[] compareBulk(String json) throws JsonProcessingException, ApiException {
+        LOG.debug("Compare models: " + json);
+        if (json == null) {
+            throw new IllegalArgumentException(NULL_MODEL_MSG);
+        }
+        return compareApi.compareBulk(json, this.retinaName);
     }
 }

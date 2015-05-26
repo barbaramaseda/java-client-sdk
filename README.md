@@ -2,14 +2,13 @@ cortical.io
 ===========
 Welcome to the cortical.io Retina java client source code page.
 
-Release Version: 2.1.0
-
-If you just need the JAR file, this can be downloaded directly from this repo (retina-service-java-api-client-2.1.0-jar-with-dependencies.jar) or you can build the project using Maven.
+Release Version: 2.2.0
 
 This page contains
 <UL>
 <LI><B>Introduction</B></LI>
 <LI><B>Dependencies</B></LI>
+<LI><B>Maven Repository</B></LI>
 <LI><B>How to use</B></LI>
 <LI><B>Change Log</B></LI>
 <LI><B>License</B></LI>
@@ -31,6 +30,17 @@ cortical.io's Retina java client is compatible with Java version: 1.7. See the r
 
 Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.io's api</a>.
 
+### Maven Repository
+If you just need the JAR file, this can be downloaded directly from the <a href="http://https://search.maven.org/#browse|-882754531">Sonatype Central Repository</a> directly or by adding the dependency to a Maven pom:
+
+```
+<dependency>
+    <groupId>io.cortical</groupId>
+    <artifactId>retina-service-java-api-client</artifactId>
+    <version>2.2.0</version>
+</dependency>
+```
+
 ### How to use/build
 * You will need to have Maven 3.x installed.
 * Clone all the sources from our Github repository.
@@ -42,7 +52,7 @@ Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.
 <dependency>
     <groupId>io.cortical</groupId>
     <artifactId>retina-service-java-api-client</artifactId>
-    <version>2.1.0</version>
+    <version>2.2.0</version>
 </dependency>
 ```
 
@@ -53,14 +63,19 @@ Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.
    * The example project
     
 For further documentation about the Retina-API and information on cortical.io's 'Retina' technology please see: 
-http://www.cortical.io/developers_tutorials.html
+http://www.cortical.io/resources_tutorials.html
 
 If you have any questions or problems please visit our forum:
-http://www.cortical.io/developers_forum.html
+http://www.cortical.io/resources_forum.html
 
 ### Change Log
+<B>v 2.2.0</B>
+* new Classfiy api with /classify/create_category_filter
+* new /text/detect_language endpoint
+* new /compare/bulk endpoint
+
 <B>v 2.1.0</B>
-* Initial release version.
+* initial release
 
     
 ### License

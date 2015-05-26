@@ -67,6 +67,7 @@ public abstract class ApiTestUtils {
                         eq(requestBody), any(Map.class), any(String.class))).thenReturn(responseJson);
     }
     
+    
     /**
      * Prepare Api's GET mocked method. 
      * 
@@ -120,6 +121,7 @@ public abstract class ApiTestUtils {
             @SuppressWarnings("rawtypes")
             @Override
             public boolean matches(Object argument) {
+                @SuppressWarnings("unchecked")
                 Map<String, String> agrumentThat = (Map) argument;
                 boolean isEquals = true;
                 for (Entry<String, String> entryThat : agrumentThat.entrySet()) {
