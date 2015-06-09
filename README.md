@@ -2,7 +2,7 @@ cortical.io
 ===========
 Welcome to the cortical.io Retina java client source code page.
 
-Release Version: 2.2.0
+Release Version: 2.2.1
 
 This page contains
 <UL>
@@ -30,13 +30,13 @@ cortical.io's Retina java client is compatible with Java version: 1.7. See the r
 Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.io's api</a>.
 
 ### Maven Repository
-If you just need the JAR file, this can be downloaded directly from the <a href="http://https://search.maven.org/#browse|-882754531">Sonatype Central Repository</a> directly or by adding the dependency to a Maven pom:
+If you just need the JAR file, this can be downloaded directly from the <a href="https://search.maven.org/#browse|-882754531">Sonatype Central Repository</a> directly or by adding the dependency to a Maven pom:
 
 ```
 <dependency>
     <groupId>io.cortical</groupId>
     <artifactId>retina-service-java-api-client</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
@@ -51,7 +51,7 @@ If you just need the JAR file, this can be downloaded directly from the <a href=
 <dependency>
     <groupId>io.cortical</groupId>
     <artifactId>retina-service-java-api-client</artifactId>
-    <version>2.2.0</version>
+    <version>2.2.1</version>
 </dependency>
 ```
 
@@ -68,6 +68,9 @@ If you have any questions or problems please visit our forum:
 http://www.cortical.io/resources_forum.html
 
 ### Change Log
+<B>v 2.2.1</B>
+* Update build process for Maven Central Repo.
+
 <B>v 2.2.0</B>
 * new Classfiy api with /classify/create_category_filter
 * new /text/detect_language endpoint
