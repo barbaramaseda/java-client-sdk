@@ -3,7 +3,7 @@
     <modelVersion>4.0.0</modelVersion>
 
     <properties>
-	<corticalio.version>2.2.0</corticalio.version>
+	<corticalio.version>2.2.1</corticalio.version>
         <maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <java-version>1.7</java-version>
