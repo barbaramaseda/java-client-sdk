@@ -13,6 +13,31 @@
     <packaging>jar</packaging>
     
     <name>${project.groupId}:${project.artifactId}</name>
+    <description>cortical.io's java client - example project.</description>
+    
+    <url>https://github.com/cortical-io/java-client-sdk</url>
+    
+    <licenses>
+	<license>
+		<name>Terms of Service</name>
+		<url>http://www.cortical.io/terms.html</url>
+	</license>
+    </licenses>
+    
+    <developers>
+	<developer>
+	    <name>cortical.io Team</name>
+	    <email>support@cortical.io</email>
+	    <organization>cortical.io</organization>
+	    <organizationUrl>www.cortical.io</organizationUrl>
+	</developer>
+    </developers>
+    
+    <scm>
+	<connection>https://github.com/cortical-io/java-client-sdk.git</connection>
+	<developerConnection>https://github.com/cortical-io/java-client-sdk.git</developerConnection>
+	<url>https://github.com/cortical-io/java-client-sdk.git</url>
+    </scm>
 
     <dependencies>
         <dependency>
