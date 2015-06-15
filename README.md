@@ -29,6 +29,8 @@ cortical.io's Retina java client is compatible with Java version: 1.7. See the r
 
 Compatible with all 2.x.x versions of <a href="http://api.cortical.io">cortical.io's api</a>.
 
+To use the API you will need to obtain an <a href="http://www.cortical.io/resources_apikey.html">api key</a>.
+
 ### Maven Repository
 If you just need the JAR file, this can be downloaded directly from the <a href="https://search.maven.org/#browse|-882754531">Sonatype Central Repository</a> directly or by adding the dependency to a Maven pom:
 

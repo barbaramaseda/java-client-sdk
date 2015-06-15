@@ -53,10 +53,10 @@ public class ExampleMain {
      */
     private static final Log LOG = getLog(ExampleMain.class);
     private static final String RETINA_NAME = "en_associative";    
-    private static final String RETINA_IP = "s_api.cortical.io";
+    private static final String RETINA_IP = "api.cortical.io";
     private static final Short RETINA_PORT = 80;
     /* TODO: You will need to replace this api key with your api key. */
-    private static final String API_KEY = "4faf0e50-e8b0-45b5-8783-e31f84a1dce5";
+    private static final String API_KEY = "your API key";
     
     private static final Text TEXT_1 = new Text("the first text to use");
     private static final Text TEXT_2 = text("the second text to use");
