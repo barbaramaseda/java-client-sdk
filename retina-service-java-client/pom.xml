@@ -1,0 +1,153 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+	<modelVersion>4.0.0</modelVersion>
+	<groupId>io.cortical</groupId>
+	<artifactId>retina-service-java-client</artifactId>
+	<version>0.0.1-SNAPSHOT</version>
+
+	<name>${project.groupId}:${project.artifactId}</name>
+	<description>cortical.io's java client - a simple java http client which simplifies communication between any java application and the Retina server using the Retina's REST API.</description>
+
+	<url>https://github.com/cortical-io/java-client-sdk</url>
+
+	<licenses>
+		<license>
+			<name>Terms of Service</name>
+			<url>http://www.cortical.io/terms.html</url>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<name>cortical.io Team</name>
+			<email>support@cortical.io</email>
+			<organization>cortical.io</organization>
+			<organizationUrl>www.cortical.io</organizationUrl>
+		</developer>
+	</developers>
+
+	<scm>
+		<connection>https://github.com/cortical-io/java-client-sdk.git</connection>
+		<developerConnection>https://github.com/cortical-io/java-client-sdk.git</developerConnection>
+		<url>https://github.com/cortical-io/java-client-sdk.git</url>
+	</scm>
+
+	<properties>
+		<corticalio.version>2.2.1</corticalio.version>
+		<maven.compiler.plugin.version>3.0</maven.compiler.plugin.version>
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<java-version>1.7</java-version>
+		<junit-version>4.11</junit-version>
+		<jackson-version>2.3.3</jackson-version>
+		<jackson-version-joda>2.3.3</jackson-version-joda>
+		<commons-httpclient-version>3.1</commons-httpclient-version>
+		<commons-lang3-version>3.3.2</commons-lang3-version>
+		<jersey-version>1.7</jersey-version>
+		<powermock-version>1.5.4</powermock-version>
+		<scala-maven-plugin-version>3.2.0</scala-maven-plugin-version>
+		<version-lombok>1.12.6</version-lombok>
+		<surefire.version>2.16</surefire.version>
+	</properties>
+
+	<build>
+		<plugins>
+			<plugin>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.1</version>
+				<configuration>
+					<source>1.7</source>
+					<target>1.7</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${surefire.version}</version>
+				<configuration>
+					<skipTests>true</skipTests>
+				</configuration>
+			</plugin>
+			<plugin>
+				<artifactId>maven-assembly-plugin</artifactId>
+				<executions>
+					<execution>
+						<phase>package</phase>
+						<goals>
+							<goal>single</goal>
+						</goals>
+						<configuration>
+							<descriptorRefs>
+								<descriptorRef>jar-with-dependencies</descriptorRef>
+							</descriptorRefs>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+		</plugins>
+	</build>
+
+	<reporting>
+		<plugins>
+			<plugin>
+				<groupId>net.alchim31.maven</groupId>
+				<artifactId>scala-maven-plugin</artifactId>
+				<version>${scala-maven-plugin-version}</version>
+			</plugin>
+		</plugins>
+	</reporting>
+
+	<dependencies>
+		<dependency>
+			<groupId>com.sun.jersey</groupId>
+			<artifactId>jersey-client</artifactId>
+			<version>${jersey-version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-core</artifactId>
+			<version>${jackson-version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-annotations</artifactId>
+			<version>${jackson-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.core</groupId>
+			<artifactId>jackson-databind</artifactId>
+			<version>${jackson-version}</version>
+			<scope>compile</scope>
+		</dependency>
+		<dependency>
+			<groupId>com.fasterxml.jackson.datatype</groupId>
+			<artifactId>jackson-datatype-joda</artifactId>
+			<version>${jackson-version-joda}</version>
+		</dependency>
+		<dependency>
+			<groupId>commons-httpclient</groupId>
+			<artifactId>commons-httpclient</artifactId>
+			<version>${commons-httpclient-version}</version>
+		</dependency>
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+			<version>${commons-lang3-version}</version>
+		</dependency>
+
+		<!-- test dependencies -->
+		<dependency>
+			<groupId>junit</groupId>
+			<artifactId>junit</artifactId>
+			<version>${junit-version}</version>
+			<scope>test</scope>
+		</dependency>
+		<dependency>
+			<groupId>org.powermock</groupId>
+			<artifactId>powermock-api-mockito</artifactId>
+			<version>${powermock-version}</version>
+			<scope>test</scope>
+		</dependency>
+	</dependencies>
+</project>
