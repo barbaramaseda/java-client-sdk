@@ -7,9 +7,9 @@
  ******************************************************************************/
 package io.cortical.retina.client.core;
 
-import static io.cortical.retina.model.TestDataMother.createFingerprints;
-import static io.cortical.retina.model.TestDataMother.createStrings;
-import static io.cortical.retina.model.TestDataMother.createTexts;
+import static io.cortical.retina.model.TestDataHarness.createFingerprints;
+import static io.cortical.retina.model.TestDataHarness.createStrings;
+import static io.cortical.retina.model.TestDataHarness.createTexts;
 import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Text;

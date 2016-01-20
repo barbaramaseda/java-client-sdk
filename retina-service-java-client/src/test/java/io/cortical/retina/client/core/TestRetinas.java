@@ -7,16 +7,8 @@
  ******************************************************************************/
 package io.cortical.retina.client.core;
 
-import static io.cortical.retina.model.TestDataMother.createRetina;
-import static io.cortical.retina.model.TestDataMother.createRetinas;
-import io.cortical.retina.model.Retina;
-import io.cortical.retina.client.core.Retinas;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.RetinasApi;
-import java.util.List;
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
+import static io.cortical.retina.model.TestDataHarness.createRetina;
+import static io.cortical.retina.model.TestDataHarness.createRetinas;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -26,10 +18,19 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import io.cortical.retina.model.Retina;
+import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.RetinasApi;
+
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 
 /**
- * {@link RetinaInfoApiImpl} test class.
+ * {@link Retinas} test class.
  * 
  */
 public class TestRetinas {
@@ -38,40 +39,40 @@ public class TestRetinas {
      */
     @Mock
     private RetinasApi api;
-//    private RetinaInfoApiImpl retinaInfoApiImpl;
+    private Retinas retinas;
     
     @Before
     public void before() {
         initMocks(this);
-//        retinaInfoApiImpl = new RetinaInfoApiImpl(api);
+        retinas = Retinas.makeTestRetinas(api);
     }
     
     /**
-     * {@link RetinaInfoApiImpl#getAllRetinas()} method test.
+     * {@link Retinas#getAllRetinas()} method test.
      * 
      * @throws ApiException : should never be thrown
      */
     @Test
     public void getAllRetinasTest() throws ApiException {
-//        int count = 7;
-//        when(api.getRetinas(isNull(String.class))).thenReturn(createRetinas(count));
-//        List<Retina> retinas = retinaInfoApiImpl.getAllRetinas();
-//        assertEquals(count, retinas.size());
-//        verify(api, times(1)).getRetinas(isNull(String.class));
+        int count = 7;
+        when(api.getRetinas(isNull(String.class))).thenReturn(createRetinas(count));
+        List<Retina> retinasList = retinas.getAllRetinas();
+        assertEquals(count, retinasList.size());
+        verify(api, times(1)).getRetinas(isNull(String.class));
     }
     
     /**
-     *  {@link RetinaInfoApiImpl#retinaByName(String)} method test.
+     *  {@link Retinas#retinaByName(String)} method test.
      * 
      * @throws ApiException : should never be thrown
      */
     @Test
     public void retinaByNameTest() throws ApiException {
-//        String retinaName = "some_retina_name";
-//        Retina[] retinaArray = { createRetina(retinaName) };
-//        when(api.getRetinas(eq(retinaName))).thenReturn(asList(retinaArray));
-//        Retina retina = retinaInfoApiImpl.retinaByName(retinaName);
-//        assertNotNull(retina);
-//        verify(api, times(1)).getRetinas(eq(retinaName));
+        String retinaName = "some_retina_name";
+        Retina[] retinaArray = { createRetina(retinaName) };
+        when(api.getRetinas(eq(retinaName))).thenReturn(asList(retinaArray));
+        Retina retina = retinas.retinaByName(retinaName);
+        assertNotNull(retina);
+        verify(api, times(1)).getRetinas(eq(retinaName));
     }
 }

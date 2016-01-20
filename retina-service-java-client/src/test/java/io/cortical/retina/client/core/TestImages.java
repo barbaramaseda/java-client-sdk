@@ -7,7 +7,7 @@
  ******************************************************************************/
 package io.cortical.retina.client.core;
 
-import static io.cortical.retina.model.TestDataMother.createImages;
+import static io.cortical.retina.model.TestDataHarness.createImages;
 import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Term;

@@ -7,18 +7,14 @@
  ******************************************************************************/
 package io.cortical.retina.client.core;
 
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.RetinasApi;
 
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.logging.LogFactory.getLog;
 
 
 /**
@@ -26,11 +22,6 @@ import static org.apache.commons.logging.LogFactory.getLog;
  * 
  */
 public class Retinas {
-    /**
-     * LOGGER.
-     */
-    private static final Log LOG = getLog(Retinas.class);
-    
     /**
      * The APIs
      */
@@ -58,7 +49,7 @@ public class Retinas {
         if (isEmpty(apiKey)) {
             throw new IllegalArgumentException(NULL_API_KEY_MSG);
         }
-        LOG.info("Initialize retina API for retina name: " + retinaName);
+        
         compareApi = new Compare(retinaName, basePath, apiKey);
         expressionsApi = new Expressions(apiKey, basePath, retinaName);
         imageApi = new Images(apiKey, basePath, retinaName);
@@ -67,7 +58,6 @@ public class Retinas {
         classifyApi = new Classify(apiKey, basePath, retinaName);
         retinasApi = new RetinasApi(apiKey);
     }
-    
     
     /**
      * Creates a new instance of {@link Retinas}.
@@ -85,7 +75,7 @@ public class Retinas {
         if (isEmpty(apiKey)) {
             throw new IllegalArgumentException(NULL_API_KEY_MSG);
         }
-        LOG.info("Initialize retina API for retina name: " + retinaName);
+        
         compareApi = new Compare(retinaName, basePath, apiKey);
         expressionsApi = new Expressions(apiKey, basePath, retinaName);
         imageApi = new Images(apiKey, basePath, retinaName);
@@ -140,5 +130,28 @@ public class Retinas {
             return null;
         }
         return retinas.get(0);
+    }
+    
+    
+    //////////////////////////////////
+    //      Test Code Only          //
+    //////////////////////////////////
+    /*
+     * Non-client code for testing only. Do not use!
+     * @return
+     */
+    static Retinas makeTestRetinas(RetinasApi api) {
+        return new Retinas(api);
+    }
+    
+    /* For testing */
+    private Retinas(RetinasApi api) {
+        compareApi = null;
+        expressionsApi = null;
+        imageApi = null;
+        termsApi = null;
+        textApi = null;
+        classifyApi = null;
+        retinasApi = api;
     }
 }

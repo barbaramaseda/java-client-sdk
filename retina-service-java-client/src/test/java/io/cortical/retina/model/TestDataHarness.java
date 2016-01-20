@@ -28,7 +28,7 @@ import static java.util.Arrays.sort;
  * 
  * Test data Generator.
  */
-public abstract class TestDataMother {
+public abstract class TestDataHarness {
     /**
      * 
      */
