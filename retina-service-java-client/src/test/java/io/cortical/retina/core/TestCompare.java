@@ -5,18 +5,23 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
+import io.cortical.retina.core.Compare;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.CompareApi;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;

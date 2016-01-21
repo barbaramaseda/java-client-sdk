@@ -7,18 +7,20 @@
  ******************************************************************************/
 package io.cortical.retina.service;
 
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_API_KEY;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_BASE_PATH;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
-import static io.cortical.retina.client.core.ApiTestUtils.prepareApiPostMethod;
-import static io.cortical.retina.client.core.ApiTestUtils.setApiInvoker;
-import static io.cortical.retina.client.core.ApiTestUtils.verifyApiPostMethod;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_BASE_PATH;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.ApiTestUtils.prepareApiPostMethod;
+import static io.cortical.retina.core.ApiTestUtils.setApiInvoker;
+import static io.cortical.retina.core.ApiTestUtils.verifyApiPostMethod;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.ApiInvoker;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.MockitoAnnotations.initMocks;
 

@@ -5,9 +5,9 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import static io.cortical.retina.rest.RestServiceConstants.NULL_SERVER_IP_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_SERVER_IP_MSG;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 

@@ -5,10 +5,10 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.service.ApiException;
@@ -43,6 +43,7 @@ public class Retinas {
      */
     public Retinas(final String retinaName, final String ip, final String apiKey) {
         String basePath = RetinaUtils.generateBasepath(ip, null);
+        
         if (isEmpty(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
         }
@@ -85,27 +86,50 @@ public class Retinas {
         retinasApi = new RetinasApi(apiKey);
     }
     
-    
+    /**
+     * Returns the request proxy for the {@link Compare} endpoint
+     * @return
+     */
     public final Compare compareApi() {
         return compareApi;
     }
     
+    /**
+     * Returns the request proxy for the {@link Compare} endpoint
+     * @return
+     */
     public final Expressions expressionsApi() {
         return expressionsApi;
     }
     
+    /**
+     * Returns the request proxy for the {@link Images} endpoint
+     * @return
+     */
     public final Images imageApi() {
         return imageApi;
     }
     
+    /**
+     * Returns the request proxy for the {@link Terms} endpoint
+     * @return
+     */
     public final Terms termsApi() {
         return termsApi;
     }
     
+    /**
+     * Returns the request proxy for the {@link Texts} endpoint
+     * @return
+     */
     public final Texts textApi() {
         return textApi;
     }
     
+    /**
+     * Returns the request proxy for the {@link Classify} endpoint
+     * @return
+     */
     public final Classify classifyApi() {
         return classifyApi;
     }

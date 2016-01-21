@@ -5,7 +5,7 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 import static io.cortical.retina.model.TestDataHarness.createRetina;
 import static io.cortical.retina.model.TestDataHarness.createRetinas;
@@ -18,6 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import io.cortical.retina.core.Retinas;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.RetinasApi;

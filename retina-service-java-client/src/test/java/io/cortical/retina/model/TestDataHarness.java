@@ -13,14 +13,17 @@ import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.client.core.PosType;
+import io.cortical.retina.core.PosType;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
+
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
+
 import static java.util.Arrays.sort;
 
 

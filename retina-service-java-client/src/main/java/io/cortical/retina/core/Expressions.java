@@ -5,39 +5,29 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.cortical.retina.rest.DefaultValues;
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.DefaultValues;
 import io.cortical.retina.service.ExpressionsApi;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.logging.LogFactory.getLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * 
  * The Expression Retina's API implementation.
  */
 class Expressions extends AbstractRetinas {
-    /**
-     * 
-     */
-    private static final Log LOG = getLog(Expressions.class);
-    /**
-     * 
-     */
+    /** Rest Service access for the Expressions endpoint */
     private final ExpressionsApi expressionsApi;
     
     Expressions(String apiKey, String basePath, String retinaName) {
@@ -50,7 +40,7 @@ class Expressions extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Expressions Retina Api with retina: " + retinaName);
+
         this.expressionsApi = new ExpressionsApi(apiKey);
         this.expressionsApi.setBasePath(basePath);
     }
@@ -90,7 +80,6 @@ class Expressions extends AbstractRetinas {
      */
     public List<Fingerprint> resolveBulk(Double sparsity, Model... models) throws JsonProcessingException, ApiException {
         validateRequiredModels(models);
-        LOG.debug("Resolve bulk expression for models: " + toJson(models) + "  sparsity: " + sparsity);
         return this.expressionsApi.resolveBulkExpression(toJson(models), retinaName, sparsity);
     }
     
@@ -125,7 +114,6 @@ class Expressions extends AbstractRetinas {
      */
     public Fingerprint resolve(Double sparsity, Model model) throws JsonProcessingException, ApiException {
         validateRequiredModels(model);
-        LOG.debug("Resolve expression for model: " + model.toJson());
         return this.expressionsApi.resolveExpression(model.toJson(), retinaName, sparsity);
     }
     
@@ -633,8 +621,6 @@ class Expressions extends AbstractRetinas {
         if (posType != null) {
             posTypeName = posType.name();
         }
-        LOG.debug("Retrieve similar terms for bulk expression: model: " + jsonModel + " pagination: "
-                + pagination.toString() + "  sparsity: " + sparsity + "  include fingerprint: " + includeFingerprint);
         return this.expressionsApi.getSimilarTermsForBulkExpressionContext(jsonModel, contextId, posTypeName,
                 includeFingerprint, retinaName, pagination.getStartIndex(), pagination.getMaxResults(), sparsity);
     }
@@ -650,7 +636,6 @@ class Expressions extends AbstractRetinas {
      */
     public List<Fingerprint> resolveBulk(Double sparsity, String jsonModels) throws JsonProcessingException,
             ApiException {
-        LOG.debug("Resolve bulk expression for models: " + jsonModels + "  sparsity: " + sparsity);
         return this.expressionsApi.resolveBulkExpression(jsonModels, retinaName, sparsity);
     }
     
@@ -671,8 +656,6 @@ class Expressions extends AbstractRetinas {
     public List<List<Context>> getContextsBulk(Pagination pagination, Boolean includeFingerprint, Double sparsity,
             String jsonModels) throws JsonProcessingException, ApiException {
         pagination = initPagination(pagination);
-        LOG.debug("Retrieve contexts for bulk expression: " + jsonModels + " pagination: " + pagination.toString()
-                + "  sparsity: " + sparsity + "  include fingerprint: " + includeFingerprint);
         return this.expressionsApi.getContextsForBulkExpression(jsonModels, includeFingerprint, retinaName,
                 pagination.getStartIndex(), pagination.getMaxResults(), sparsity);
     }
@@ -687,7 +670,6 @@ class Expressions extends AbstractRetinas {
      * @throws ApiException : if there are server or connection issues.      
      */
     public Fingerprint resolve(Double sparsity, String jsonModel) throws JsonProcessingException, ApiException {
-        LOG.debug("Resolve expression for model: " + jsonModel);
         return this.expressionsApi.resolveExpression(jsonModel, retinaName, sparsity);
     }
     
@@ -705,8 +687,6 @@ class Expressions extends AbstractRetinas {
     public List<Context> getContexts(Pagination pagination, Boolean includeFingerprint, Double sparsity,
             String jsonModel) throws JsonProcessingException, ApiException {
         pagination = initPagination(pagination);
-        LOG.debug("Retrieve contexts for expression: model: " + jsonModel + " pagination: " + pagination.toString()
-                + "  sparsity: " + sparsity + "  include fingerprint: " + includeFingerprint);
         return this.expressionsApi.getContextsForExpression(jsonModel, includeFingerprint, retinaName,
                 pagination.getStartIndex(), pagination.getMaxResults(), sparsity);
     }
@@ -732,8 +712,6 @@ class Expressions extends AbstractRetinas {
         if (posType != null) {
             posTypeName = posType.name();
         }
-        LOG.debug("Retrieve similar terms for model: " + jsonModel + " pagination: " + pagination.toString()
-                + "  sparsity: " + sparsity + "  include fingerprint: " + includeFingerprint);
         return this.expressionsApi.getSimilarTermsForExpressionContext(jsonModel, contextId, posTypeName,
                 includeFingerprint, retinaName, pagination.getStartIndex(), pagination.getMaxResults(), sparsity);
     }

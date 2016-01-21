@@ -5,24 +5,28 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 import static io.cortical.retina.model.TestDataHarness.createFingerprints;
 import static io.cortical.retina.model.TestDataHarness.createStrings;
 import static io.cortical.retina.model.TestDataHarness.createTexts;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.client.core.Pagination;
-import io.cortical.retina.client.core.PosTag;
-import io.cortical.retina.client.core.Texts;
+import io.cortical.retina.core.Pagination;
+import io.cortical.retina.core.PosTag;
+import io.cortical.retina.core.Texts;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.TextApi;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.util.List;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Matchers.any;

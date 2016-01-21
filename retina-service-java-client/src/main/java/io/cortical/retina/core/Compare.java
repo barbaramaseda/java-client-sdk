@@ -5,23 +5,18 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import static io.cortical.retina.rest.RestServiceConstants.NULL_MODEL_MSG;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
-
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.CompareApi;
 
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.logging.LogFactory.getLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 
@@ -30,13 +25,7 @@ import static org.apache.commons.logging.LogFactory.getLog;
  * The Compare Retina API implementation. 
  */
 class Compare extends AbstractRetinas {
-    /**
-     * 
-     */
-    private static final Log LOG = getLog(Compare.class);
-    /**
-     * 
-     */
+    /** Rest Service access for the Compare endpoint */
     private final CompareApi compareApi;
     
     /**
@@ -57,7 +46,7 @@ class Compare extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Compare Retina Api with retina: " + retinaName);
+        
         this.compareApi = new CompareApi(apiKey);
         this.compareApi.setBasePath(basePath);
     }
@@ -85,7 +74,6 @@ class Compare extends AbstractRetinas {
      */
     public Metric compare(Model model1, Model model2) throws JsonProcessingException, ApiException {
         validateRequiredModels(model1, model2);
-        LOG.debug("Compare models: model1: " + model1.toJson() + "  model: " + model2.toJson());
         return compareApi.compare(toJson(model1, model2), this.retinaName);
     }
     
@@ -100,7 +88,6 @@ class Compare extends AbstractRetinas {
      */
     public Metric compare(String jsonModel1, Model model2) throws JsonProcessingException, ApiException {
         validateRequiredModels(model2);
-        LOG.debug("Compare models: model1: " + jsonModel1 + "  model: " + model2.toJson());
         return compareApi.compare("[ " + jsonModel1 + ", " + model2.toJson() + " ]", this.retinaName);
     }
     
@@ -114,7 +101,6 @@ class Compare extends AbstractRetinas {
      * @throws ApiException : if the cortical.io's API isn't available/ or an internal error occurred.
      */
     public Metric compare(String jsonModel1, String jsonModel2) throws JsonProcessingException, ApiException {
-        LOG.debug("Compare models: model1: " + jsonModel1 + "  model: " + jsonModel2);
         return compareApi.compare("[ " + jsonModel1 + ", " + jsonModel2 + " ]", this.retinaName);
     }
 
@@ -127,9 +113,6 @@ class Compare extends AbstractRetinas {
      * @throws ApiException : if the cortical.io's API isn't available/ or an internal error occurred.
      */
     public Metric[] compareBulk(CompareModels... compareModels) throws JsonProcessingException, ApiException {
-        if (LOG.isDebugEnabled()) {
-            LOG.debug("Compare " + compareModels.length + " pairs.");
-        }
         if (compareModels == null || compareModels.length == 0) {
             throw new IllegalArgumentException(NULL_MODEL_MSG);
         }
@@ -150,7 +133,6 @@ class Compare extends AbstractRetinas {
      * @throws ApiException : if the cortical.io's API isn't available/ or an internal error occurred.
      */
     public Metric[] compareBulk(String json) throws JsonProcessingException, ApiException {
-        LOG.debug("Compare models: " + json);
         if (json == null) {
             throw new IllegalArgumentException(NULL_MODEL_MSG);
         }

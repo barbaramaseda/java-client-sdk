@@ -5,27 +5,23 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.cortical.retina.rest.DefaultValues;
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_TEXT_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.DefaultValues;
 import io.cortical.retina.service.TextApi;
 
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_TEXT_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.logging.LogFactory.getLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 
@@ -34,13 +30,7 @@ import static org.apache.commons.logging.LogFactory.getLog;
  * The Retina's Texts API implementation. 
  */
 class Texts extends AbstractRetinas {
-    /**
-     * 
-     */
-    private static final Log LOG = getLog(Texts.class);
-    /**
-     * 
-     */
+    /** Rest Service access for the Texts endpoint */
     private final TextApi api;
     
     Texts(String apiKey, String basePath, String retinaName) {
@@ -53,7 +43,7 @@ class Texts extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Text Retina Api with retina: " + retinaName);
+        
         this.api = new TextApi(apiKey);
         this.api.setBasePath(basePath);
     }
@@ -74,7 +64,6 @@ class Texts extends AbstractRetinas {
         if (isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        LOG.debug("Retrieve keywords for the text: " + text);
         return this.api.getKeywordsForText(text, retinaName);
     }
     
@@ -89,7 +78,6 @@ class Texts extends AbstractRetinas {
         if (isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        LOG.debug("Retrieve representation for the text: " + text);
         return this.api.getRepresentationForText(text, retinaName);
     }
     
@@ -105,7 +93,6 @@ class Texts extends AbstractRetinas {
     public List<Fingerprint> getFingerprintBulk(Double sparsity, Text... texts) throws JsonProcessingException,
             ApiException {
         validateRequiredModels(texts);
-        LOG.debug("Retrieve representation for the bulk Text: " + toJson(texts) + "  sparsity: " + sparsity);
         return this.api.getRepresentationsForBulkText(toJson(texts), retinaName, sparsity);
     }
     
@@ -124,8 +111,6 @@ class Texts extends AbstractRetinas {
         }
         pagination = initPagination(pagination);
         
-        LOG.debug("Retrieve slices for the text: " + text + " pagination: " + pagination.toString()
-                + "  include fingerprint: " + includeFingerprint);
         return this.api.getSlicesForText(text, includeFingerprint, retinaName, pagination.getStartIndex(),
                 pagination.getMaxResults());
     }
@@ -142,7 +127,6 @@ class Texts extends AbstractRetinas {
         if (isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        LOG.debug("Retrieve tokens for the text: " + text);
         return this.api.getTokensForText(text, cluePosTags(posTags), retinaName);
     }
     

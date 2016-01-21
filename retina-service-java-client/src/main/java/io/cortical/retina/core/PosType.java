@@ -5,14 +5,15 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 
 /**
- * Image shapes.
+ * Available Part of Speech types.
  * 
  */
-public enum ImagePlotShape {
-    CIRCLE,
-    SQUARE
+public enum PosType {
+    NOUN,
+    ADJECTIVE,
+    VERB;
 }

@@ -9,16 +9,18 @@ package io.cortical.retina.service;
 
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.FilterTrainingObject;
+
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_API_KEY;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_BASE_PATH;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
-import static io.cortical.retina.client.core.ApiTestUtils.prepareApiPostMethod;
-import static io.cortical.retina.client.core.ApiTestUtils.setApiInvoker;
+
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_BASE_PATH;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.ApiTestUtils.prepareApiPostMethod;
+import static io.cortical.retina.core.ApiTestUtils.setApiInvoker;
 import static org.mockito.MockitoAnnotations.initMocks;
 
 

@@ -7,19 +7,21 @@
  ******************************************************************************/
 package io.cortical.retina.service;
 
-import com.fasterxml.jackson.databind.JavaType;
-import com.sun.jersey.api.client.Client;
-import com.sun.jersey.api.client.ClientResponse;
-import com.sun.jersey.api.client.WebResource.Builder;
-import com.sun.jersey.api.client.filter.LoggingFilter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response.Status.Family;
+
 import org.apache.commons.httpclient.URIException;
 import org.apache.commons.httpclient.util.URIUtil;
+
+import com.fasterxml.jackson.databind.JavaType;
+import com.sun.jersey.api.client.Client;
+import com.sun.jersey.api.client.ClientResponse;
+import com.sun.jersey.api.client.WebResource.Builder;
 
 /** Generated. **/
 public class ApiInvoker {
@@ -216,7 +218,6 @@ public class ApiInvoker {
     private Client getClient(String host) {
         if(!hostMap.containsKey(host)) {
             Client client = Client.create();
-            client.addFilter(new LoggingFilter());
             hostMap.put(host, client);
         }
         return hostMap.get(host);

@@ -5,25 +5,21 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-
-import io.cortical.retina.rest.DefaultValues;
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.DefaultValues;
 import io.cortical.retina.service.ImageApi;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
 
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.logging.LogFactory.getLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 
@@ -32,13 +28,7 @@ import static org.apache.commons.logging.LogFactory.getLog;
  * 
  */
 class Images extends AbstractRetinas {
-    /**
-     * 
-     */
-    private static final Log LOG = getLog(Images.class);
-    /**
-     * 
-     */
+    /** Rest Service access for the Images endpoint */
     private final ImageApi api;
     
     Images(String apiKey, String basePath, String retinaName) {
@@ -51,7 +41,7 @@ class Images extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Image Retina Api with retina: " + retinaName);
+        
         this.api = new ImageApi(apiKey);
         this.api.setBasePath(basePath);
     }
@@ -241,8 +231,6 @@ class Images extends AbstractRetinas {
     public List<Image> getImageBulk(Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, Double sparsity,
             String jsonModel) throws JsonProcessingException, ApiException {
         
-        LOG.debug("Retrieve images for bulk expressions: model: " + jsonModel + "  scalar: " + scalar + "  sparsity: "
-                + sparsity + "  shape: " + name(shape) + "  include fingerprint: " + includeFingerprint);
         String shapeString = null;
         if (shape != null) {
             shapeString = shape.name().toLowerCase();
@@ -265,8 +253,6 @@ class Images extends AbstractRetinas {
     public ByteArrayInputStream getImage(Integer scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
             Double sparsity, String jsonModel) throws JsonProcessingException, ApiException {
         
-        LOG.debug("Retrieve image for expression: model: " + jsonModel + "  scalar: " + scalar + "  sparsity: "
-                + sparsity + "  shape: " + name(shape) + "  image encoding: " + name(imageEncoding));
         String shapeString = null;
         if (shape != null) {
             shapeString = shape.name().toLowerCase();
@@ -295,8 +281,6 @@ class Images extends AbstractRetinas {
     public ByteArrayInputStream compare(Integer scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
             String jsonModel) throws JsonProcessingException, ApiException {
         
-        LOG.debug("Retrieve image for expression: model: " + jsonModel + "  scalar: " + scalar + "  shape: "
-                + name(shape) + "  image encoding: " + name(imageEncoding));
         String shapeString = null;
         if (shape != null) {
             shapeString = shape.name().toLowerCase();
@@ -412,13 +396,6 @@ class Images extends AbstractRetinas {
      */
     public ByteArrayInputStream compare(String jsonModels) throws JsonProcessingException, ApiException {
         return compare(null, null, jsonModels);
-    }
-    
-    private String name(Enum<?> enumItem) {
-        if (enumItem != null) {
-            return enumItem.name();
-        }
-        return null;
     }
     
 }

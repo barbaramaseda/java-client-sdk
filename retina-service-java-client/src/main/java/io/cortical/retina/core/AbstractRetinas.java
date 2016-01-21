@@ -5,10 +5,10 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import static io.cortical.retina.rest.RestServiceConstants.NULL_MODEL_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Model;
 

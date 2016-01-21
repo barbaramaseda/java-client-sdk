@@ -5,24 +5,28 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 import static io.cortical.retina.model.TestDataHarness.createImages;
-import static io.cortical.retina.client.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Term;
-import io.cortical.retina.client.core.ImageEncoding;
-import io.cortical.retina.client.core.ImagePlotShape;
-import io.cortical.retina.client.core.Images;
+import io.cortical.retina.core.ImageEncoding;
+import io.cortical.retina.core.ImagePlotShape;
+import io.cortical.retina.core.Images;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.ImageApi;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
+
 import java.io.ByteArrayInputStream;
 import java.util.List;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
 import static org.mockito.Matchers.eq;
 import static org.mockito.Matchers.isNull;
 import static org.mockito.Mockito.times;

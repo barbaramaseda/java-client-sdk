@@ -5,29 +5,21 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_TEXT_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.ClassifyApi;
-import org.apache.commons.logging.Log;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_TEXT_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.lang3.StringUtils.isEmpty;
-import static org.apache.commons.logging.LogFactory.getLog;
 
 
 public class Classify extends AbstractRetinas {
 
-    /**
-     *
-     */
-    private static final Log LOG = getLog(Classify.class);
-    /**
-     *
-     */
+    /** Rest Service access for the Classify end point */
     private final ClassifyApi api;
 
     Classify(String apiKey, String basePath, String retinaName) {
@@ -40,7 +32,7 @@ public class Classify extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Classify Retina Api with retina: " + retinaName);
+        
         this.api = new ClassifyApi(apiKey);
         this.api.setBasePath(basePath);
     }
@@ -63,7 +55,7 @@ public class Classify extends AbstractRetinas {
         if (isEmpty(filter_name) || body ==null) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        LOG.debug("Retrieve CategoryFilter: " + body);
+        
         return this.api.createCategoryFilter(filter_name, body, retinaName);
     }
 }

@@ -5,7 +5,7 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.ApiInvoker;

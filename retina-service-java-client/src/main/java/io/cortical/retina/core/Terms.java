@@ -5,23 +5,19 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.client.core;
+package io.cortical.retina.core;
 
-import io.cortical.retina.rest.DefaultValues;
+import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.service.RestServiceConstants.NULL_TERM_MSG;
+import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.DefaultValues;
 import io.cortical.retina.service.TermsApi;
 
 import java.util.List;
-
-import org.apache.commons.logging.Log;
-
-import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.rest.RestServiceConstants.NULL_TERM_MSG;
-import static org.apache.commons.lang3.StringUtils.isBlank;
-import static org.apache.commons.logging.LogFactory.getLog;
 
 
 
@@ -30,13 +26,7 @@ import static org.apache.commons.logging.LogFactory.getLog;
  * The Retina's Terms API implementation. 
  */
 class Terms extends AbstractRetinas {
-    /**
-     * 
-     */
-    private static final Log LOG = getLog(Terms.class);
-    /**
-     * 
-     */
+    /** Rest Service access for the Terms endpoint */
     private final TermsApi api;
     
     Terms(String apiKey, String basePath, String retinaName) {
@@ -49,7 +39,7 @@ class Terms extends AbstractRetinas {
         if (isBlank(basePath)) {
             throw new IllegalArgumentException(NULL_BASE_PATH_MSG);
         }
-        LOG.info("Initialize Terms Retina Api with retina: " + retinaName);
+        
         this.api = new TermsApi(apiKey);
         this.api.setBasePath(basePath);
     }
@@ -72,9 +62,6 @@ class Terms extends AbstractRetinas {
             throws ApiException {
         pagination = initPagination(pagination);
         validateTerm(term);
-        
-        LOG.debug("Retrieve contexts for the term: " + term + " pagination: " + pagination.toString()
-                + "  include fingerprint: " + includeFingerprint);
         
         return api.getContextsForTerm(term, includeFingerprint, retinaName, pagination.getStartIndex(),
                 pagination.getMaxResults());
@@ -110,9 +97,6 @@ class Terms extends AbstractRetinas {
             posTypeName = posType.name();
         }
         
-        LOG.debug("Retrieve Similar for the term: " + term + " pagination: " + pagination.toString()
-                + "  include fingerprint: " + includeFingerprint);
-        
         return api.getSimilarTerms(term, contextId, posTypeName, includeFingerprint, retinaName,
                 pagination.getStartIndex(), pagination.getMaxResults());
     }
@@ -130,11 +114,8 @@ class Terms extends AbstractRetinas {
         
         pagination = initPagination(pagination);
         
-        LOG.debug("Retrieve terms: " + term + " pagination: " + pagination.toString() + "  include fingerprint: "
-                + includeFingerprint);
-        
-        return api
-                .getTerm(term, includeFingerprint, retinaName, pagination.getStartIndex(), pagination.getMaxResults());
+        return api.getTerm(term, includeFingerprint, retinaName, pagination.getStartIndex(), 
+            pagination.getMaxResults());
     }
     
     private void validateTerm(String term) {
