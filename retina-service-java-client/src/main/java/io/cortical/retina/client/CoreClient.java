@@ -1,12 +1,16 @@
 package io.cortical.retina.client;
 
+import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
 import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.core.Retinas;
+import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
+import io.cortical.retina.model.Metric;
+import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
@@ -705,6 +709,46 @@ public class CoreClient {
         
         return retinas.expressionsApi().getSimilarTermsForExpressions(expressionModels, startIndex, maxResults, 
             contextId, posType, includeFingerprint, sparsity);
+    }
+    
+    /**
+     * Compares 2 models.
+     * 
+     * @param model1    model to be compared with model2 
+     * @param model2    model to be compared with model1
+     * 
+     * @return the result of the comparison as a @{link Metric} object.
+     * @throws JsonProcessingException  if the models cannot be converted to JSON.
+     * @throws ApiException if the cortical.io's API isn't available/ or an internal error occurred.
+     */
+    public Metric compare(Model model1, Model model2) throws JsonProcessingException, ApiException {
+        return retinas.compareApi().compare(model1, model2);
+    }
+    
+    /**
+     * <p>
+     * Compares pairs of models in bulk.
+     * </p><p>
+     * <pre>
+     * To create a CompareModel...
+     * 
+     * CompareModel model = new CompareModel(Model model1, Model model2);
+     * </pre>
+     * </p>
+     * Where "Model" can be any subtype such as:
+     * <UL>
+     *  <li>Term</li>
+     *  <li>Text</li>
+     *  <li>etc.</li>
+     * </UL>
+     * 
+     * @param compareModels     array of model to be compare holder. 
+     * @return the result of the comparison as a array of @{link Metric} object.
+     * @throws JsonProcessingException  if the models cannot be converted to JSON.
+     * @throws ApiException     if the cortical.io's API isn't available/ or an internal error occurred.
+     */
+    public Metric[] compareBulk(List<CompareModel> compareModels) throws JsonProcessingException, ApiException {
+        return retinas.compareApi().compareBulk(compareModels);
     }
     
     /**

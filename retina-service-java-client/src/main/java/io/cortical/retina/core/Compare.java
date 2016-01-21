@@ -16,6 +16,8 @@ import io.cortical.retina.model.Model;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.CompareApi;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
@@ -24,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * The Compare Retina API implementation. 
  */
-class Compare extends AbstractRetinas {
+public class Compare extends AbstractRetinas {
     /** Rest Service access for the Compare endpoint */
     private final CompareApi compareApi;
     
@@ -63,11 +65,15 @@ class Compare extends AbstractRetinas {
         this.compareApi = api;
     }
     
+    //////////////////////////////////////////////////
+    //                   New Methods                //
+    //////////////////////////////////////////////////
     /**
      * Compares 2 models.
      * 
-     * @param model1 : model to be compared with model2 
-     * @param model2 : model to be compared with model1
+     * @param model1    model to be compared with model2 
+     * @param model2    model to be compared with model1
+     * 
      * @return the result of the comparison as a @{link Metric} object.
      * @throws JsonProcessingException : if the models cannot be converted to JSON.
      * @throws ApiException : if the cortical.io's API isn't available/ or an internal error occurred.
@@ -75,6 +81,49 @@ class Compare extends AbstractRetinas {
     public Metric compare(Model model1, Model model2) throws JsonProcessingException, ApiException {
         validateRequiredModels(model1, model2);
         return compareApi.compare(toJson(model1, model2), this.retinaName);
+    }
+    
+    /**
+     * Compares pairs of models in bulk.
+     * 
+     * @param compareModels     list of model to be compare holder. 
+     * @return the result of the comparison as a array of @{link Metric} object.
+     * @throws JsonProcessingException  if the models cannot be converted to JSON.
+     * @throws ApiException     if the cortical.io's API isn't available/ or an internal error occurred.
+     */
+    public Metric[] compareBulk(List<CompareModel> compareModels) throws JsonProcessingException, ApiException {
+        if (compareModels == null || compareModels.size() == 0) {
+            throw new IllegalArgumentException(NULL_MODEL_MSG);
+        }
+        Model[][] toCompare = new Model[compareModels.size()][2];
+        int i = 0;
+        for (CompareModel pair: compareModels) {
+            toCompare[i++] = pair.getModels();
+        }
+        return compareApi.compareBulk(toJsonBulk(toCompare), this.retinaName);
+    }
+    
+    //////////////////////////////////////////////////
+    //                   Old Methods                //
+    //////////////////////////////////////////////////
+    /**
+     * Compares pairs of models in bulk.
+     * 
+     * @param compareModels     array of model to be compare holder. 
+     * @return the result of the comparison as a array of @{link Metric} object.
+     * @throws JsonProcessingException  if the models cannot be converted to JSON.
+     * @throws ApiException     if the cortical.io's API isn't available/ or an internal error occurred.
+     */
+    public Metric[] compareBulk(CompareModel... compareModels) throws JsonProcessingException, ApiException {
+        if (compareModels == null || compareModels.length == 0) {
+            throw new IllegalArgumentException(NULL_MODEL_MSG);
+        }
+        Model[][] toCompare = new Model[compareModels.length][2];
+        int i = 0;
+        for (CompareModel pair: compareModels) {
+            toCompare[i++] = pair.getModels();
+        }
+        return compareApi.compareBulk(toJsonBulk(toCompare), this.retinaName);
     }
     
     /**
@@ -105,26 +154,6 @@ class Compare extends AbstractRetinas {
     }
 
     /**
-     * Compares bulk models.
-     * 
-     * @param compareModels : array of model to be compare holder. 
-     * @return the result of the comparison as a array of @{link Metric} object.
-     * @throws JsonProcessingException : if the models cannot be converted to JSON.
-     * @throws ApiException : if the cortical.io's API isn't available/ or an internal error occurred.
-     */
-    public Metric[] compareBulk(CompareModels... compareModels) throws JsonProcessingException, ApiException {
-        if (compareModels == null || compareModels.length == 0) {
-            throw new IllegalArgumentException(NULL_MODEL_MSG);
-        }
-        Model[][] toCompare = new Model[compareModels.length][2];
-        int i = 0;
-        for (CompareModels pair: compareModels) {
-            toCompare[i++] = pair.getModels();
-        }
-        return compareApi.compareBulk(toJsonBulk(toCompare), this.retinaName);
-    }
-
-    /**
      * Compares 2 models.
      * 
      * @param json : models in a json format to be compared.
@@ -145,24 +174,24 @@ class Compare extends AbstractRetinas {
      * 
      *
      */
-    public static class CompareModels {
+    public static class CompareModel {
         /**
          * 
-         * Creates a new instance of {@link CompareModels}.
+         * Creates a new instance of {@link CompareModel}.
          * 
          *
          */
-        public CompareModels() {
+        public CompareModel() {
             
         }
         
         /**
          * 
-         * Creates a new instance of {@link CompareModels}.
+         * Creates a new instance of {@link CompareModel}.
          * @param model1 : first model to be compare.
          * @param model2 : second model to be compare.
          */
-        public CompareModels(Model model1, Model model2) {
+        public CompareModel(Model model1, Model model2) {
             setModel1(model1);
             setModel2(model2);
         }
