@@ -42,5 +42,10 @@ public class CoreClientTest {
             assertEquals("The retinaName cannot be null.", e.getMessage());
         }
     }
+    
+    @Test
+    public void testGetTerms() {
+        
+    }
 
 }

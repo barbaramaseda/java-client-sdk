@@ -7,12 +7,15 @@
  ******************************************************************************/
 package io.cortical.retina.model;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import static com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility.ANY;
 import static com.fasterxml.jackson.annotation.JsonInclude.Include.NON_EMPTY;
 import static com.fasterxml.jackson.annotation.PropertyAccessor.FIELD;
 import static com.fasterxml.jackson.databind.SerializationFeature.INDENT_OUTPUT;
+
+import java.util.List;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
@@ -44,8 +47,19 @@ public abstract class Model {
     /**
      * Returns the json representation of the input Model(s).
      * 
+     * @param models    models to be converted to json.
+     * @return the List in the json representation.
+     * @throws JsonProcessingException
+     */
+    public static <T extends Model> String toJson(List<T> models) throws JsonProcessingException {
+        return MAPPER.writeValueAsString(models);
+    }
+
+    /**
+     * Returns the json representation of the input Model(s).
+     * 
      * @param models : models to be converted to json.
-     * @return the objects' array in the json representation.
+     * @return the object array in the json representation.
      * @throws JsonProcessingException
      */
     public static String toJson(Model... models) throws JsonProcessingException {
@@ -55,12 +69,12 @@ public abstract class Model {
     /**
      * Returns the json representation of the input Model(s).
      * 
-     * @param modelsArrays : arrays of models to be converted to json.
-     * @return the objects' array in the json representation.
+     * @param modelArray      arrays of models to be converted to json.
+     * @return the object array in the json representation.
      * @throws JsonProcessingException
      */
-    public static String toJsonBulk(Model[]... modelsArrays) throws JsonProcessingException {
-        return MAPPER.writeValueAsString(modelsArrays);
+    public static String toJsonBulk(Model[]... modelArray) throws JsonProcessingException {
+        return MAPPER.writeValueAsString(modelArray);
     }
 
 }

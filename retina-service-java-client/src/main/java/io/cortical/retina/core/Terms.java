@@ -25,7 +25,7 @@ import java.util.List;
  * 
  * The Retina's Terms API implementation. 
  */
-class Terms extends AbstractRetinas {
+public class Terms extends AbstractRetinas {
     /** Rest Service access for the Terms endpoint */
     private final TermsApi api;
     
@@ -49,6 +49,91 @@ class Terms extends AbstractRetinas {
         this.api = api;
     }
     
+    //////////////////////////////////////////////////
+    //                   New Methods                //
+    //////////////////////////////////////////////////
+    /**
+     * Retrieve a term with meta-data for an exact match, or a list of potential retina terms. 
+     * 
+     * @param term                  the {@link Term} for which to retrieve a term or a list of potential terms.
+     * @param startIndex            the index marking the beginning of a page of responses
+     * @param maxResults            the number of results to return
+     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @return term with meta-data of potential terms.
+     * @throws ApiException if there are server or connection issues.
+     */
+    public List<Term> getTerms(Term term, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
+        String termStr = term == null ? null : term.getTerm();
+        return api.getTerm(termStr, includeFingerprint, retinaName, startIndex, maxResults);
+    }
+    
+    /**
+     * Retrieve contexts for the input term.
+     * 
+     * @param term                  the input term.
+     * @param startIndex            the response item's start index.
+     * @param maxResults            the number of results to return
+     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @return List of contexts for the input term. 
+     * @throws ApiException     if there are server or connection issues.
+     */
+    public List<Context> getContextsForTerm(Term term, int startIndex, int maxResults, Boolean includeFingerprint)
+            throws ApiException {
+        
+        validateTerm(term);
+        
+        return api.getContextsForTerm(term.getTerm(), includeFingerprint, retinaName, startIndex, maxResults);
+    }
+    
+    /**
+     * Retrieve all similar terms for the input.
+     * <br>If any context is specified, only the similar terms related to this context are returned.
+     * 
+     * <ul>
+     * <li> No input context: returns all similar terms without context filtering.
+     * <li> 0..N-1 : returns all similar terms for the Nth context.
+     * </ul>
+     * 
+     * <br>Uses pagination 
+     * 
+     * @param term                  the input term
+     * @param contextId             the context id
+     * @param posType               the posType used for filtering
+     * @param startIndex            the response item's start index.
+     * @param maxResults            the number of results to return
+     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @return A list of similar terms.
+     * @throws ApiException : if there are server or connection issues.
+     */
+    public List<Term> getSimilarTermsForTerm(Term term, Integer contextId, PosType posType, int startIndex,
+        int maxResults, Boolean includeFingerprint) throws ApiException {
+        
+        validateTerm(term);
+        
+        String posTypeName = null;
+        if (posType != null) {
+            posTypeName = posType.name();
+        }
+        
+        return api.getSimilarTerms(term.getTerm(), contextId, posTypeName, includeFingerprint, retinaName,
+            startIndex, maxResults);
+    }
+    
+    private void validateTerm(Term term) {
+        if (term == null || term.getTerm().length() == 0) {
+            throw new IllegalArgumentException(NULL_TERM_MSG);
+        }
+    }
+    
+    private void validateTerm(String term) {
+        if (term == null || term.trim().length() == 0) {
+            throw new IllegalArgumentException(NULL_TERM_MSG);
+        }
+    }
+    
+    //////////////////////////////////////////////////
+    //                   Old Methods                //
+    //////////////////////////////////////////////////
     /**
      * Retrieve contexts for the input term.
      * 
@@ -118,11 +203,6 @@ class Terms extends AbstractRetinas {
             pagination.getMaxResults());
     }
     
-    private void validateTerm(String term) {
-        if (term == null || term.trim().length() == 0) {
-            throw new IllegalArgumentException(NULL_TERM_MSG);
-        }
-    }
     
     /**
      * Retrieve contexts for the input term.

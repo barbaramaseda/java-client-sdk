@@ -12,6 +12,8 @@ import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Model;
 
+import java.util.List;
+
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
@@ -46,6 +48,16 @@ abstract class AbstractRetinas {
         }
     }
     
+    protected <T extends Model> void validateRequiredModels(List<T> models) {
+        if (models == null || models.size() == 0) {
+            throw new IllegalArgumentException(NULL_MODEL_MSG);
+        }
+        for (Model model : models) {
+            if (model == null) {
+                throw new IllegalArgumentException(NULL_MODEL_MSG);
+            }
+        }
+    }
     
     protected Pagination initPagination(Pagination pagination) {
         if (pagination == null) {
@@ -58,7 +70,7 @@ abstract class AbstractRetinas {
     /**
      * Returns a JSON representation of the input Models.
      * 
-     * @param models : models to be converted to a json array.
+     * @param models    models to be converted to a json array.
      * @return the array in json format.
      * @throws JsonProcessingException
      */
@@ -67,9 +79,20 @@ abstract class AbstractRetinas {
     }
     
     /**
+     * Returns a JSON representation of the input Models.
+     * 
+     * @param models    models to be converted to a json array.
+     * @return the array in json format.
+     * @throws JsonProcessingException
+     */
+    protected <T extends Model> String toJson(List<T> models) throws JsonProcessingException {
+        return Model.toJson(models);
+    }
+    
+    /**
      * Returns the json representation of the input Model(s).
      * 
-     * @param modelsArrays : arrays of models to be converted to json.
+     * @param modelsArrays  arrays of models to be converted to json.
      * @return the array in json format.
      * @throws JsonProcessingException
      */
