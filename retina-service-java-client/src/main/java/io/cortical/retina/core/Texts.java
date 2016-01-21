@@ -63,11 +63,11 @@ public class Texts extends AbstractRetinas {
      * @return fingerprints     generated for the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForText(Text text) throws ApiException {
+    public Fingerprint getFingerprintForText(Text text) throws ApiException {
         if (text == null || isEmpty(text.getText())) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getRepresentationForText(text.getText(), retinaName);
+        return this.api.getRepresentationForText(text.getText(), retinaName).get(0);
     }
     
     /**

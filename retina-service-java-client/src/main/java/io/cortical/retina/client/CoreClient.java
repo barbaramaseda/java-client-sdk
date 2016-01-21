@@ -1,14 +1,16 @@
 package io.cortical.retina.client;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
+import io.cortical.retina.core.Compare.CompareModel;
+import io.cortical.retina.core.Endpoints;
+import io.cortical.retina.core.ImageEncoding;
+import io.cortical.retina.core.ImagePlotShape;
 import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
-import io.cortical.retina.core.Retinas;
-import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
+import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Retina;
@@ -17,6 +19,7 @@ import io.cortical.retina.model.Text;
 import io.cortical.retina.service.ApiException;
 
 import java.beans.Expression;
+import java.io.ByteArrayInputStream;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -36,7 +39,7 @@ public class CoreClient {
     private String retinaName;
     
     /** Main server access proxy */
-    private Retinas retinas;
+    private Endpoints endoints;
     
     /** Stores the max results setting (default: 10) */
     private int maxResults = 10;
@@ -67,23 +70,7 @@ public class CoreClient {
         this.apiServer = apiServer;
         this.retinaName = retinaName;
         
-        retinas = new Retinas(this.retinaName, this.apiServer, this.apiKey);
-    }
-    
-    /**
-     * Sets the aggregate container for the request proxy endpoints.
-     * @param retinas   the {@link Retinas} providing all endpoint access.
-     */
-    public void setRetinas(Retinas retinas) {
-        this.retinas = retinas;
-    }
-    
-    /**
-     * Returns the aggregate container for the request proxy endpoints.
-     * @return retinas   the {@link Retinas} providing all endpoint access.
-     */
-    public Retinas getRetinas() {
-        return retinas;
+        endoints = new Endpoints(this.retinaName, this.apiServer, this.apiKey);
     }
     
     /**
@@ -106,7 +93,7 @@ public class CoreClient {
      * @throws ApiException if there are server or connection issues.
      */
     public List<Term> getTerms(Term term, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
-        return retinas.termsApi().getTerms(term, startIndex, maxResults, includeFingerprint);
+        return endoints.termsApi().getTerms(term, startIndex, maxResults, includeFingerprint);
     }
     
     /**
@@ -132,7 +119,7 @@ public class CoreClient {
      */
     public List<Context> getContextsForTerm(Term term, int startIndex, int maxResults, boolean includeFingerprint)
         throws ApiException {
-        return retinas.termsApi().getContextsForTerm(term, startIndex, maxResults, includeFingerprint);
+        return endoints.termsApi().getContextsForTerm(term, startIndex, maxResults, includeFingerprint);
     }
     
     /**
@@ -181,18 +168,18 @@ public class CoreClient {
      */
     public List<Term> getSimilarTermsForTerm(Term term, Integer contextId, PosType posType, int startIndex,
         int maxResults, Boolean includeFingerprint) throws ApiException {
-        return retinas.termsApi().getSimilarTermsForTerm(term, null, null, 0, maxResults, false);
+        return endoints.termsApi().getSimilarTermsForTerm(term, null, null, 0, maxResults, false);
     }
     
     /**
-     * Retrieve fingerprints for the input {@link Text} (text is split and for each item a fingerprint is generated).
+     * Retrieve fingerprint for the input {@link Text} (text is split and for each item a fingerprint is generated).
      * 
      * @param model             model for which a fingerprint is generated.
      * @return fingerprints     generated for the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForText(Text text) throws ApiException {
-        return retinas.textApi().getFingerprintsForText(text);
+    public Fingerprint getFingerprintForText(Text text) throws ApiException {
+        return endoints.textApi().getFingerprintForText(text);
     }
     
     /**
@@ -221,7 +208,7 @@ public class CoreClient {
      */
     public List<Fingerprint> getFingerprintsForTexts(List<Text> texts, Double sparsity) throws ApiException,
         JsonProcessingException {
-        return retinas.textApi().getFingerprintsForTexts(texts, sparsity);
+        return endoints.textApi().getFingerprintsForTexts(texts, sparsity);
     }
     
     /**
@@ -232,7 +219,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      */
     public List<String> getKeywordsForText(Text text) throws ApiException {
-        return retinas.textApi().getKeywordsForText(text);
+        return endoints.textApi().getKeywordsForText(text);
     }
     
     /**
@@ -246,7 +233,7 @@ public class CoreClient {
      * @throws ApiException : if there are server or connection issues.
      */
     public List<String> getTokensForText(Text text) throws ApiException {
-        return retinas.textApi().getTokensForText(text, null);
+        return endoints.textApi().getTokensForText(text, null);
     }
     
     /**
@@ -261,7 +248,7 @@ public class CoreClient {
      * @throws ApiException : if there are server or connection issues.
      */
     public List<String> getTokensForText(Text text, List<PosTag> tags) throws ApiException {
-        return retinas.textApi().getTokensForText(text, tags);
+        return endoints.textApi().getTokensForText(text, tags);
     }
     
     /**
@@ -289,7 +276,7 @@ public class CoreClient {
      * @throws ApiException     if there are server or connection issues.
      */
     public List<Text> getSlicesForText(Text text, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
-        return retinas.textApi().getSlicesForText(text, startIndex, maxResults, includeFingerprint);
+        return endoints.textApi().getSlicesForText(text, startIndex, maxResults, includeFingerprint);
     }
     
     /**
@@ -300,7 +287,7 @@ public class CoreClient {
      * @throws ApiException if there are server or connection issues.
      */
     public Retina getLanguageForText(Text text) throws ApiException {
-        return retinas.textApi().getLanguageForText(text);
+        return endoints.textApi().getLanguageForText(text);
     }
     
     /**
@@ -359,7 +346,7 @@ public class CoreClient {
      */
     public <T extends ExpressionModel> Fingerprint getFingerprintForExpression(T expressionModel, Double sparsity) 
         throws JsonProcessingException, ApiException {
-        return retinas.expressionsApi().getFingerprintForExpression(expressionModel, sparsity);
+        return endoints.expressionsApi().getFingerprintForExpression(expressionModel, sparsity);
     }
     
     /**
@@ -418,7 +405,7 @@ public class CoreClient {
      */
     public <T extends ExpressionModel> List<Fingerprint> getFingerprintsForExpressions(List<T> expressionModel, Double sparsity) 
         throws JsonProcessingException, ApiException {
-        return retinas.expressionsApi().getFingerprintsForExpressions(expressionModel, sparsity);
+        return endoints.expressionsApi().getFingerprintsForExpressions(expressionModel, sparsity);
     }
     
     /**
@@ -487,7 +474,7 @@ public class CoreClient {
         T expressionModel, int startIndex, int maxResults, Double sparsity, Boolean includeFingerprint)
             throws JsonProcessingException, ApiException {
         
-        return retinas.expressionsApi().getContextsForExpression(expressionModel, startIndex, maxResults, sparsity, includeFingerprint);
+        return endoints.expressionsApi().getContextsForExpression(expressionModel, startIndex, maxResults, sparsity, includeFingerprint);
     }
     
     /**
@@ -562,7 +549,7 @@ public class CoreClient {
         List<T> expressionModels, int startIndex, int maxResults, 
             Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
         
-        return retinas.expressionsApi().getContextsForExpressions(
+        return endoints.expressionsApi().getContextsForExpressions(
             expressionModels, startIndex, maxResults, includeFingerprint, sparsity);
     }
     
@@ -593,7 +580,7 @@ public class CoreClient {
     public <T extends ExpressionModel> List<Term> getSimilarTermsForExpression(T expressionModel) 
         throws JsonProcessingException, ApiException {
         
-        return retinas.expressionsApi().getSimilarTermsForExpression(expressionModel, 0, maxResults, 
+        return endoints.expressionsApi().getSimilarTermsForExpression(expressionModel, 0, maxResults, 
             null, null, false, null);
     }
     
@@ -631,7 +618,7 @@ public class CoreClient {
         int maxResults, Integer contextId, PosType posType, Boolean includeFingerprint, Double sparsity) 
             throws JsonProcessingException, ApiException {
         
-        return retinas.expressionsApi().getSimilarTermsForExpression(expressionModel, startIndex, maxResults, 
+        return endoints.expressionsApi().getSimilarTermsForExpression(expressionModel, startIndex, maxResults, 
             contextId, posType, includeFingerprint, sparsity);
     }
     
@@ -707,7 +694,7 @@ public class CoreClient {
         List<T> expressionModels, int startIndex, int maxResults, Integer contextId, PosType posType, 
             Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
         
-        return retinas.expressionsApi().getSimilarTermsForExpressions(expressionModels, startIndex, maxResults, 
+        return endoints.expressionsApi().getSimilarTermsForExpressions(expressionModels, startIndex, maxResults, 
             contextId, posType, includeFingerprint, sparsity);
     }
     
@@ -722,7 +709,7 @@ public class CoreClient {
      * @throws ApiException if the cortical.io's API isn't available/ or an internal error occurred.
      */
     public Metric compare(Model model1, Model model2) throws JsonProcessingException, ApiException {
-        return retinas.compareApi().compare(model1, model2);
+        return endoints.compareApi().compare(model1, model2);
     }
     
     /**
@@ -748,7 +735,202 @@ public class CoreClient {
      * @throws ApiException     if the cortical.io's API isn't available/ or an internal error occurred.
      */
     public Metric[] compareBulk(List<CompareModel> compareModels) throws JsonProcessingException, ApiException {
-        return retinas.compareApi().compareBulk(compareModels);
+        return endoints.compareApi().compareBulk(compareModels);
+    }
+    
+    /**
+     * <p>
+     * Generate an image for the for the model.
+     * </p><p>
+     * <b>Defaults are:</b>
+     * <UL>
+     *  <li> Scaling factor "1" (no scaling - uses original image size)</li>
+     *  <li> Shape = {@link ImagePlotShape#CIRCLE}</li>
+     *  <li> Image Encoding = {@link ImageEncoding#BASE64_PNG}</li>
+     *  <li> sparsity = null (uses default Fingerprint sparsity)
+     * </UL>
+     * </p><p>
+     * <b>To create image in memory:</b>
+     * <pre>
+     *  try {
+     *      CoreClient client ...
+     *      ByteArrayInputStream in = client.getImage(model);
+     *      BufferedImage bImage = ImageIO.read(in);
+     *  }catch(IOException e) {
+     *      System.out.println(e.getMessage());
+     *  }
+     * 
+     *  // write it to a file...
+     *  try {
+     *      ImageIO.write(bImage, "png", new File("/mydirectory/my-image.png"));
+     *  }catch(IOException e) {
+     *      System.out.println(e.getMessage());
+     *  }
+     * </pre>
+     * </p>
+     * 
+     * @param model             the {@link Model} subtype for which an image is generated.
+     * 
+     * @return a byte array holding the image data.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException : if there are some server or connection issues.
+     */
+    public ByteArrayInputStream getImage(Model model) throws JsonProcessingException, ApiException {
+        
+        return endoints.imageApi().getImage(model, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, null);
+    }
+    
+    /**
+     * <p>
+     * Generate an image for the for the model.
+     * </p><p>
+     * <b>Defaults are:</b>
+     * <UL>
+     *  <li> Scaling factor "1" (no scaling - uses original image size)</li>
+     *  <li> Shape = {@link ImagePlotShape#CIRCLE}</li>
+     *  <li> Image Encoding = {@link ImageEncoding#BASE64_PNG}</li>
+     *  <li> sparsity = null (uses default Fingerprint sparsity)
+     * </UL>
+     * </p><p>
+     * <b>To create image in memory:</b>
+     * <pre>
+     *  try {
+     *      CoreClient client ...
+     *      ByteArrayInputStream in = client.getImage(model);
+     *      BufferedImage bImage = ImageIO.read(in);
+     *  }catch(IOException e) {
+     *      System.out.println(e.getMessage());
+     *  }
+     * 
+     *  // write it to a file...
+     *  try {
+     *      ImageIO.write(bImage, "png", new File("/mydirectory/my-image.png"));
+     *  }catch(IOException e) {
+     *      System.out.println(e.getMessage());
+     *  }
+     * </pre>
+     * </p>
+     * 
+     * @param model             the {@link Model} subtype for which an image is generated.
+     * @param scalar            scaling factor of the image to generate
+     * @param shape             shape of the plots used in the overlay image
+     * @param imageEncoding     the encoding of the image.
+     * @param sparsity          a sparsity value which can be applied to the image
+     * 
+     * @return a byte array holding the image data.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException : if there are some server or connection issues.
+     */
+    public ByteArrayInputStream getImage(Model model, Integer scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
+            Double sparsity) throws JsonProcessingException, ApiException {
+        
+        return endoints.imageApi().getImage(model, scalar, shape, imageEncoding, sparsity);
+    }
+    
+    /**
+     * <p>
+     * Returns a List of {@link Image}s for the input models.
+     * </p><p>
+     * <b>For tips on image usage see:</b> {@link #getImage(Model)}
+     * </p>
+     * 
+     * @param models                List of {@link Model}s from which to produce fingerprint images.
+     * 
+     * @return a list of images generated using the input models.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException     if there are some server or connection issues.
+     * @see #getImage(Model)
+     */
+    public List<Image> getImages(List<Model> models) throws JsonProcessingException, ApiException {
+        return endoints.imageApi().getImages(models, false, 1, ImagePlotShape.CIRCLE, null);
+    }
+    
+    /**
+     * Returns a List of {@link Image}s for the input models.
+     * </p><p>
+     * <b>For tips on image usage see:</b> {@link #getImage(Model)}
+     * </p>
+     * 
+     * @param models                List of {@link Model}s from which to produce fingerprint images.
+     * @param includeFingerprint    identify if the fingerprint should  be present/provided in the images.
+     * @param scalar                scaling factor of the image to generate
+     * @param shape                 shape of the plots used in the overlay image
+     * @param sparsity              a sparsity value which can be applied to the image
+     * 
+     * @return a list of images generated using the input models.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException     if there are some server or connection issues.
+     * @see #getImage(Model)
+     */
+    public List<Image> getImages(List<Model> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
+        Double sparsity) throws JsonProcessingException, ApiException {
+        return endoints.imageApi().getImages(models, includeFingerprint, scalar, shape, sparsity);
+    }
+    
+    /**
+     * Returns a visualization of the comparison of two fingerprints. 
+     * <p> The returned image contains a visualization of the left and right fingerprint and the overlay of both
+     *     fingerprints.
+     * </p>
+     * <p>
+     * <b>For tips on image usage see:</b> {@link #getImage(Model)}
+     * </p>
+     * @param models            a List of {@link Model}s (list size = 2), for which the fingerprint's images are 
+     *                          generated.
+     * @param scalar            scaling factor of the image to generate
+     * @param shape             the shape of the plots used in the overlay image
+     * @param imageEncoding     the encoding of the image.
+     * 
+     * @return a byte array holding the image data.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException : if there are some server or connection issues.
+     * @see #getImage(Model)
+     */
+    public ByteArrayInputStream compareImage(List<Model> models) throws JsonProcessingException, ApiException {
+        return compareImage(models, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG);
+    }
+    
+    /**
+     * Returns a visualization of the comparison of two fingerprints. 
+     * <p> The returned image contains a visualization of the left and right fingerprint and the overlay of both
+     *     fingerprints.
+     * </p>
+     * <p>
+     * <b>For tips on image usage see:</b> {@link #getImage(Model)}
+     * </p>
+     * 
+     * @param models            a List of {@link Model}s (list size = 2), for which the fingerprint's images are 
+     *                          generated.
+     * @param scalar            scaling factor of the image to generate
+     * @param shape             the shape of the plots used in the overlay image
+     * @param imageEncoding     the encoding of the image.
+     * 
+     * @return a byte array holding the image data.
+     * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
+     * @throws ApiException : if there are some server or connection issues.
+     * @see #getImage(Model)
+     */
+    public ByteArrayInputStream compareImage(List<Model> models, Integer scalar, ImagePlotShape shape,
+        ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
+        return endoints.imageApi().compareImage(models, scalar, shape, imageEncoding);
+    }
+    
+    /**
+     * Retrieve all available retinas.
+     * @return all available retinas.
+     */
+    public List<Retina> getRetinas() throws ApiException {
+        return endoints.getAllRetinas();
+    }
+    
+    /**
+     * Find retina by name.
+     * @param name : the retina's name.
+     * 
+     * @return retina found by name or null if there is no such retina.
+     */
+    public Retina retinaByName(String name) throws ApiException {
+        return endoints.retinaByName(name);
     }
     
     /**

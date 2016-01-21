@@ -18,7 +18,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
-import io.cortical.retina.core.Retinas;
+import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.RetinasApi;
@@ -31,25 +31,25 @@ import org.mockito.Mock;
 
 
 /**
- * {@link Retinas} test class.
+ * {@link Endpoints} test class.
  * 
  */
-public class TestRetinas {
+public class EndpointsTest {
     /**
      * 
      */
     @Mock
     private RetinasApi api;
-    private Retinas retinas;
+    private Endpoints endpoints;
     
     @Before
     public void before() {
         initMocks(this);
-        retinas = Retinas.makeTestRetinas(api);
+        endpoints = Endpoints.makeTestRetinas(api);
     }
     
     /**
-     * {@link Retinas#getAllRetinas()} method test.
+     * {@link Endpoints#getAllRetinas()} method test.
      * 
      * @throws ApiException : should never be thrown
      */
@@ -57,13 +57,13 @@ public class TestRetinas {
     public void getAllRetinasTest() throws ApiException {
         int count = 7;
         when(api.getRetinas(isNull(String.class))).thenReturn(createRetinas(count));
-        List<Retina> retinasList = retinas.getAllRetinas();
+        List<Retina> retinasList = endpoints.getAllRetinas();
         assertEquals(count, retinasList.size());
         verify(api, times(1)).getRetinas(isNull(String.class));
     }
     
     /**
-     *  {@link Retinas#retinaByName(String)} method test.
+     *  {@link Endpoints#retinaByName(String)} method test.
      * 
      * @throws ApiException : should never be thrown
      */
@@ -72,7 +72,7 @@ public class TestRetinas {
         String retinaName = "some_retina_name";
         Retina[] retinaArray = { createRetina(retinaName) };
         when(api.getRetinas(eq(retinaName))).thenReturn(asList(retinaArray));
-        Retina retina = retinas.retinaByName(retinaName);
+        Retina retina = endpoints.retinaByName(retinaName);
         assertNotNull(retina);
         verify(api, times(1)).getRetinas(eq(retinaName));
     }

@@ -21,7 +21,7 @@ import java.util.List;
  * RetinaApis factory.
  * 
  */
-public class Retinas {
+public class Endpoints {
     /**
      * The APIs
      */
@@ -35,13 +35,13 @@ public class Retinas {
     private final RetinasApi retinasApi;
     
     /**
-     * Creates a new instance of {@link Retinas}.
+     * Creates a new instance of {@link Endpoints}.
      * 
      * @param retinaName
      * @param ip
      * @param apiKey
      */
-    public Retinas(final String retinaName, final String ip, final String apiKey) {
+    public Endpoints(final String retinaName, final String ip, final String apiKey) {
         String basePath = RetinaUtils.generateBasepath(ip, null);
         
         if (isEmpty(retinaName)) {
@@ -61,14 +61,14 @@ public class Retinas {
     }
     
     /**
-     * Creates a new instance of {@link Retinas}.
+     * Creates a new instance of {@link Endpoints}.
      * 
      * @param retinaName
      * @param ip
      * @param port
      * @param apiKey
      */
-    public Retinas(final String retinaName, final String ip, final Short port, final String apiKey) {
+    public Endpoints(final String retinaName, final String ip, final Short port, final String apiKey) {
         String basePath = RetinaUtils.generateBasepath(ip, port);
         if (isEmpty(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
@@ -164,12 +164,12 @@ public class Retinas {
      * Non-client code for testing only. Do not use!
      * @return
      */
-    static Retinas makeTestRetinas(RetinasApi api) {
-        return new Retinas(api);
+    static Endpoints makeTestRetinas(RetinasApi api) {
+        return new Endpoints(api);
     }
     
     /* For testing */
-    private Retinas(RetinasApi api) {
+    private Endpoints(RetinasApi api) {
         compareApi = null;
         expressionsApi = null;
         imageApi = null;

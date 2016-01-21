@@ -29,7 +29,7 @@ public class Image {
     }
     /**
      * 
-     * Creates a new instance of {@link ImageImpl}.
+     * Creates a new instance of {@link Image}.
      * 
      * @param imageData the base64 encoded image data
      * @param fingerprint the {@link Fingerprint}.
