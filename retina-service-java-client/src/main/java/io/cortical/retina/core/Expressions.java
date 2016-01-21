@@ -11,6 +11,7 @@ import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
 import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Context;
+import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
@@ -26,7 +27,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * The Expression Retina's API implementation.
  */
-class Expressions extends AbstractRetinas {
+public class Expressions extends AbstractRetinas {
     /** Rest Service access for the Expressions endpoint */
     private final ExpressionsApi expressionsApi;
     
@@ -50,6 +51,150 @@ class Expressions extends AbstractRetinas {
         this.expressionsApi = expressionsApi;
     }
     
+    //////////////////////////////////////////////////
+    //                   New Methods                //
+    //////////////////////////////////////////////////
+    /**
+     * Resolves an expression.
+     * 
+     * @param sparsity      a {@link ExpressionModel} used for re-sparsifying the evaluated expression.
+     * @param model         a model for which a fingerprint is generated. 
+     * @return a fingerprint for the input model.
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException     if there are server or connection issues.
+     */
+    public <T extends ExpressionModel> Fingerprint getFingerprintForExpression(T model, Double sparsity) 
+        throws JsonProcessingException, ApiException {
+        validateRequiredModels(model);
+        return this.expressionsApi.resolveExpression(model.toJson(), retinaName, sparsity);
+    }
+    
+    /**
+     * Resolves a bulk expression call. 
+     * 
+     * @param models        {@link ExpressionModel}(s) for which the list of fingerprints is generated.
+     * @param sparsity      a value used for re-sparsifying the evaluated expression.
+     * 
+     * @return a list of fingerprints generated for each of the input model(s).
+     * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
+     * @throws ApiException             if there are server or connection issues.
+     */
+    public <T extends ExpressionModel> List<Fingerprint> getFingerprintsForExpressions(
+        List<T> expressionModels, Double sparsity) throws JsonProcessingException, ApiException {
+        
+        validateRequiredModels(expressionModels);
+        return this.expressionsApi.resolveBulkExpression(toJson(expressionModels), retinaName, sparsity);
+    }
+    
+    /**
+     *  Calculate contexts of the result of an expression.
+     * 
+     * @param model                 a {@link ExpressionModel} for which a list of contexts is generated.
+     * @param startIndex            the response item's first result
+     * @param 
+     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param sparsity              a value used for re-sparsifying the evaluated expression.
+     *  
+     * @return a list of contexts generated from the input model.
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException : if there are server or connection issues.
+     */
+    public <T extends ExpressionModel> List<Context> getContextsForExpression(
+        T model, int startIndex, int maxResults, Double sparsity, Boolean includeFingerprint)
+            throws JsonProcessingException, ApiException {
+        
+        validateRequiredModels(model);
+        return this.expressionsApi.getContextsForExpression(model.toJson(), includeFingerprint, retinaName,
+            startIndex, maxResults, sparsity);
+    }
+    
+    /**
+     * Calculate contexts for each model. 
+     * 
+     * <br>Returns a list of {@link Context} for each one of the input expressions in the bulk, so the returned
+     * Response object will contain a list of lists of Contexts.
+     * 
+     * @param jsonModel             json model(s) for which a list of contexts is generated. 
+     *                              (for each model a list of {@link Context} is generated.) 
+     * @param startIndex            the index of the first response required
+     * @param maxResults            the maximum number of results to return
+     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param sparsity              a value used for re-sparsifying the evaluated expression.
+     * 
+     * @return a list of contexts lists generated from the input model(s).
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException     if there are server or connection issues.
+     */
+    public <T extends ExpressionModel> List<List<Context>> getContextsForExpressions(
+        List<T> expressionModels, int startIndex, int maxResults, 
+            Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
+        
+        validateRequiredModels(expressionModels);
+        
+        return this.expressionsApi.getContextsForBulkExpression(
+            toJson(expressionModels), includeFingerprint, retinaName, startIndex, 
+                maxResults, sparsity);
+    }
+    
+    /**
+     * Gets similar terms for the expression.
+     * 
+     * @param expressionModel       {@link ExpressionModel} for which a list of terms is generated. 
+     * @param startIndex            the index of the first {@link Term} to return
+     * @param maxResults            the maximum number of results to return
+     * @param contextId             an id identifying a {@link Term}'s context
+     * @param posType               a part of speech type
+     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param sparsity              a value used for re-sparsifying the evaluated expression.
+     * 
+     * @return a list of similar terms generated from the input model.
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException     if there are server or connection issues.      
+     */
+    public <T extends ExpressionModel> List<Term> getSimilarTermsForExpression(T expressionModel, int startIndex, 
+        int maxResults, Integer contextId, PosType posType, Boolean includeFingerprint, Double sparsity) 
+            throws JsonProcessingException, ApiException {
+        
+        String posTypeName = null;
+        if (posType != null) {
+            posTypeName = posType.name();
+        }
+        
+        return this.expressionsApi.getSimilarTermsForExpressionContext(expressionModel.toJson(), contextId, 
+            posTypeName, includeFingerprint, retinaName, startIndex, maxResults, sparsity);
+    }
+    
+    /**
+     * Retrieve similar terms for the each item in the model's array.
+     * 
+     * @param expressionModels      an {@link ExpressionModel} for which a list of terms is generated. 
+     *                              (for each model a list of {@link Term} is generated.) 
+     * @param startIndex            the index of the first {@link Term} to return
+     * @param maxResults            the total number of results to return
+     * @param contextId             an id identifying a {@link Term}'s context
+     * @param posType               a part of speech type.
+     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param sparsity              a value used for re-sparsifying the evaluated expression.
+     * 
+     * @return A list containing a list of terms generated for each item in the models.
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException if there are server or connection issues.
+     */
+    public <T extends ExpressionModel> List<List<Term>> getSimilarTermsForExpressions(
+        List<T> expressionModels, int startIndex, int maxResults, Integer contextId, PosType posType, 
+            Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
+        
+        String posTypeName = null;
+        if (posType != null) {
+            posTypeName = posType.name();
+        }
+        return this.expressionsApi.getSimilarTermsForBulkExpressionContext(toJson(expressionModels), contextId, 
+            posTypeName, includeFingerprint, retinaName, startIndex, maxResults, sparsity);
+    }
+    
+    //////////////////////////////////////////////////
+    //                   Old Methods                //
+    //////////////////////////////////////////////////
     /**
      * Retrieve similar terms for each item in the model's array.
      * 
@@ -92,7 +237,8 @@ class Expressions extends AbstractRetinas {
      * @param pagination : the response's items pagination mechanism configuration.
      * @param includeFingerprint : true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity : a value used for re-sparsifying the evaluated expression.
-     * @param models : model(s) for which a list of contexts is generated. (for each model a list of {@link Context} is generated.) 
+     * @param models : model(s) for which a list of contexts is generated. (for each model a list of {@link Context} is 
+     *          generated.) 
      * @return a list of contexts' lists generated from the input model(s).
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException : if there are server or connection issues.
