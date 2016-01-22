@@ -13,8 +13,15 @@ import static io.cortical.retina.service.RestServiceConstants.NULL_TEXT_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.CategoryFilter;
+import io.cortical.retina.model.Sample;
+import io.cortical.retina.model.Text;
 import io.cortical.retina.service.ApiException;
 import io.cortical.retina.service.ClassifyApi;
+
+import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 public class Classify extends AbstractRetinas {
@@ -41,8 +48,36 @@ public class Classify extends AbstractRetinas {
         super(retinaName);
         this.api = api;
     }
-
     
+    /**
+     * Endpoint for creating a {@link CategoryFilter} from text inputs.
+     * 
+     * @param name the name of the category filter
+     * @param ftostring the json representation of a {@link FilterTrainingObject)
+     * @return {@link CategoryFilter}
+     * @throws ApiException 
+     */
+    public CategoryFilter createCategoryFilter(String filterName, List<Text> positiveExamples, List<Text> negativeExamples) throws ApiException {
+        if (isEmpty(filterName) || positiveExamples == null || positiveExamples.isEmpty()) {
+            throw new IllegalArgumentException(NULL_TEXT_MSG);
+        }
+        
+        Sample sample = new Sample();
+        sample.addAllPositive(positiveExamples);
+        sample.addAllNegative(negativeExamples);
+        
+        String json = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(Include.NON_NULL);
+            json = mapper.writeValueAsString(sample);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+        
+        return this.api.createCategoryFilter(filterName, json, retinaName);
+    }
+
     /**
      * Endpoint for creating a {@link CategoryFilter} from text inputs.
      * 
