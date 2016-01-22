@@ -947,7 +947,7 @@ public class CoreClient {
     
     /**
      * Find retina by name.
-     * @param name : the retina's name.
+     * @param name  the retina's name.
      * 
      * @return retina found by name or null if there is no such retina.
      */
