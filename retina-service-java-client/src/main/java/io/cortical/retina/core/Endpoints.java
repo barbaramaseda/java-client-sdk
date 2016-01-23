@@ -90,7 +90,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Compare} endpoint
      * @return
      */
-    public final Compare compareApi() {
+    public Compare compareApi() {
         return compareApi;
     }
     
@@ -98,7 +98,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Compare} endpoint
      * @return
      */
-    public final Expressions expressionsApi() {
+    public Expressions expressionsApi() {
         return expressionsApi;
     }
     
@@ -106,7 +106,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Images} endpoint
      * @return
      */
-    public final Images imageApi() {
+    public Images imageApi() {
         return imageApi;
     }
     
@@ -114,7 +114,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Terms} endpoint
      * @return
      */
-    public final Terms termsApi() {
+    public Terms termsApi() {
         return termsApi;
     }
     
@@ -122,7 +122,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Texts} endpoint
      * @return
      */
-    public final Texts textApi() {
+    public Texts textApi() {
         return textApi;
     }
     
@@ -130,7 +130,7 @@ public class Endpoints {
      * Returns the request proxy for the {@link Classify} endpoint
      * @return
      */
-    public final Classify classifyApi() {
+    public Classify classifyApi() {
         return classifyApi;
     }
     

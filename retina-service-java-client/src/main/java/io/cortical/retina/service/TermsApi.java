@@ -53,7 +53,7 @@ public class TermsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Term> **/
-    public List<Term> getTerm (String term, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results) throws ApiException {
+    public List<Term> getTerm (String term, boolean get_fingerprint, String retina_name, int start_index, int max_results) throws ApiException {
         // verify required params are set
         if(retina_name == null ) {
              throw new ApiException(400, "missing required params");
@@ -107,7 +107,7 @@ public class TermsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Context> **/
-    public List<Context> getContextsForTerm (String term, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results) throws ApiException {
+    public List<Context> getContextsForTerm (String term, boolean get_fingerprint, String retina_name, int start_index, int max_results) throws ApiException {
         // verify required params are set
         if(retina_name == null || term == null ) {
              throw new ApiException(400, "missing required params");
@@ -161,7 +161,7 @@ public class TermsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Term> **/
-    public List<Term> getSimilarTerms (String term, Integer context_id, String pos_type, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results) throws ApiException {
+    public List<Term> getSimilarTerms (String term, int context_id, String pos_type, boolean get_fingerprint, String retina_name, int start_index, int max_results) throws ApiException {
         // verify required params are set
         if(retina_name == null || term == null ) {
              throw new ApiException(400, "missing required params");

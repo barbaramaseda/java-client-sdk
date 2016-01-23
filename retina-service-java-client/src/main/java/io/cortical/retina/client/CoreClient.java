@@ -34,13 +34,6 @@ public class CoreClient {
     /** The default retina type */
     private static final String DEFAULT_RETINA = "en_associative";
     
-    /** Stores the user specified api key */
-    private String apiKey;
-    /** User specified server address */
-    private String apiServer;
-    /** User specified retina type */
-    private String retinaName;
-    
     /** Main server access proxy */
     private Endpoints endpoints;
     
@@ -67,11 +60,20 @@ public class CoreClient {
      *                      en_associatiave (default) or en_synonymous).
      */
     public CoreClient(String apiKey, String apiServer, String retinaName) {
-        this.apiKey = apiKey;
-        this.apiServer = apiServer;
-        this.retinaName = retinaName;
-        
-        endpoints = new Endpoints(this.retinaName, this.apiServer, this.apiKey);
+        this(apiKey, apiServer, retinaName, 
+            new Endpoints(retinaName, apiServer, apiKey));
+    }
+    
+    /**
+     * 
+     * @param apiKey        authorization key specific to each user
+     * @param apiServer     http or ip address
+     * @param retinaName    the type of retina to use (must be one of 
+     *                      en_associatiave (default) or en_synonymous).
+     * @param ep            contains all the endpoints representing the various apis.
+     */
+    public CoreClient(String apiKey, String apiServer, String retinaName, Endpoints ep) {
+        this.endpoints = ep;
     }
     
     /**
@@ -93,7 +95,7 @@ public class CoreClient {
      * @return term with meta-data of potential terms.
      * @throws ApiException if there are server or connection issues.
      */
-    public List<Term> getTerms(String term, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
+    public List<Term> getTerms(String term, int startIndex, int maxResults, boolean includeFingerprint) throws ApiException {
         return endpoints.termsApi().getTerms(term, startIndex, maxResults, includeFingerprint);
     }
     
@@ -144,7 +146,7 @@ public class CoreClient {
      * @throws ApiException         if there are server or connection issues.
      */
     public List<Term> getSimilarTermsForTerm(String term) throws ApiException {
-        return getSimilarTermsForTerm(term, null, null, 0, MAX_RESULTS, false);
+        return getSimilarTermsForTerm(term, Context.ANY_ID, PosType.ANY, 0, MAX_RESULTS, false);
     }
     
     /**
@@ -169,7 +171,7 @@ public class CoreClient {
      */
     public List<Term> getSimilarTermsForTerm(String term, Integer contextId, PosType posType, int startIndex,
         int maxResults, Boolean includeFingerprint) throws ApiException {
-        return endpoints.termsApi().getSimilarTermsForTerm(term, null, null, 0, maxResults, false);
+        return endpoints.termsApi().getSimilarTermsForTerm(term, contextId, posType, 0, maxResults, false);
     }
     
     /**
@@ -194,7 +196,7 @@ public class CoreClient {
      */
     public List<Fingerprint> getFingerprintsForTexts(List<String> texts) throws ApiException,
         JsonProcessingException {
-        return getFingerprintsForTexts(texts, null);
+        return getFingerprintsForTexts(texts, 1.0);
     }
     
     /**
@@ -207,7 +209,7 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForTexts(List<String> texts, Double sparsity) throws ApiException,
+    public List<Fingerprint> getFingerprintsForTexts(List<String> texts, double sparsity) throws ApiException,
         JsonProcessingException {
         return endpoints.textApi().getFingerprintsForTexts(texts, sparsity);
     }
@@ -276,7 +278,7 @@ public class CoreClient {
      * @return list of slices in the {@link Text} representation.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Text> getSlicesForText(String text, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
+    public List<Text> getSlicesForText(String text, int startIndex, int maxResults, boolean includeFingerprint) throws ApiException {
         return endpoints.textApi().getSlicesForText(text, startIndex, maxResults, includeFingerprint);
     }
     
@@ -472,7 +474,7 @@ public class CoreClient {
      * @throws ApiException : if there are server or connection issues.
      */
     public List<Context> getContextsForExpression(
-        Model model, int startIndex, int maxResults, double sparsity, Boolean includeFingerprint)
+        Model model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
             throws JsonProcessingException, ApiException {
         
         return endpoints.expressionsApi().getContextsForExpression(model, startIndex, maxResults, sparsity, includeFingerprint);
@@ -779,7 +781,7 @@ public class CoreClient {
      */
     public ByteArrayInputStream getImage(Model model) throws JsonProcessingException, ApiException {
         
-        return endpoints.imageApi().getImage(model, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, null);
+        return endpoints.imageApi().getImage(model, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, 1.0);
     }
     
     /**
@@ -844,7 +846,7 @@ public class CoreClient {
      * @see #getImage(Model)
      */
     public List<Image> getImages(List<Model> models) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImages(models, false, 1, ImagePlotShape.CIRCLE, null);
+        return endpoints.imageApi().getImages(models, false, 1, ImagePlotShape.CIRCLE, 1.0);
     }
     
     /**
