@@ -16,6 +16,9 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents the context for a word.
  */
 public class Context {
+    // The api equates "null" with any or all...
+    public static final Integer ANY_ID = null;
+    
     private int contextId;
     private String contextLabel;
     private Fingerprint fingerprint;

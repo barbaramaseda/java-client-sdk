@@ -11,7 +11,9 @@ import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
 import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Model;
+import io.cortical.retina.model.Text;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -64,6 +66,14 @@ abstract class AbstractRetinas {
             return new Pagination();
         }
         return pagination;
+    }
+    
+    protected List<Text> convertToTextModel(List<String> l) {
+        List<Text> retVal = new ArrayList<>();
+        for(String s : l) {
+            retVal.add(new Text(s));
+        }
+        return retVal;
     }
     
     

@@ -62,9 +62,8 @@ public class Terms extends AbstractRetinas {
      * @return term with meta-data of potential terms.
      * @throws ApiException if there are server or connection issues.
      */
-    public List<Term> getTerms(Term term, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
-        String termStr = term == null ? null : term.getTerm();
-        return api.getTerm(termStr, includeFingerprint, retinaName, startIndex, maxResults);
+    public List<Term> getTerms(String term, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
+        return api.getTerm(term, includeFingerprint, retinaName, startIndex, maxResults);
     }
     
     /**
@@ -77,12 +76,12 @@ public class Terms extends AbstractRetinas {
      * @return List of contexts for the input term. 
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Context> getContextsForTerm(Term term, int startIndex, int maxResults, Boolean includeFingerprint)
+    public List<Context> getContextsForTerm(String term, int startIndex, int maxResults, Boolean includeFingerprint)
             throws ApiException {
         
         validateTerm(term);
         
-        return api.getContextsForTerm(term.getTerm(), includeFingerprint, retinaName, startIndex, maxResults);
+        return api.getContextsForTerm(term, includeFingerprint, retinaName, startIndex, maxResults);
     }
     
     /**
@@ -105,24 +104,18 @@ public class Terms extends AbstractRetinas {
      * @return A list of similar terms.
      * @throws ApiException : if there are server or connection issues.
      */
-    public List<Term> getSimilarTermsForTerm(Term term, Integer contextId, PosType posType, int startIndex,
+    public List<Term> getSimilarTermsForTerm(String term, Integer contextId, PosType posType, int startIndex,
         int maxResults, Boolean includeFingerprint) throws ApiException {
         
         validateTerm(term);
         
         String posTypeName = null;
-        if (posType != null) {
+        if (posType != null && posType != PosType.ANY) { // Allow PosType.ANY to specify null name
             posTypeName = posType.name();
         }
         
-        return api.getSimilarTerms(term.getTerm(), contextId, posTypeName, includeFingerprint, retinaName,
+        return api.getSimilarTerms(term, contextId, posTypeName, includeFingerprint, retinaName,
             startIndex, maxResults);
-    }
-    
-    private void validateTerm(Term term) {
-        if (term == null || term.getTerm().length() == 0) {
-            throw new IllegalArgumentException(NULL_TERM_MSG);
-        }
     }
     
     private void validateTerm(String term) {
@@ -130,6 +123,7 @@ public class Terms extends AbstractRetinas {
             throw new IllegalArgumentException(NULL_TERM_MSG);
         }
     }
+    
     
     //////////////////////////////////////////////////
     //                   Old Methods                //

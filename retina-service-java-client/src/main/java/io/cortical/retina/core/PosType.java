@@ -15,5 +15,6 @@ package io.cortical.retina.core;
 public enum PosType {
     NOUN,
     ADJECTIVE,
-    VERB;
+    VERB,
+    ANY;
 }

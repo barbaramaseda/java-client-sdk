@@ -63,7 +63,7 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public <T extends ExpressionModel> Fingerprint getFingerprintForExpression(T model, Double sparsity) 
+    public Fingerprint getFingerprintForExpression(Model model, Double sparsity) 
         throws JsonProcessingException, ApiException {
         validateRequiredModels(model);
         return this.expressionsApi.resolveExpression(model.toJson(), retinaName, sparsity);
@@ -79,8 +79,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public <T extends ExpressionModel> List<Fingerprint> getFingerprintsForExpressions(
-        List<T> expressionModels, Double sparsity) throws JsonProcessingException, ApiException {
+    public List<Fingerprint> getFingerprintsForExpressions(
+        List<Model> expressionModels, Double sparsity) throws JsonProcessingException, ApiException {
         
         validateRequiredModels(expressionModels);
         return this.expressionsApi.resolveBulkExpression(toJson(expressionModels), retinaName, sparsity);
@@ -89,7 +89,7 @@ public class Expressions extends AbstractRetinas {
     /**
      *  Calculate contexts of the result of an expression.
      * 
-     * @param model                 a {@link ExpressionModel} for which a list of contexts is generated.
+     * @param model                 a {@link Model} for which a list of contexts is generated.
      * @param startIndex            the response item's first result
      * @param 
      * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
@@ -99,8 +99,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException : if there are server or connection issues.
      */
-    public <T extends ExpressionModel> List<Context> getContextsForExpression(
-        T model, int startIndex, int maxResults, Double sparsity, Boolean includeFingerprint)
+    public List<Context> getContextsForExpression(
+        Model model, int startIndex, int maxResults, Double sparsity, Boolean includeFingerprint)
             throws JsonProcessingException, ApiException {
         
         validateRequiredModels(model);
@@ -125,8 +125,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public <T extends ExpressionModel> List<List<Context>> getContextsForExpressions(
-        List<T> expressionModels, int startIndex, int maxResults, 
+    public List<List<Context>> getContextsForExpressions(
+        List<Model> expressionModels, int startIndex, int maxResults, 
             Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
         
         validateRequiredModels(expressionModels);
@@ -151,7 +151,7 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.      
      */
-    public <T extends ExpressionModel> List<Term> getSimilarTermsForExpression(T expressionModel, int startIndex, 
+    public List<Term> getSimilarTermsForExpression(Model expressionModel, int startIndex, 
         int maxResults, Integer contextId, PosType posType, Boolean includeFingerprint, Double sparsity) 
             throws JsonProcessingException, ApiException {
         
@@ -180,8 +180,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException if there are server or connection issues.
      */
-    public <T extends ExpressionModel> List<List<Term>> getSimilarTermsForExpressions(
-        List<T> expressionModels, int startIndex, int maxResults, Integer contextId, PosType posType, 
+    public List<List<Term>> getSimilarTermsForExpressions(
+        List<Model> expressionModels, int startIndex, int maxResults, Integer contextId, PosType posType, 
             Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
         
         String posTypeName = null;

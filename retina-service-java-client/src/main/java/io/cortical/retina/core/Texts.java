@@ -59,45 +59,44 @@ public class Texts extends AbstractRetinas {
     /**
      * Retrieve fingerprints for the input text (text is split and for each item a fingerprint is generated).
      * 
-     * @param text              {@link Text} model for which a fingerprint is generated.
+     * @param text              text for which a fingerprint is generated.
      * @return fingerprints     generated for the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public Fingerprint getFingerprintForText(Text text) throws ApiException {
-        if (text == null || isEmpty(text.getText())) {
+    public Fingerprint getFingerprintForText(String text) throws ApiException {
+        if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getRepresentationForText(text.getText(), retinaName).get(0);
+        return this.api.getRepresentationForText(text, retinaName).get(0);
     }
     
     /**
      * Retrieve a list of fingerprints obtained from input texts (one fingerprint per text). 
      * 
-     * @param texts             input {@link Text}s.
+     * @param texts             input Strings.
      * @param sparsity          the value used for re-sparsifying the expression. Not used here!
      * 
      * @return a list of fingerprints generated using the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForTexts(List<Text> texts, Double sparsity) throws JsonProcessingException,
+    public List<Fingerprint> getFingerprintsForTexts(List<String> texts, double sparsity) throws JsonProcessingException,
             ApiException {
-        validateRequiredModels(texts);
-        return this.api.getRepresentationsForBulkText(toJson(texts), retinaName, sparsity);
+        return this.api.getRepresentationsForBulkText(toJson(convertToTextModel(texts)), retinaName, sparsity);
     }
     
     /**
      * Retrieve a list of keywords from the input text.
      * 
-     * @param text   the input model {@link Text}.
+     * @param text   the input String.
      * @return an array of keywords
      * @throws ApiException     if there are some server or connection issues.
      */
-    public List<String> getKeywordsForText(Text text) throws ApiException {
-        if (text == null || isEmpty(text.getText())) {
+    public List<String> getKeywordsForText(String text) throws ApiException {
+        if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getKeywordsForText(text.getText(), retinaName);
+        return this.api.getKeywordsForText(text, retinaName);
     }
     
     /**
@@ -106,32 +105,32 @@ public class Texts extends AbstractRetinas {
      * (Retrieves a list of lists of tokens for the input model: a list of sentences containing lists of 
      * tokens).
      *  
-     * @param text      input {@link Text}. 
+     * @param text      input text String. 
      * @param posTags   array of pos tags used in the token generation.
      * @return a list of tokens.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<String> getTokensForText(Text text, List<PosTag> posTags) throws ApiException {
-        if (text == null || isEmpty(text.getText())) {
+    public List<String> getTokensForText(String text, List<PosTag> posTags) throws ApiException {
+        if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getTokensForText(text.getText(), formatPosTags(posTags), retinaName);
+        return this.api.getTokensForText(text, formatPosTags(posTags), retinaName);
     }
     
     /**
      * Slice the text.
      * 
-     * @param text                  a {@link Text} to slice.
+     * @param text                  a text String to slice.
      * @param pagination            a pagination configuration. 
      * @param includeFingerprint    true if a fingerprint should  be provided with the response items.
      * @return list of slices in the {@link Text} representation.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Text> getSlicesForText(Text text, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
-        if (text == null || isEmpty(text.getText())) {
+    public List<Text> getSlicesForText(String text, int startIndex, int maxResults, Boolean includeFingerprint) throws ApiException {
+        if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getSlicesForText(text.getText(), includeFingerprint, retinaName, startIndex, maxResults);
+        return this.api.getSlicesForText(text, includeFingerprint, retinaName, startIndex, maxResults);
     }
     
     /**
@@ -141,11 +140,11 @@ public class Texts extends AbstractRetinas {
      * @return a {@link Retina} object.
      * @throws ApiException if there are server or connection issues.
      */
-    public Retina getLanguageForText(Text text) throws ApiException {
-        if (text == null || isEmpty(text.getText())) {
+    public Retina getLanguageForText(String text) throws ApiException {
+        if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
-        return this.api.getLanguage(text.getText());
+        return this.api.getLanguage(text);
     }
     
     private String formatPosTags(List<PosTag> posTags) {
