@@ -56,6 +56,20 @@ public class Texts extends AbstractRetinas {
     }
     
     /**
+     * Retrieve a list of keywords from the input text.
+     * 
+     * @param text   the input String.
+     * @return an array of keywords
+     * @throws ApiException     if there are some server or connection issues.
+     */
+    public List<String> getKeywordsForText(String text) throws ApiException {
+        if (text == null || isEmpty(text)) {
+            throw new IllegalArgumentException(NULL_TEXT_MSG);
+        }
+        return this.api.getKeywordsForText(text, retinaName);
+    }
+    
+    /**
      * Retrieve fingerprints for the input text (text is split and for each item a fingerprint is generated).
      * 
      * @param text              text for which a fingerprint is generated.
@@ -82,20 +96,6 @@ public class Texts extends AbstractRetinas {
     public List<Fingerprint> getFingerprintsForTexts(List<String> texts, double sparsity) throws JsonProcessingException,
             ApiException {
         return this.api.getRepresentationsForBulkText(toJson(convertToTextModel(texts)), retinaName, sparsity);
-    }
-    
-    /**
-     * Retrieve a list of keywords from the input text.
-     * 
-     * @param text   the input String.
-     * @return an array of keywords
-     * @throws ApiException     if there are some server or connection issues.
-     */
-    public List<String> getKeywordsForText(String text) throws ApiException {
-        if (text == null || isEmpty(text)) {
-            throw new IllegalArgumentException(NULL_TEXT_MSG);
-        }
-        return this.api.getKeywordsForText(text, retinaName);
     }
     
     /**
