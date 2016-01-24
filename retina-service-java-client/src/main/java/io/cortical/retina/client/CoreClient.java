@@ -11,6 +11,7 @@ import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
+import io.cortical.retina.model.LanguageRest;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Retina;
@@ -20,7 +21,10 @@ import io.cortical.retina.service.ApiException;
 
 import java.beans.Expression;
 import java.io.ByteArrayInputStream;
+import java.util.Arrays;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
@@ -28,11 +32,19 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 public class CoreClient {
     /** The default number of results to return */
     private static final int MAX_RESULTS = 10;
+    /** Default scaling factor of images api */
+    public static final int DEFAULT_SCALING_FACTOR = 1;
+    /** Specifies max percentage of on bits out of the representational whole */
+    public static final double DEFAULT_SPARSITY = 1.0;
+    /** Helper list to specify all tags */
+    public static final Set<PosTag> DEFAULT_TAGS = new LinkedHashSet<PosTag>(Arrays.asList(PosTag.any()));
+    
     
     /** The default server address */
     private static final String DEFAULT_SERVER = "api.cortical.io";
     /** The default retina type */
     private static final String DEFAULT_RETINA = "en_associative";
+    
     
     /** Main server access proxy */
     private Endpoints endpoints;
@@ -169,8 +181,8 @@ public class CoreClient {
      * @return A list of similar terms.
      * @throws ApiException         if there are server or connection issues.
      */
-    public List<Term> getSimilarTermsForTerm(String term, Integer contextId, PosType posType, int startIndex,
-        int maxResults, Boolean includeFingerprint) throws ApiException {
+    public List<Term> getSimilarTermsForTerm(String term, int contextId, PosType posType, int startIndex,
+        int maxResults, boolean includeFingerprint) throws ApiException {
         return endpoints.termsApi().getSimilarTermsForTerm(term, contextId, posType, 0, maxResults, false);
     }
     
@@ -196,7 +208,7 @@ public class CoreClient {
      */
     public List<Fingerprint> getFingerprintsForTexts(List<String> texts) throws ApiException,
         JsonProcessingException {
-        return getFingerprintsForTexts(texts, 1.0);
+        return getFingerprintsForTexts(texts, DEFAULT_SPARSITY);
     }
     
     /**
@@ -236,7 +248,7 @@ public class CoreClient {
      * @throws ApiException     if there are server or connection issues.
      */
     public List<String> getTokensForText(String text) throws ApiException {
-        return endpoints.textApi().getTokensForText(text, null);
+        return getTokensForText(text, DEFAULT_TAGS);
     }
     
     /**
@@ -250,7 +262,7 @@ public class CoreClient {
      * @return  a list of tokens.
      * @throws ApiException if there are server or connection issues.
      */
-    public List<String> getTokensForText(String text, List<PosTag> tags) throws ApiException {
+    public List<String> getTokensForText(String text, Set<PosTag> tags) throws ApiException {
         return endpoints.textApi().getTokensForText(text, tags);
     }
     
@@ -289,7 +301,7 @@ public class CoreClient {
      * @return a {@link Retina} object.
      * @throws ApiException if there are server or connection issues.
      */
-    public Retina getLanguageForText(String text) throws ApiException {
+    public LanguageRest getLanguageForText(String text) throws ApiException {
         return endpoints.textApi().getLanguageForText(text);
     }
     
@@ -319,7 +331,7 @@ public class CoreClient {
      */
     public Fingerprint getFingerprintForExpression(Model model) 
         throws JsonProcessingException, ApiException {
-        return getFingerprintForExpression(model, 1.0);
+        return getFingerprintForExpression(model, DEFAULT_SPARSITY);
     }
     
     /**
@@ -378,7 +390,7 @@ public class CoreClient {
      */
     public List<Fingerprint> getFingerprintsForExpressions(List<Model> models) 
         throws JsonProcessingException, ApiException {
-        return getFingerprintsForExpressions(models, 1.0);
+        return getFingerprintsForExpressions(models, DEFAULT_SPARSITY);
     }
     
     /**
@@ -442,7 +454,7 @@ public class CoreClient {
     public List<Context> getContextsForExpression(Model model)
         throws JsonProcessingException, ApiException {
         
-        return getContextsForExpression(model, 0, MAX_RESULTS, 1.0, false);
+        return getContextsForExpression(model, 0, MAX_RESULTS, DEFAULT_SPARSITY, false);
     }
     
     /**
@@ -471,7 +483,7 @@ public class CoreClient {
      *  
      * @return a list of contexts generated from the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
-     * @throws ApiException : if there are server or connection issues.
+     * @throws ApiException     if there are server or connection issues.
      */
     public List<Context> getContextsForExpression(
         Model model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
@@ -514,7 +526,7 @@ public class CoreClient {
     public List<List<Context>> getContextsForExpressions(List<Model> models) 
         throws JsonProcessingException, ApiException {
         
-        return getContextsForExpressions(models, 0, MAX_RESULTS, false, 1.0);
+        return getContextsForExpressions(models, 0, MAX_RESULTS, false, DEFAULT_SPARSITY);
     }
     
     /**
@@ -585,7 +597,7 @@ public class CoreClient {
         throws JsonProcessingException, ApiException {
         
         return endpoints.expressionsApi().getSimilarTermsForExpression(model, 0, MAX_RESULTS, 
-            Context.ANY_ID, PosType.ANY, false, 1.0);
+            Context.ANY_ID, PosType.ANY, false, DEFAULT_SPARSITY);
     }
     
     /**
@@ -660,7 +672,7 @@ public class CoreClient {
     public List<List<Term>> getSimilarTermsForExpressions(List<Model> expressionModels) 
         throws JsonProcessingException, ApiException {
         
-        return getSimilarTermsForExpressions(expressionModels, 0, MAX_RESULTS, Context.ANY_ID, PosType.ANY, false, 1.0);
+        return getSimilarTermsForExpressions(expressionModels, 0, MAX_RESULTS, Context.ANY_ID, PosType.ANY, false, DEFAULT_SPARSITY);
     }
     
     /**
@@ -781,7 +793,7 @@ public class CoreClient {
      */
     public ByteArrayInputStream getImage(Model model) throws JsonProcessingException, ApiException {
         
-        return endpoints.imageApi().getImage(model, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, 1.0);
+        return endpoints.imageApi().getImage(model, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, DEFAULT_SPARSITY);
     }
     
     /**
@@ -826,7 +838,7 @@ public class CoreClient {
      * @throws ApiException : if there are some server or connection issues.
      */
     public ByteArrayInputStream getImage(Model model, Integer scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
-            Double sparsity) throws JsonProcessingException, ApiException {
+            double sparsity) throws JsonProcessingException, ApiException {
         
         return endpoints.imageApi().getImage(model, scalar, shape, imageEncoding, sparsity);
     }
@@ -846,7 +858,7 @@ public class CoreClient {
      * @see #getImage(Model)
      */
     public List<Image> getImages(List<Model> models) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImages(models, false, 1, ImagePlotShape.CIRCLE, 1.0);
+        return endpoints.imageApi().getImages(models, false, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, DEFAULT_SPARSITY);
     }
     
     /**
@@ -891,7 +903,7 @@ public class CoreClient {
      * @see #getImage(Model)
      */
     public ByteArrayInputStream compareImage(List<Model> models) throws JsonProcessingException, ApiException {
-        return compareImage(models, 1, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG);
+        return compareImage(models, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG);
     }
     
     /**
@@ -914,7 +926,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public ByteArrayInputStream compareImage(List<Model> models, Integer scalar, ImagePlotShape shape,
+    public ByteArrayInputStream compareImage(List<Model> models, int scalar, ImagePlotShape shape,
         ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().compareImage(models, scalar, shape, imageEncoding);
     }

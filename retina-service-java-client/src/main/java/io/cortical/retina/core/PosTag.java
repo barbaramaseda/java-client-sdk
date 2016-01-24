@@ -26,4 +26,12 @@ public enum PosTag {
         }
         return name();
     }
+    
+    /**
+     * Returns a default array of all types
+     * @return
+     */
+    public static PosTag[] any() {
+        return values();
+    }
 }

@@ -3,6 +3,7 @@ package io.cortical.retina.client;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_BASE_PATH;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.model.TestDataHarness.createStrings;
 import static io.cortical.retina.model.TestDataHarness.createTerms;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -14,6 +15,7 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.Terms;
+import io.cortical.retina.core.Texts;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.service.ApiException;
 
@@ -22,6 +24,8 @@ import java.util.List;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 public class CoreClientTest {
@@ -125,5 +129,22 @@ public class CoreClientTest {
         assertEquals(count, termsList.size());
         verify(terms, times(1)).getTerms(eq(TERM), eq(startIndex), eq(maxResults), eq(getFingerprint));
     }
+    
+    /**
+     * {@link Texts#getTokensForText(String)} test method.
+     * 
+     * @throws ApiException : should never be thrown
+     * @throws JsonProcessingException 
+     */
+//    @Test
+//    public void testGetTokensForText() throws ApiException, JsonProcessingException {
+//        int count = 4;
+//        String expectedPosTags =  "CC,CD,DT,EX,FW,IN,JJ,JJR,JJS,JJSS,-LRB-,LS,MD,NN,NNP,NNPS,NNS,NP,NPS,PDT,POS,PP,PRPR$,"
+//            + "PRP,PRP$,RB,RBR,RBS,RP,STAART,SYM,TO,UH,VBD,VBG,VBN,VBP,VB,VBZ,WDT,WP$,WP,WRB";
+//        when(textApi.getTokensForText(eq(TEXT), eq(expectedPosTags), eq(NOT_NULL_RETINA))).thenReturn(createStrings(count));
+//        List<String> tokens = texts.getTokensForText(TEXT);
+//        assertEquals(count, tokens.size());
+//        verify(textApi, times(1)).getTokensForText(eq(TEXT), eq(expectedPosTags), eq(NOT_NULL_RETINA));
+//    }
 
 }

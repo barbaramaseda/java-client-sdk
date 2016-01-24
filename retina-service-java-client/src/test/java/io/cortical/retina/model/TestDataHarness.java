@@ -7,24 +7,17 @@
  ******************************************************************************/
 package io.cortical.retina.model;
 
-import io.cortical.retina.model.Context;
-import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.Image;
-import io.cortical.retina.model.Retina;
-import io.cortical.retina.model.Term;
-import io.cortical.retina.model.Text;
+import static java.util.Arrays.sort;
 import io.cortical.retina.core.PosType;
 
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
 import org.apache.commons.lang3.ArrayUtils;
 import org.apache.commons.lang3.RandomStringUtils;
-
-import static java.util.Arrays.sort;
 
 
 /**
@@ -35,8 +28,9 @@ public abstract class TestDataHarness {
     /**
      * 
      */
-    private static final Integer FINGERPRINT_LENGTH = 100;
-    private static final Integer MAX_POSITION = 16000;
+    private static final int FINGERPRINT_LENGTH = 100;
+    private static final int MAX_POSITION = 16384;
+    private static final int SEED = 42;
     
     /**
      * Create dummy  {@link Fingerprint}.
@@ -44,8 +38,8 @@ public abstract class TestDataHarness {
      * @return dummy fingerprint.
      */
     public static Fingerprint createFingerprint() {
-        Random random = new Random();
-        Set<Integer> positionSet = new HashSet<>();
+        Random random = new Random(SEED);
+        Set<Integer> positionSet = new LinkedHashSet<>();
         while (positionSet.size() <= FINGERPRINT_LENGTH) {
             positionSet.add(random.nextInt(MAX_POSITION));
         }
@@ -59,13 +53,46 @@ public abstract class TestDataHarness {
     /**
      * Create dummy list of {@link Fingerprint}. 
      * 
-     * @param count : count of dummy fingerprints.
+     * @param count     count of dummy fingerprints.
      * @return new generated dummy fingerprints.
      */
     public static List<Fingerprint> createFingerprints(int count) {
         List<Fingerprint> fingerprints = new ArrayList<>();
         for (int i = 0; i < count; i++) {
             fingerprints.add(createFingerprint());
+        }
+        return fingerprints;
+    }
+    
+    /**
+     * Create dummy  {@link Fingerprint}.
+     * @param sparsity      percentage of on bits
+     * @return dummy fingerprint.
+     */
+    public static Fingerprint createFingerprint(double sparsity) {
+        Random random = new Random(SEED);
+        Set<Integer> positionSet = new LinkedHashSet<>();
+        while (positionSet.size() <= ((double)(MAX_POSITION)) * sparsity) {
+            positionSet.add(random.nextInt(MAX_POSITION));
+        }
+        
+        Integer[] positionsInteger = new Integer[FINGERPRINT_LENGTH];
+        positionsInteger = positionSet.toArray(positionsInteger);
+        sort(positionsInteger);
+        return new Fingerprint(ArrayUtils.toPrimitive(positionsInteger));
+    }
+    
+    /**
+     * Create dummy list of {@link Fingerprint}. 
+     * 
+     * @param count     count of dummy fingerprints.
+     * @param sparsity  percentage of on bits
+     * @return new generated dummy fingerprints.
+     */
+    public static List<Fingerprint> createFingerprints(int count, double sparsity) {
+        List<Fingerprint> fingerprints = new ArrayList<>();
+        for (int i = 0; i < count; i++) {
+            fingerprints.add(createFingerprint(sparsity));
         }
         return fingerprints;
     }
@@ -83,7 +110,7 @@ public abstract class TestDataHarness {
     /**
      * Create dummy list of {@link Text}. 
      * 
-     * @param count : count of dummy {@link Text}.
+     * @param count     count of dummy {@link Text}.
      * @return list of {@link Text}.
      */
     public static List<Text> createTexts(int count) {
@@ -214,5 +241,17 @@ public abstract class TestDataHarness {
             images.add(createImage());
         }
         return images;
+    }
+    
+    /**
+     * Creates and returns a {@link LanguageRest} object.
+     * @return
+     */
+    public static LanguageRest createLanguage() {
+        LanguageRest lr = new LanguageRest();
+        lr.setLanguage("English");
+        lr.setIso_tag("en");
+        lr.setWiki_url("http://en.wikipedia.org/wiki/English_language");
+        return lr;
     }
 }

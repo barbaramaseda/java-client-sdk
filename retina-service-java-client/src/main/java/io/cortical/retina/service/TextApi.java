@@ -8,7 +8,7 @@
 package io.cortical.retina.service;
 
 import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.Retina;
+import io.cortical.retina.model.LanguageRest;
 import io.cortical.retina.model.Text;
 
 import java.util.HashMap;
@@ -194,7 +194,7 @@ public class TextApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Text> **/
-    public List<Text> getSlicesForText (String body, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results) throws ApiException {
+    public List<Text> getSlicesForText (String body, boolean get_fingerprint, String retina_name, int start_index, int max_results) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -295,7 +295,7 @@ public class TextApi {
     /** Generated. 
      *@throws ApiException if an error occurs during querying of the API.
      *@return Retina **/
-     public Retina getLanguage (String body) throws ApiException {
+     public LanguageRest getLanguage (String body) throws ApiException {
          // verify required params are set
          if(body == null ) {
               throw new ApiException(400, "missing required params");
@@ -314,12 +314,12 @@ public class TextApi {
                  , body, headerParams, contentType);
              if(response != null) {
                  if (response instanceof String) {
-                     Retina result = (Retina) ApiInvoker.deserialize((String) response, "",
-                         Retina.class, null);
+                     LanguageRest result = (LanguageRest) ApiInvoker.deserialize((String) response, "",
+                         LanguageRest.class, null);
                      return result;
                  }
                  else if (response instanceof java.io.ByteArrayInputStream) {
-                     Retina result = (Retina) response;
+                     LanguageRest result = (LanguageRest) response;
                      return result;
                  }
                  
