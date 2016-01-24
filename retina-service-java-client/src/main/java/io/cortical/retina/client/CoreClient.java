@@ -925,16 +925,16 @@ public class CoreClient {
      * to another.
      * 
      * @param filterName            the identifier for the filter
-     * @param positiveExamples      the list of {@link Text}s which represent similarity to the 
+     * @param positiveExamples      the list of Strings which represent similarity to the 
      *                              concepts closest to the filter.
-     * @param negativeExamples      the list of {@link Text}s which represent dissimilarity to the 
+     * @param negativeExamples      the list of Strings which represent dissimilarity to the 
      *                              concepts closest to the filter.
      * @return  a CategoryFilter containing positions which can be used to obtain metrics
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException         if there are some server or connection issues.
      */
     public CategoryFilter createCategoryFilter(
-        String filterName, List<Text> positiveExamples, List<Text> negativeExamples) 
+        String filterName, List<String> positiveExamples, List<String> negativeExamples) 
             throws JsonProcessingException, ApiException{
         
         return endpoints.classifyApi().createCategoryFilter(filterName, positiveExamples, negativeExamples);

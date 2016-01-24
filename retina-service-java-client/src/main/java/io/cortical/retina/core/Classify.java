@@ -57,14 +57,17 @@ public class Classify extends AbstractRetinas {
      * @return {@link CategoryFilter}
      * @throws ApiException 
      */
-    public CategoryFilter createCategoryFilter(String filterName, List<Text> positiveExamples, List<Text> negativeExamples) throws ApiException {
+    public CategoryFilter createCategoryFilter(String filterName, List<String> positiveExamples, List<String> negativeExamples) throws ApiException {
         if (isEmpty(filterName) || positiveExamples == null || positiveExamples.isEmpty()) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
         
+        List<Text> posEx = convertToTextModel(positiveExamples);
+        List<Text> negEx = convertToTextModel(negativeExamples);
+        
         Sample sample = new Sample();
-        sample.addAllPositive(positiveExamples);
-        sample.addAllNegative(negativeExamples);
+        sample.addAllPositive(posEx);
+        sample.addAllNegative(negEx);
         
         String json = null;
         try {
