@@ -56,21 +56,25 @@ import static io.cortical.retina.model.TestDataHarness.createTexts;
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import io.cortical.retina.core.Compare;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.Expressions;
 import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.core.Terms;
 import io.cortical.retina.core.Texts;
+import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
@@ -78,8 +82,10 @@ import io.cortical.retina.service.ApiException;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 import org.junit.Before;
@@ -103,11 +109,30 @@ public class CoreClientTest {
     
     private static final Term TERM_1 = new Term("term_1");
     private static final Term TERM_2 = new Term("term_2");
+    private static final Text TEXT_1 = new Text("the short text");
+    private static final String TERM_1_TEXT_1_JSON;
     private static final String TERM_1_JSON;
+    private static final String TEXT_1_JSON;
+    
+    private static final Metric METRIC;
     
     static {
         try {
+            TERM_1_TEXT_1_JSON = Term.toJson(TERM_1, TEXT_1);
             TERM_1_JSON = TERM_1.toJson();
+            TEXT_1_JSON = TEXT_1.toJson();
+            
+            Map<String, Double> m = new HashMap<>();
+            m.put("Cosine-Similarity", 0.54321);
+            m.put("Euclidean-Distance", 0.54321);
+            m.put("Jaccard-Distance", 0.54321);
+            m.put("Overlapping-all", 0.54321);
+            m.put("Overlapping-left-right", 0.54321);
+            m.put("Overlapping-right-left", 0.54321);
+            m.put("Weighted-Scoring", 0.54321);
+            m.put("Size-left", 0.54321);
+            m.put("Size-right", 0.54321);
+            METRIC = new Metric(m);
         }
         catch (JsonProcessingException e) {
             throw new IllegalStateException("Impossible to initialize test input data.");
@@ -123,6 +148,8 @@ public class CoreClientTest {
     private Texts text;
     @Mock
     private Expressions expressions;
+    @Mock
+    private Compare compare;
     
     private CoreClient client;
     
@@ -601,5 +628,45 @@ public class CoreClientTest {
         assertEquals(listOfSimTerms.size(), actualTerms.size());
         verify(expressions, times(1)).getSimilarTermsForExpressions(
             eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#compare(io.cortical.retina.model.Model, io.cortical.retina.model.Model)} method test.
+     * @throws JsonProcessingException : should never be thrown.
+     * @throws ApiException : should never be thrown.
+     */
+    @Test
+    public void compareTest_javaModels() throws JsonProcessingException, ApiException {
+        when(endpoints.compareApi()).thenReturn(compare);
+        when(compare.compare(eq(TERM_1), eq(TEXT_1))).thenReturn(METRIC);
+        Metric metric = client.compare(TERM_1, TEXT_1);
+        assertEquals(METRIC, metric);
+        verify(compare, times(1)).compare(eq(TERM_1), eq(TEXT_1));
+    }
+    
+    /**
+     * 
+     * {@link Compare#compare(io.cortical.retina.model.Model, io.cortical.retina.model.Model)} method test.
+     * @throws JsonProcessingException : should never be thrown.
+     * @throws ApiException : should never be thrown.
+     */
+    @Test
+    public void compareTest_bulk() throws JsonProcessingException, ApiException {
+        List<CompareModel> compareModels = Arrays.asList(
+            new CompareModel(TERM_1, TEXT_1), new CompareModel(TERM_1, TEXT_1), new CompareModel(TERM_1, TEXT_1));
+        
+        Model[][] toCompare = new Model[compareModels.size()][2];
+        int i = 0;
+        for (CompareModel pair: compareModels) {
+            toCompare[i++] = pair.getModels();
+        }
+        
+        Metric[] metrics = new Metric[] { METRIC, METRIC, METRIC };
+        when(endpoints.compareApi()).thenReturn(compare);
+        when(compare.compareBulk(eq(compareModels))).thenReturn(metrics);
+        Metric[] retVal = compare.compareBulk(compareModels);
+        assertTrue(Arrays.equals(metrics, retVal));
+        verify(compare, times(1)).compareBulk(eq(compareModels));
     }
 }

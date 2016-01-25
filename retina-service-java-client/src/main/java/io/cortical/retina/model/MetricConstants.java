@@ -12,7 +12,7 @@ package io.cortical.retina.model;
  * Contains the the names of the various distance metrics as constants.
  * 
  */
-abstract class MetricConstants {
+public abstract class MetricConstants {
     
     /** Cosine Similarity. */
     public static final String COSINE_SIMILARITY = "Cosine-Similarity";
