@@ -52,7 +52,7 @@ public class ImageApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return java.io.ByteArrayInputStream **/
-    public java.io.ByteArrayInputStream getImageForExpression (String body, String retina_name, Integer image_scalar, String plot_shape, String image_encoding, Double sparsity) throws ApiException {
+    public java.io.ByteArrayInputStream getImageForExpression (String body, String retina_name, int image_scalar, String plot_shape, String image_encoding, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -107,7 +107,7 @@ public class ImageApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return java.io.ByteArrayInputStream **/
-    public java.io.ByteArrayInputStream getOverlayImage (String body, String retina_name, String plot_shape, Integer image_scalar, String image_encoding) throws ApiException {
+    public java.io.ByteArrayInputStream getOverlayImage (String body, String retina_name, String plot_shape, int image_scalar, String image_encoding) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -159,7 +159,7 @@ public class ImageApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Image> **/
-    public List<Image> getImageForBulkExpressions (String body, Boolean get_fingerprint, String retina_name, Integer image_scalar, String plot_shape, Double sparsity) throws ApiException {
+    public List<Image> getImageForBulkExpressions (String body, boolean get_fingerprint, String retina_name, int image_scalar, String plot_shape, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");

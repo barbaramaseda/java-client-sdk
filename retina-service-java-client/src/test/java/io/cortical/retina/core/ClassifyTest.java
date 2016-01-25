@@ -7,41 +7,34 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import io.cortical.retina.core.Classify;
-import io.cortical.retina.model.CategoryFilter;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ClassifyApi;
-
-import java.util.ArrayList;
-
-import org.junit.Before;
-import org.junit.Test;
-import org.mockito.Mock;
-
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
 import static org.junit.Assert.assertTrue;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import io.cortical.retina.model.CategoryFilter;
+import io.cortical.retina.model.Sample;
+import io.cortical.retina.service.ApiException;
+import io.cortical.retina.service.ClassifyApi;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
+
+import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 /**
  * 
- * {@link io.cortical.services.TextRetinaApiImpl} test class.
+ * {@link io.cortical.retina.core.Images} test class.
  */
-public class TestClassify {
+public class ClassifyTest {
 
-    
-    private static final String ftoString = "{"
-            + " \"positiveExamples\" : ["
-            + "{ \"text\" : \"Shoe with a lining to help keep your feet dry and comfortable on wet terrain.\" },"
-            + "{ \"text\" : \"running shoes providing protective cushioning.\" }"
-            +  "], "
-            + " \"negativeExamples\" : [ "
-            + " { \"text\" : \"The most comfortable socks for your feet.\"}, "
-            + "{ \"text\" : \"6 feet USB cable basic white\"}"
-            + "]}";
-    
     @SuppressWarnings("serial")
     private static final CategoryFilter cf = new CategoryFilter()
     {
@@ -82,8 +75,28 @@ public class TestClassify {
      */
     @Test
     public void testCreateCategoryFilter() throws ApiException {
-        when(classifyApi.createCategoryFilter(eq("12"), eq(ftoString), eq(NOT_NULL_RETINA))).thenReturn(cf);
-        CategoryFilter result = classify.createCategoryFilter("12", ftoString);
+        List<String> pos = Arrays.asList(
+            "Shoe with a lining to help keep your feet dry and comfortable on wet terrain.",
+            "running shoes providing protective cushioning.");
+        List<String> neg = Arrays.asList(
+            "The most comfortable socks for your feet.",
+            "6 feet USB cable basic white");
+        
+        Sample sample = new Sample();
+        sample.addAllPositive(pos.toArray(new String[pos.size()]));
+        sample.addAllNegative(neg.toArray(new String[neg.size()]));
+        
+        String json = null;
+        try {
+            ObjectMapper mapper = new ObjectMapper();
+            mapper.setSerializationInclusion(Include.NON_NULL);
+            json = mapper.writeValueAsString(sample);
+        }catch(Exception e) {
+            e.printStackTrace();
+        }
+
+        when(classifyApi.createCategoryFilter(eq("12"), eq(json), eq("en_associative"))).thenReturn(cf);
+        CategoryFilter result = classify.createCategoryFilter("12", pos, neg);
         assertTrue(result.getCategoryName().equals("12"));
         assertTrue(result.getPositions().size() == 3);
     }

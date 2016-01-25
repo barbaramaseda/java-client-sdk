@@ -792,8 +792,8 @@ public class CoreClient {
      * @throws ApiException : if there are some server or connection issues.
      */
     public ByteArrayInputStream getImage(Model model) throws JsonProcessingException, ApiException {
-        
-        return endpoints.imageApi().getImage(model, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, DEFAULT_SPARSITY);
+        return endpoints.imageApi().getImage(model, DEFAULT_SCALING_FACTOR,
+            ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, DEFAULT_SPARSITY);
     }
     
     /**

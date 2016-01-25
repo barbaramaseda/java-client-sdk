@@ -107,4 +107,28 @@ public class Sample {
         if(negativeTexts == null) return;
         negativeExamples.addAll(negativeTexts);
     }
+    
+    /**
+     * Adds the specified list to this {@code Sample}'s list 
+     * of positive examples.
+     * @param positiveTexts
+     */
+    public void addAllPositive(String... positiveTexts) {
+        if(positiveTexts == null) return;
+        for(String s : positiveTexts) {
+            positiveExamples.add(new Text(s));
+        }
+    }
+    
+    /**
+     * Adds the specified list to this {@code Sample}'s list 
+     * of negative examples.
+     * @param negativeTexts
+     */
+    public void addAllNegative(String... negativeTexts) {
+        if(negativeTexts == null) return;
+        for(String s : negativeTexts) {
+            negativeExamples.add(new Text(s));
+        }
+    }
 }
