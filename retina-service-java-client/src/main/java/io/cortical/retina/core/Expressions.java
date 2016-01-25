@@ -80,10 +80,10 @@ public class Expressions extends AbstractRetinas {
      * @throws ApiException             if there are server or connection issues.
      */
     public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(
-        List<T> expressionModels, double sparsity) throws JsonProcessingException, ApiException {
+        List<T> models, double sparsity) throws JsonProcessingException, ApiException {
         
-        validateRequiredModels(expressionModels);
-        return this.expressionsApi.resolveBulkExpression(toJson(expressionModels), retinaName, sparsity);
+        validateRequiredModels(models);
+        return this.expressionsApi.resolveBulkExpression(toJson(models), retinaName, sparsity);
     }
     
     /**
@@ -99,8 +99,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException : if there are server or connection issues.
      */
-    public <T extends Model> List<Context> getContextsForExpression(
-        T model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
+    public List<Context> getContextsForExpression(
+        Model model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
             throws JsonProcessingException, ApiException {
         
         validateRequiredModels(model);
@@ -139,7 +139,7 @@ public class Expressions extends AbstractRetinas {
     /**
      * Gets similar terms for the expression.
      * 
-     * @param expressionModel       {@link ExpressionModel} for which a list of terms is generated. 
+     * @param model       {@link Model} for which a list of terms is generated. 
      * @param startIndex            the index of the first {@link Term} to return
      * @param maxResults            the maximum number of results to return
      * @param contextId             an id identifying a {@link Term}'s context
@@ -151,7 +151,7 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.      
      */
-    public List<Term> getSimilarTermsForExpression(Model expressionModel, int startIndex, 
+    public List<Term> getSimilarTermsForExpression(Model model, int startIndex, 
         int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity) 
             throws JsonProcessingException, ApiException {
         
@@ -160,7 +160,7 @@ public class Expressions extends AbstractRetinas {
             posTypeName = posType.name();
         }
         
-        return this.expressionsApi.getSimilarTermsForExpressionContext(expressionModel.toJson(), contextId, 
+        return this.expressionsApi.getSimilarTermsForExpressionContext(model.toJson(), contextId, 
             posTypeName, includeFingerprint, retinaName, startIndex, maxResults, sparsity);
     }
     
@@ -181,14 +181,14 @@ public class Expressions extends AbstractRetinas {
      * @throws ApiException if there are server or connection issues.
      */
     public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(
-        List<T> expressionModels, int startIndex, int maxResults, int contextId, PosType posType, 
+        List<T> models, int startIndex, int maxResults, int contextId, PosType posType, 
             boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
         String posTypeName = null;
         if (posType != null) {
             posTypeName = posType.name();
         }
-        return this.expressionsApi.getSimilarTermsForBulkExpressionContext(toJson(expressionModels), contextId, 
+        return this.expressionsApi.getSimilarTermsForBulkExpressionContext(toJson(models), contextId, 
             posTypeName, includeFingerprint, retinaName, startIndex, maxResults, sparsity);
     }
     

@@ -95,7 +95,7 @@ public class Images extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException     if there are some server or connection issues.
      */
-    public List<Image> getImages(List<Model> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
+    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
         Double sparsity) throws JsonProcessingException, ApiException {
         
         String shapeString = null;
@@ -120,7 +120,7 @@ public class Images extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException : if there are some server or connection issues.
      */
-    public ByteArrayInputStream compareImage(List<Model> models, Integer scalar, ImagePlotShape shape,
+    public <T extends Model> ByteArrayInputStream compareImage(List<T> models, Integer scalar, ImagePlotShape shape,
         ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
         
         String shapeString = null;

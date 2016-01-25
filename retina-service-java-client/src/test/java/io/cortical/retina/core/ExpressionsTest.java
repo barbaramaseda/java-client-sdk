@@ -79,7 +79,8 @@ public class ExpressionsTest {
     public void testGetFingerprintForExpression() throws ApiException, JsonProcessingException {
         double sparsity = 0.02;
         
-        when(expressionsApi.resolveExpression(eq(TERM_1_JSON), eq(NOT_NULL_RETINA), eq(0.02))).thenReturn(createFingerprint(sparsity));
+        when(expressionsApi.resolveExpression(eq(TERM_1_JSON), eq(NOT_NULL_RETINA), eq(0.02))).thenReturn(
+            createFingerprint(sparsity));
         Fingerprint fingerprint = expressions.getFingerprintForExpression(TERM_1, sparsity);
         assertEquals("[124, 133, 146, 181, 192, 230, 249, 279, 442, 447, 514, 597, 612, "
             + "659, 785, 858, 861, 895, 1150, 1247, 1262, 1315, 1321, 1485, "
@@ -117,7 +118,8 @@ public class ExpressionsTest {
             + "15991, 16016, 16032, 16137, 16143, 16318, 16354, 16366]", 
             Arrays.toString(fingerprint.getPositions()));
         assertEquals(Math.rint(16384.* 0.02), fingerprint.getPositions().length, 0.001);
-        verify(expressionsApi, times(1)).resolveExpression(eq(TERM_1_JSON), eq(NOT_NULL_RETINA), eq(sparsity));
+        verify(expressionsApi, times(1)).resolveExpression(eq(TERM_1_JSON), eq(NOT_NULL_RETINA), 
+            eq(sparsity));
     }
     
     /**
@@ -132,7 +134,8 @@ public class ExpressionsTest {
         List<Term> terms = Arrays.asList(TERM_1, TERM_2);
         String termJson = Model.toJson(terms);
         
-        when(expressionsApi.resolveBulkExpression(eq(termJson), eq(NOT_NULL_RETINA), eq(0.02))).thenReturn(createFingerprints(count, sparsity));
+        when(expressionsApi.resolveBulkExpression(eq(termJson), eq(NOT_NULL_RETINA), eq(0.02))).thenReturn(
+            createFingerprints(count, sparsity));
         List<Fingerprint> fingerprints = expressions.getFingerprintsForExpressions(terms, sparsity);
         assertEquals("[124, 133, 146, 181, 192, 230, 249, 279, 442, 447, 514, 597, 612, "
             + "659, 785, 858, 861, 895, 1150, 1247, 1262, 1315, 1321, 1485, "
@@ -184,10 +187,12 @@ public class ExpressionsTest {
         int count = 5;
         List<Context> contexts = createContexts(count);
         
-        when(expressionsApi.getContextsForExpression(eq(TERM_1_JSON), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(contexts); 
+        when(expressionsApi.getContextsForExpression(eq(TERM_1_JSON), eq(false), eq(NOT_NULL_RETINA), eq(0),
+            eq(10), eq(0.02))).thenReturn(contexts); 
         List<Context> actualContexts = expressions.getContextsForExpression(TERM_1, 0, 10, 0.02, false);
         assertEquals(contexts.size(), actualContexts.size());
-        verify(expressionsApi, times(1)).getContextsForExpression(eq(TERM_1_JSON), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
+        verify(expressionsApi, times(1)).getContextsForExpression(eq(TERM_1_JSON), eq(false), eq(NOT_NULL_RETINA), 
+            eq(0), eq(10), eq(0.02));
     }
     
     /**
@@ -205,10 +210,13 @@ public class ExpressionsTest {
         listOfContexts.add(createContexts(count));
         listOfContexts.add(createContexts(count));
         
-        when(expressionsApi.getContextsForBulkExpression(eq(jsonTermList), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(listOfContexts); 
-        List<List<Context>> actualListOfContexts = expressions.getContextsForExpressions(listOfTerms, 0, 10, false, 0.02);
+        when(expressionsApi.getContextsForBulkExpression(eq(jsonTermList), eq(false), eq(NOT_NULL_RETINA), eq(0), 
+            eq(10), eq(0.02))).thenReturn(listOfContexts); 
+        List<List<Context>> actualListOfContexts = expressions.getContextsForExpressions(listOfTerms, 0, 10, false,
+            0.02);
         assertEquals(listOfContexts.size(), actualListOfContexts.size());
-        verify(expressionsApi, times(1)).getContextsForBulkExpression(eq(jsonTermList), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
+        verify(expressionsApi, times(1)).getContextsForBulkExpression(eq(jsonTermList), eq(false), 
+            eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
     }
     
     /**
@@ -223,10 +231,13 @@ public class ExpressionsTest {
         int contextId = 0;
         PosType posType = PosType.NOUN;
         
-        when(expressionsApi.getSimilarTermsForExpressionContext(eq(TERM_1_JSON), eq(contextId), eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(createTerms(count));
-        List<Term> actualTerms = expressions.getSimilarTermsForExpression(TERM_1, 0, 10, contextId, posType, false, 0.02);
+        when(expressionsApi.getSimilarTermsForExpressionContext(eq(TERM_1_JSON), eq(contextId), eq(posType.name()), 
+            eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(createTerms(count));
+        List<Term> actualTerms = expressions.getSimilarTermsForExpression(TERM_1, 0, 10, contextId, posType, false, 
+            0.02);
         assertEquals(count, actualTerms.size());
-        verify(expressionsApi, times(1)).getSimilarTermsForExpressionContext(eq(TERM_1_JSON), eq(contextId), eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
+        verify(expressionsApi, times(1)).getSimilarTermsForExpressionContext(eq(TERM_1_JSON), eq(contextId),
+            eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
     }
     
     /**
@@ -246,9 +257,12 @@ public class ExpressionsTest {
         listOfSimTerms.add(createTerms(count));
         listOfSimTerms.add(createTerms(count));
         
-        when(expressionsApi.getSimilarTermsForBulkExpressionContext(eq(jsonTermList), eq(contextId), eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(listOfSimTerms);
-        List<List<Term>> actualTerms = expressions.getSimilarTermsForExpressions(listOfTerms, 0, 10, contextId, posType, false, 0.02);
+        when(expressionsApi.getSimilarTermsForBulkExpressionContext(eq(jsonTermList), eq(contextId), 
+            eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02))).thenReturn(listOfSimTerms);
+        List<List<Term>> actualTerms = expressions.getSimilarTermsForExpressions(
+            listOfTerms, 0, 10, contextId, posType, false, 0.02);
         assertEquals(listOfSimTerms.size(), actualTerms.size());
-        verify(expressionsApi, times(1)).getSimilarTermsForBulkExpressionContext(eq(jsonTermList), eq(contextId), eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
+        verify(expressionsApi, times(1)).getSimilarTermsForBulkExpressionContext(eq(jsonTermList), eq(contextId), 
+            eq(posType.name()), eq(false), eq(NOT_NULL_RETINA), eq(0), eq(10), eq(0.02));
     }
 }

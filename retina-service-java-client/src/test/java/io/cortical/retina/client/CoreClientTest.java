@@ -46,6 +46,7 @@ import static io.cortical.retina.core.PosTag.WDT;
 import static io.cortical.retina.core.PosTag.WP;
 import static io.cortical.retina.core.PosTag.WP$;
 import static io.cortical.retina.core.PosTag.WRB;
+import static io.cortical.retina.model.TestDataHarness.createContexts;
 import static io.cortical.retina.model.TestDataHarness.createFingerprint;
 import static io.cortical.retina.model.TestDataHarness.createFingerprints;
 import static io.cortical.retina.model.TestDataHarness.createLanguage;
@@ -64,14 +65,18 @@ import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.Expressions;
 import io.cortical.retina.core.PosTag;
+import io.cortical.retina.core.PosType;
 import io.cortical.retina.core.Terms;
 import io.cortical.retina.core.Texts;
+import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.service.ApiException;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
@@ -203,7 +208,8 @@ public class CoreClientTest {
         int startIndex = 0;
         int maxResults = 100;
         when(endpoints.termsApi()).thenReturn(terms);
-        when(terms.getTerms(eq(TERM), eq(startIndex), eq(maxResults), eq(getFingerprint))).thenReturn(createTerms(count));
+        when(terms.getTerms(eq(TERM), eq(startIndex), eq(maxResults), eq(getFingerprint))).thenReturn(
+            createTerms(count));
         List<Term> termsList = client.getTerms(TERM, startIndex, maxResults, getFingerprint);
         assertEquals(count, termsList.size());
         verify(terms, times(1)).getTerms(eq(TERM), eq(startIndex), eq(maxResults), eq(getFingerprint));
@@ -276,8 +282,9 @@ public class CoreClientTest {
     @Test
     public void testGetTokensForText() throws ApiException, JsonProcessingException {
         int count = 4;
-        Set<PosTag> expectedPosTags =  new LinkedHashSet<>(Arrays.asList(CC,CD,DT,EX,FW,IN,JJ,JJR,JJS,JJSS,LRB,LS,MD,NN,NNP,NNPS,NNS,NP,NPS,PDT,POS,PP,PRPR$,
-            PRP,PRP$,RB,RBR,RBS,RP,STAART,SYM,TO,UH,VBD,VBG,VBN,VBP,VB,VBZ,WDT,WP$,WP,WRB));
+        Set<PosTag> expectedPosTags =  new LinkedHashSet<>(Arrays.asList(CC,CD,DT,EX,FW,IN,JJ,JJR,JJS,JJSS,LRB,LS,MD,
+            NN,NNP,NNPS,NNS,NP,NPS,PDT,POS,PP,PRPR$,PRP,PRP$,RB,RBR,RBS,RP,STAART,SYM,TO,UH,VBD,VBG,VBN,VBP,VB,VBZ,
+                WDT,WP$,WP,WRB));
         when(endpoints.textApi()).thenReturn(text);
         when(text.getTokensForText(eq(TEXT), eq(CoreClient.DEFAULT_TAGS))).thenReturn(createStrings(count));
         List<String> tokens = client.getTokensForText(TEXT);
@@ -361,8 +368,25 @@ public class CoreClientTest {
         double sparsity = 0.02;
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getFingerprintForExpression(eq(TERM_1), eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(
+            createFingerprint(sparsity));
+        Fingerprint fingerprint = client.getFingerprintForExpression(TERM_1);
+        assertEquals(Math.rint(16384.* 0.02), fingerprint.getPositions().length, 0.001);
+        verify(expressions, times(1)).getFingerprintForExpression(eq(TERM_1), eq(CoreClient.DEFAULT_SPARSITY));
+    }
+    
+    /**
+     * {@link CoreClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetFingerprintForExpression_withSparsity() throws ApiException, JsonProcessingException {
+        double sparsity = 0.02;
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
         when(expressions.getFingerprintForExpression(eq(TERM_1), eq(0.02))).thenReturn(createFingerprint(sparsity));
-        Fingerprint fingerprint = expressions.getFingerprintForExpression(TERM_1, sparsity);
+        Fingerprint fingerprint = client.getFingerprintForExpression(TERM_1, sparsity);
         assertEquals("[124, 133, 146, 181, 192, 230, 249, 279, 442, 447, 514, 597, 612, "
             + "659, 785, 858, 861, 895, 1150, 1247, 1262, 1315, 1321, 1485, "
             + "1496, 1518, 1522, 1535, 1580, 1685, 1701, 1882, 1896, 2054, "
@@ -401,5 +425,181 @@ public class CoreClientTest {
         assertEquals(Math.rint(16384.* 0.02), fingerprint.getPositions().length, 0.001);
         verify(expressions, times(1)).getFingerprintForExpression(eq(TERM_1), eq(sparsity));
     }
+    
+    /**
+     * {@link CoreClient#getContextsForExpression(Model, int, int, double, boolean)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetContextsForExpression() throws ApiException, JsonProcessingException {
+        int count = 5;
+        List<Context> contexts = createContexts(count);
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getContextsForExpression(eq(TERM_1), eq(0), eq(10), eq(CoreClient.DEFAULT_SPARSITY), 
+            eq(false))).thenReturn(contexts); 
+        List<Context> actualContexts = client.getContextsForExpression(TERM_1);
+        assertEquals(contexts.size(), actualContexts.size());
+        verify(expressions, times(1)).getContextsForExpression(eq(TERM_1), eq(0), eq(10), 
+            eq(CoreClient.DEFAULT_SPARSITY), eq(false));
+    }
 
+    /**
+     * {@link CoreClient#getContextsForExpression(Model, int, int, double, boolean)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetContextsForExpression_wStartStop() throws ApiException, JsonProcessingException {
+        int count = 5;
+        List<Context> contexts = createContexts(count);
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getContextsForExpression(eq(TERM_1), eq(0), eq(10), eq(0.02), eq(false))).
+            thenReturn(contexts); 
+        List<Context> actualContexts = client.getContextsForExpression(TERM_1, 0, 10, 0.02, false);
+        assertEquals(contexts.size(), actualContexts.size());
+        verify(expressions, times(1)).getContextsForExpression(eq(TERM_1), eq(0), eq(10), eq(0.02), eq(false));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getContextsForExpressions(List, int, int, boolean, double)}
+     * @throws JsonProcessingException      should never be thrown.
+     * @throws ApiException     should never be thrown.
+     */
+    @Test
+    public void testGetContextsForExpressions() throws JsonProcessingException, ApiException {
+        int count = 5;
+        List<Term> listOfTerms = Arrays.asList(TERM_1, TERM_2);
+        List<List<Context>> listOfContexts = new ArrayList<>();
+        listOfContexts.add(createContexts(count));
+        listOfContexts.add(createContexts(count));
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), 
+            eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(listOfContexts); 
+        List<List<Context>> actualListOfContexts = client.getContextsForExpressions(listOfTerms);
+        assertEquals(listOfContexts.size(), actualListOfContexts.size());
+        verify(expressions, times(1)).getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), 
+            eq(CoreClient.DEFAULT_SPARSITY));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getContextsForExpressions(List, int, int, boolean, double)}
+     * @throws JsonProcessingException      should never be thrown.
+     * @throws ApiException     should never be thrown.
+     */
+    @Test
+    public void testGetContextsForExpressions_wStartStop() throws JsonProcessingException, ApiException {
+        int count = 5;
+        List<Term> listOfTerms = Arrays.asList(TERM_1, TERM_2);
+        List<List<Context>> listOfContexts = new ArrayList<>();
+        listOfContexts.add(createContexts(count));
+        listOfContexts.add(createContexts(count));
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), eq(0.02))).
+            thenReturn(listOfContexts); 
+        List<List<Context>> actualListOfContexts = expressions.getContextsForExpressions(listOfTerms, 0, 10, false, 0.02);
+        assertEquals(listOfContexts.size(), actualListOfContexts.size());
+        verify(expressions, times(1)).getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), eq(0.02));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetSimilarTermsForExpression() throws ApiException, JsonProcessingException {
+        int count = 5;
+        int contextId = Context.ANY_ID;
+        PosType posType = PosType.ANY;
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getSimilarTermsForExpression(eq(TERM_1), eq(0), eq(10), eq(contextId), eq(posType), eq(false),
+            eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(createTerms(count));
+        List<Term> actualTerms = client.getSimilarTermsForExpression(TERM_1);
+        assertEquals(count, actualTerms.size());
+        verify(expressions, times(1)).getSimilarTermsForExpression(eq(TERM_1), eq(0), eq(10), eq(contextId), 
+            eq(posType), eq(false), eq(CoreClient.DEFAULT_SPARSITY));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetSimilarTermsForExpression_wStartStop() throws ApiException, JsonProcessingException {
+        int count = 5;
+        int contextId = 0;
+        PosType posType = PosType.NOUN;
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getSimilarTermsForExpression(
+            eq(TERM_1), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02))).
+                thenReturn(createTerms(count));
+        List<Term> actualTerms = client.getSimilarTermsForExpression(TERM_1, 0, 10, contextId, posType, false, 0.02);
+        assertEquals(count, actualTerms.size());
+        verify(expressions, times(1)).getSimilarTermsForExpression(eq(TERM_1), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException : should never be thrown
+     * @throws ApiException : should never be thrown
+     */
+    @Test
+    public void testGetSimilarTermsForExpressions() throws ApiException, JsonProcessingException {
+        int count = 5;
+        int contextId = Context.ANY_ID;
+        PosType posType = PosType.ANY;
+        List<Term> listOfTerms = Arrays.asList(TERM_1, TERM_2);
+        List<List<Term>> listOfSimTerms = new ArrayList<>();
+        listOfSimTerms.add(createTerms(count));
+        listOfSimTerms.add(createTerms(count));
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getSimilarTermsForExpressions(
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02))).
+                thenReturn(listOfSimTerms);
+        List<List<Term>> actualTerms = client.getSimilarTermsForExpressions(listOfTerms);
+        assertEquals(listOfSimTerms.size(), actualTerms.size());
+        verify(expressions, times(1)).getSimilarTermsForExpressions(
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02));
+    }
+    
+    /**
+     * 
+     * {@link CoreClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException : should never be thrown
+     * @throws ApiException : should never be thrown
+     */
+    @Test
+    public void testGetSimilarTermsForExpressions_wStartStop() throws ApiException, JsonProcessingException {
+        int count = 5;
+        int contextId = 0;
+        PosType posType = PosType.NOUN;
+        List<Term> listOfTerms = Arrays.asList(TERM_1, TERM_2);
+        List<List<Term>> listOfSimTerms = new ArrayList<>();
+        listOfSimTerms.add(createTerms(count));
+        listOfSimTerms.add(createTerms(count));
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getSimilarTermsForExpressions(
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02))).
+                thenReturn(listOfSimTerms);
+        List<List<Term>> actualTerms = client.getSimilarTermsForExpressions(listOfTerms, 0, 10, contextId,
+            posType, false, 0.02);
+        assertEquals(listOfSimTerms.size(), actualTerms.size());
+        verify(expressions, times(1)).getSimilarTermsForExpressions(
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02));
+    }
 }

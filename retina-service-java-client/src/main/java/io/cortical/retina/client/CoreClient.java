@@ -388,7 +388,7 @@ public class CoreClient {
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForExpressions(List<Model> models) 
+    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> models) 
         throws JsonProcessingException, ApiException {
         return getFingerprintsForExpressions(models, DEFAULT_SPARSITY);
     }
@@ -418,7 +418,7 @@ public class CoreClient {
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForExpressions(List<Model> expressionModel, double sparsity) 
+    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> expressionModel, double sparsity) 
         throws JsonProcessingException, ApiException {
         return endpoints.expressionsApi().getFingerprintsForExpressions(expressionModel, sparsity);
     }
@@ -523,7 +523,7 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<List<Context>> getContextsForExpressions(List<Model> models) 
+    public <T extends Model> List<List<Context>> getContextsForExpressions(List<T> models) 
         throws JsonProcessingException, ApiException {
         
         return getContextsForExpressions(models, 0, MAX_RESULTS, false, DEFAULT_SPARSITY);
@@ -561,8 +561,8 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<List<Context>> getContextsForExpressions(
-        List<Model> models, int startIndex, int maxResults, 
+    public <T extends Model> List<List<Context>> getContextsForExpressions(
+        List<T> models, int startIndex, int maxResults, 
             boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
         return endpoints.expressionsApi().getContextsForExpressions(
@@ -618,7 +618,7 @@ public class CoreClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      *  
-     * @param expressionModel       {@link Model} for which a list of terms is generated. 
+     * @param model                 {@link Model} for which a list of terms is generated. 
      * @param startIndex            the index of the first {@link Term} to return
      * @param maxResults            the maximum number of results to return
      * @param contextId             a context id
@@ -630,11 +630,11 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.      
      */
-    public List<Term> getSimilarTermsForExpression(Model expressionModel, int startIndex, 
+    public List<Term> getSimilarTermsForExpression(Model model, int startIndex, 
         int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity) 
             throws JsonProcessingException, ApiException {
         
-        return endpoints.expressionsApi().getSimilarTermsForExpression(expressionModel, startIndex, maxResults, 
+        return endpoints.expressionsApi().getSimilarTermsForExpression(model, startIndex, maxResults, 
             contextId, posType, includeFingerprint, sparsity);
     }
     
@@ -669,7 +669,7 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException if there are server or connection issues.
      */
-    public List<List<Term>> getSimilarTermsForExpressions(List<Model> expressionModels) 
+    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> expressionModels) 
         throws JsonProcessingException, ApiException {
         
         return getSimilarTermsForExpressions(expressionModels, 0, MAX_RESULTS, Context.ANY_ID, PosType.ANY, false, DEFAULT_SPARSITY);
@@ -706,8 +706,8 @@ public class CoreClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException if there are server or connection issues.
      */
-    public List<List<Term>> getSimilarTermsForExpressions(
-        List<Model> models, int startIndex, int maxResults, int contextId, PosType posType, 
+    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(
+        List<T> models, int startIndex, int maxResults, int contextId, PosType posType, 
             boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
         return endpoints.expressionsApi().getSimilarTermsForExpressions(models, startIndex, maxResults, 
@@ -857,7 +857,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public List<Image> getImages(List<Model> models) throws JsonProcessingException, ApiException {
+    public <T extends Model> List<Image> getImages(List<T> models) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().getImages(models, false, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, DEFAULT_SPARSITY);
     }
     
@@ -878,7 +878,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public List<Image> getImages(List<Model> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
+    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
         Double sparsity) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().getImages(models, includeFingerprint, scalar, shape, sparsity);
     }
@@ -902,7 +902,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public ByteArrayInputStream compareImage(List<Model> models) throws JsonProcessingException, ApiException {
+    public <T extends Model> ByteArrayInputStream compareImage(List<T> models) throws JsonProcessingException, ApiException {
         return compareImage(models, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG);
     }
     
@@ -926,7 +926,7 @@ public class CoreClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public ByteArrayInputStream compareImage(List<Model> models, int scalar, ImagePlotShape shape,
+    public <T extends Model> ByteArrayInputStream compareImage(List<T> models, int scalar, ImagePlotShape shape,
         ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().compareImage(models, scalar, shape, imageEncoding);
     }
