@@ -244,11 +244,11 @@ public abstract class TestDataHarness {
     }
     
     /**
-     * Creates and returns a {@link LanguageRest} object.
+     * Creates and returns a {@link Language} object.
      * @return
      */
-    public static LanguageRest createLanguage() {
-        LanguageRest lr = new LanguageRest();
+    public static Language createLanguage() {
+        Language lr = new Language();
         lr.setLanguage("English");
         lr.setIso_tag("en");
         lr.setWiki_url("http://en.wikipedia.org/wiki/English_language");

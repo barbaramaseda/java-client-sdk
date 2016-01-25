@@ -5,7 +5,7 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_BASE_PATH;
@@ -15,8 +15,9 @@ import static io.cortical.retina.core.ApiTestUtils.setApiInvoker;
 import static io.cortical.retina.core.ApiTestUtils.verifyApiGetMethod;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Term;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ApiInvoker;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ApiInvoker;
+import io.cortical.retina.rest.TermsApi;
 
 import java.util.HashMap;
 import java.util.List;

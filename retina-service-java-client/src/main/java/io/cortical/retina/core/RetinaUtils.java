@@ -7,7 +7,7 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_SERVER_IP_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_SERVER_IP_MSG;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 

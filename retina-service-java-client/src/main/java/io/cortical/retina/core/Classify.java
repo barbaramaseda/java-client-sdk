@@ -7,16 +7,16 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_TEXT_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_TEXT_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Sample;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ClassifyApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ClassifyApi;
 
 import java.util.List;
 
@@ -24,7 +24,7 @@ import com.fasterxml.jackson.annotation.JsonInclude.Include;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 
-public class Classify extends AbstractRetinas {
+public class Classify extends AbstractEndpoint {
 
     /** Rest Service access for the Classify end point */
     private final ClassifyApi api;

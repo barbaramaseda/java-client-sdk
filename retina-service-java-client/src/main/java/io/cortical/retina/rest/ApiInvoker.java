@@ -5,7 +5,7 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
 import java.io.IOException;
 import java.util.HashMap;

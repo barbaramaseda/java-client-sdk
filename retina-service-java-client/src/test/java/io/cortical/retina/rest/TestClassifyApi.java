@@ -5,10 +5,13 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with CEPT Systems GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.FilterTrainingObject;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ApiInvoker;
+import io.cortical.retina.rest.ClassifyApi;
 
 import org.junit.After;
 import org.junit.Assert;

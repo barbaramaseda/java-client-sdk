@@ -6,7 +6,7 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with CEPT Systems GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
 import io.cortical.retina.model.CategoryFilter;
 
@@ -25,7 +25,8 @@ public class ClassifyApi {
     public ClassifyApi(String apiKey) {
         apiInvoker = ApiInvoker.getInstance();
         this.key = apiKey;
-        apiInvoker.addDefaultHeader("api-key", apiKey);    
+        apiInvoker.addDefaultHeader("api-key", apiKey);
+        apiInvoker.addDefaultHeader("api-client", "java_1.0");
     }
 
     /** Generated. 

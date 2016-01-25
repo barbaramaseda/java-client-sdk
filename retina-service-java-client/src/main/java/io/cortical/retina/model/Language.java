@@ -8,7 +8,7 @@
 package io.cortical.retina.model;
 
 /** Generated. **/
-public class LanguageRest {
+public class Language {
     /* Language */
     private String language = null;
     /* ISO tag */

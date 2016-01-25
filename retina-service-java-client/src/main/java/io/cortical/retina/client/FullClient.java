@@ -11,13 +11,13 @@ import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
-import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Language;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
+import io.cortical.retina.rest.ApiException;
 
 import java.beans.Expression;
 import java.io.ByteArrayInputStream;
@@ -29,7 +29,7 @@ import java.util.Set;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-public class CoreClient {
+public class FullClient {
     /** The default number of results to return */
     private static final int MAX_RESULTS = 10;
     /** Default scaling factor of images api */
@@ -58,7 +58,7 @@ public class CoreClient {
      * 
      * @param apiKey    the api key string
      */
-    public CoreClient(String apiKey) {
+    public FullClient(String apiKey) {
         this(apiKey, DEFAULT_SERVER, DEFAULT_RETINA);
     }
     
@@ -71,7 +71,7 @@ public class CoreClient {
      * @param retinaName    the type of retina to use (must be one of 
      *                      en_associatiave (default) or en_synonymous).
      */
-    public CoreClient(String apiKey, String apiServer, String retinaName) {
+    public FullClient(String apiKey, String apiServer, String retinaName) {
         this(apiKey, apiServer, retinaName, 
             new Endpoints(retinaName, apiServer, apiKey));
     }
@@ -84,7 +84,7 @@ public class CoreClient {
      *                      en_associatiave (default) or en_synonymous).
      * @param ep            contains all the endpoints representing the various apis.
      */
-    public CoreClient(String apiKey, String apiServer, String retinaName, Endpoints ep) {
+    public FullClient(String apiKey, String apiServer, String retinaName, Endpoints ep) {
         this.endpoints = ep;
     }
     
@@ -301,7 +301,7 @@ public class CoreClient {
      * @return a {@link Retina} object.
      * @throws ApiException if there are server or connection issues.
      */
-    public LanguageRest getLanguageForText(String text) throws ApiException {
+    public Language getLanguageForText(String text) throws ApiException {
         return endpoints.textApi().getLanguageForText(text);
     }
     
@@ -966,7 +966,7 @@ public class CoreClient {
      * 
      * @return retina found by name or null if there is no such retina.
      */
-    public Retina retinaByName(String name) throws ApiException {
+    public Retina getRetinas(String name) throws ApiException {
         return endpoints.retinaByName(name);
     }
 }

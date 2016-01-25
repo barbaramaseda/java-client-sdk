@@ -22,8 +22,8 @@ import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ExpressionsApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ExpressionsApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;

@@ -20,8 +20,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.model.Retina;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.RetinasApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.RetinasApi;
 
 import java.util.List;
 

@@ -7,16 +7,16 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ExpressionsApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ExpressionsApi;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * The Expression Retina's API implementation.
  */
-public class Expressions extends AbstractRetinas {
+public class Expressions extends AbstractEndpoint {
     /** Rest Service access for the Expressions endpoint */
     private final ExpressionsApi expressionsApi;
     

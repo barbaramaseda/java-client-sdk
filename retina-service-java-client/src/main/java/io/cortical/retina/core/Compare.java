@@ -7,14 +7,14 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_MODEL_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.CompareApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.CompareApi;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * The Compare Retina API implementation. 
  */
-public class Compare extends AbstractRetinas {
+public class Compare extends AbstractEndpoint {
     /** Rest Service access for the Compare endpoint */
     private final CompareApi compareApi;
     

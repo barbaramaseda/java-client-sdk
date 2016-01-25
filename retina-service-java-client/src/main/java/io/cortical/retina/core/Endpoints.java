@@ -7,12 +7,12 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Retina;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.RetinasApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.RetinasApi;
 
 import java.util.List;
 

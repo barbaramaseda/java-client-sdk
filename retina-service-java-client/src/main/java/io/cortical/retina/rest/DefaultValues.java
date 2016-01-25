@@ -5,10 +5,10 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
-import static io.cortical.retina.service.RestServiceConstants.PARAM_IMAGE_ENCODING_BASE64;
-import static io.cortical.retina.service.RestServiceConstants.PARAM_PLOT_SHAPE_CIRCLE;
+import static io.cortical.retina.rest.RestServiceConstants.PARAM_IMAGE_ENCODING_BASE64;
+import static io.cortical.retina.rest.RestServiceConstants.PARAM_PLOT_SHAPE_CIRCLE;
 
 
 

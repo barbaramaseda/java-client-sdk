@@ -17,8 +17,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Term;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ImageApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ImageApi;
 
 import java.io.ByteArrayInputStream;
 import java.io.IOException;

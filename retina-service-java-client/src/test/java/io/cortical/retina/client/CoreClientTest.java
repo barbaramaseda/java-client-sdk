@@ -63,23 +63,31 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
+import io.cortical.retina.core.Classify;
 import io.cortical.retina.core.Compare;
+import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.Expressions;
+import io.cortical.retina.core.ImageEncoding;
+import io.cortical.retina.core.ImagePlotShape;
+import io.cortical.retina.core.Images;
 import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.core.Terms;
 import io.cortical.retina.core.Texts;
-import io.cortical.retina.core.Compare.CompareModel;
+import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Image;
+import io.cortical.retina.model.Language;
 import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
+import io.cortical.retina.rest.ApiException;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -110,33 +118,37 @@ public class CoreClientTest {
     private static final Term TERM_1 = new Term("term_1");
     private static final Term TERM_2 = new Term("term_2");
     private static final Text TEXT_1 = new Text("the short text");
-    private static final String TERM_1_TEXT_1_JSON;
-    private static final String TERM_1_JSON;
-    private static final String TEXT_1_JSON;
     
     private static final Metric METRIC;
     
+    @SuppressWarnings("serial")
+    private static final CategoryFilter cf = new CategoryFilter()
+    {
+        {
+            setCategoryName("12");
+            setPositions(new ArrayList<Integer>()
+            {
+                {
+                    add(3);
+                    add(6);
+                    add(7);
+                }
+            });
+        }
+    };
+    
     static {
-        try {
-            TERM_1_TEXT_1_JSON = Term.toJson(TERM_1, TEXT_1);
-            TERM_1_JSON = TERM_1.toJson();
-            TEXT_1_JSON = TEXT_1.toJson();
-            
-            Map<String, Double> m = new HashMap<>();
-            m.put("Cosine-Similarity", 0.54321);
-            m.put("Euclidean-Distance", 0.54321);
-            m.put("Jaccard-Distance", 0.54321);
-            m.put("Overlapping-all", 0.54321);
-            m.put("Overlapping-left-right", 0.54321);
-            m.put("Overlapping-right-left", 0.54321);
-            m.put("Weighted-Scoring", 0.54321);
-            m.put("Size-left", 0.54321);
-            m.put("Size-right", 0.54321);
-            METRIC = new Metric(m);
-        }
-        catch (JsonProcessingException e) {
-            throw new IllegalStateException("Impossible to initialize test input data.");
-        }
+        Map<String, Double> m = new HashMap<>();
+        m.put("Cosine-Similarity", 0.54321);
+        m.put("Euclidean-Distance", 0.54321);
+        m.put("Jaccard-Distance", 0.54321);
+        m.put("Overlapping-all", 0.54321);
+        m.put("Overlapping-left-right", 0.54321);
+        m.put("Overlapping-right-left", 0.54321);
+        m.put("Weighted-Scoring", 0.54321);
+        m.put("Size-left", 0.54321);
+        m.put("Size-right", 0.54321);
+        METRIC = new Metric(m);
     }
     
     
@@ -150,8 +162,12 @@ public class CoreClientTest {
     private Expressions expressions;
     @Mock
     private Compare compare;
+    @Mock
+    private Images images;
+    @Mock
+    private Classify classify;
     
-    private CoreClient client;
+    private FullClient client;
     
     /**
      * initialization.
@@ -159,21 +175,21 @@ public class CoreClientTest {
     @Before
     public void before() {
         initMocks(this);
-        client = new CoreClient(NOT_NULL_API_KEY, NOT_NULL_BASE_PATH, NOT_NULL_RETINA, endpoints);
+        client = new FullClient(NOT_NULL_API_KEY, NOT_NULL_BASE_PATH, NOT_NULL_RETINA, endpoints);
     }
 
     @Test
     public void testClientConstruction() {
         // Test optimistic path for two options
-        CoreClient client = new CoreClient(NOT_NULL_API_KEY);
+        FullClient client = new FullClient(NOT_NULL_API_KEY);
         assertNotNull(client);
         
-        client = new CoreClient(NOT_NULL_API_KEY, "api.cortical.io", "en_associative");
+        client = new FullClient(NOT_NULL_API_KEY, "api.cortical.io", "en_associative");
         assertNotNull(client);
         
         // Test negative path for two options
         try {
-            client = new CoreClient(null);
+            client = new FullClient(null);
             fail(); // Problem if reached
         }catch(Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
@@ -181,7 +197,7 @@ public class CoreClientTest {
         }
         
         try {
-            client = new CoreClient(NOT_NULL_API_KEY, null, "en_associative");
+            client = new FullClient(NOT_NULL_API_KEY, null, "en_associative");
             fail(); // Problem if reached
         }catch(Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
@@ -189,7 +205,7 @@ public class CoreClientTest {
         }
         
         try {
-            client = new CoreClient(NOT_NULL_API_KEY, "api.cortical.io", null);
+            client = new FullClient(NOT_NULL_API_KEY, "api.cortical.io", null);
             fail(); // Problem if reached
         }catch(Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
@@ -208,7 +224,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getTerms(String, int, int, boolean)} test method.
+     * {@link FullClient#getTerms(String, int, int, boolean)} test method.
      * 
      * @throws ApiException should never be thrown
      */
@@ -224,7 +240,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getTerms(String, int, int, boolean)} test method.
+     * {@link FullClient#getTerms(String, int, int, boolean)} test method.
      * 
      * @throws ApiException should never be thrown
      */
@@ -243,7 +259,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getKeywordsForText(String)} test method.
+     * {@link FullClient#getKeywordsForText(String)} test method.
      * 
      * @throws ApiException     should never be thrown
      */
@@ -282,7 +298,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getFingerprintsForTexts(String)} test method.
+     * {@link FullClient#getFingerprintsForTexts(String)} test method.
      * 
      * @throws ApiException : should never be thrown
      */
@@ -301,7 +317,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getTokensForText(String)} test method.
+     * {@link FullClient#getTokensForText(String)} test method.
      * 
      * @throws ApiException : should never be thrown
      * @throws JsonProcessingException 
@@ -313,7 +329,7 @@ public class CoreClientTest {
             NN,NNP,NNPS,NNS,NP,NPS,PDT,POS,PP,PRPR$,PRP,PRP$,RB,RBR,RBS,RP,STAART,SYM,TO,UH,VBD,VBG,VBN,VBP,VB,VBZ,
                 WDT,WP$,WP,WRB));
         when(endpoints.textApi()).thenReturn(text);
-        when(text.getTokensForText(eq(TEXT), eq(CoreClient.DEFAULT_TAGS))).thenReturn(createStrings(count));
+        when(text.getTokensForText(eq(TEXT), eq(FullClient.DEFAULT_TAGS))).thenReturn(createStrings(count));
         List<String> tokens = client.getTokensForText(TEXT);
         assertEquals(count, tokens.size());
         verify(text, times(1)).getTokensForText(eq(TEXT), eq(expectedPosTags));
@@ -337,7 +353,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getSlicesForText(String, int, int, boolean)} test method.
+     * {@link FullClient#getSlicesForText(String, int, int, boolean)} test method.
      * 
      * @throws ApiException     should never be thrown
      * @throws JsonProcessingException 
@@ -353,7 +369,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getSlicesForText(String, int, int, boolean)} test method.
+     * {@link FullClient#getSlicesForText(String, int, int, boolean)} test method.
      * 
      * @throws ApiException     should never be thrown
      * @throws JsonProcessingException 
@@ -369,7 +385,7 @@ public class CoreClientTest {
     }
     
     /**
-     * Tests {@link CoreClient#getLanguageForText(String)}
+     * Tests {@link FullClient#getLanguageForText(String)}
      * @throws ApiException     should never be thrown
      * @throws JsonProcessingException
      */
@@ -378,7 +394,7 @@ public class CoreClientTest {
         String testText = "Identifies the language of the text and returns it";
         when(endpoints.textApi()).thenReturn(text);
         when(text.getLanguageForText(eq(testText))).thenReturn(createLanguage());
-        LanguageRest lr = client.getLanguageForText(testText);
+        Language lr = client.getLanguageForText(testText);
         assertEquals("English", lr.getLanguage());
         assertEquals("en", lr.getIso_tag());
         assertEquals("http://en.wikipedia.org/wiki/English_language", lr.getWiki_url());
@@ -386,7 +402,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
+     * {@link FullClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -395,15 +411,15 @@ public class CoreClientTest {
         double sparsity = 0.02;
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
-        when(expressions.getFingerprintForExpression(eq(TERM_1), eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(
+        when(expressions.getFingerprintForExpression(eq(TERM_1), eq(FullClient.DEFAULT_SPARSITY))).thenReturn(
             createFingerprint(sparsity));
         Fingerprint fingerprint = client.getFingerprintForExpression(TERM_1);
         assertEquals(Math.rint(16384.* 0.02), fingerprint.getPositions().length, 0.001);
-        verify(expressions, times(1)).getFingerprintForExpression(eq(TERM_1), eq(CoreClient.DEFAULT_SPARSITY));
+        verify(expressions, times(1)).getFingerprintForExpression(eq(TERM_1), eq(FullClient.DEFAULT_SPARSITY));
     }
     
     /**
-     * {@link CoreClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
+     * {@link FullClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -454,7 +470,7 @@ public class CoreClientTest {
     }
     
     /**
-     * {@link CoreClient#getContextsForExpression(Model, int, int, double, boolean)}
+     * {@link FullClient#getContextsForExpression(Model, int, int, double, boolean)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -464,16 +480,16 @@ public class CoreClientTest {
         List<Context> contexts = createContexts(count);
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
-        when(expressions.getContextsForExpression(eq(TERM_1), eq(0), eq(10), eq(CoreClient.DEFAULT_SPARSITY), 
+        when(expressions.getContextsForExpression(eq(TERM_1), eq(0), eq(10), eq(FullClient.DEFAULT_SPARSITY), 
             eq(false))).thenReturn(contexts); 
         List<Context> actualContexts = client.getContextsForExpression(TERM_1);
         assertEquals(contexts.size(), actualContexts.size());
         verify(expressions, times(1)).getContextsForExpression(eq(TERM_1), eq(0), eq(10), 
-            eq(CoreClient.DEFAULT_SPARSITY), eq(false));
+            eq(FullClient.DEFAULT_SPARSITY), eq(false));
     }
 
     /**
-     * {@link CoreClient#getContextsForExpression(Model, int, int, double, boolean)}
+     * {@link FullClient#getContextsForExpression(Model, int, int, double, boolean)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -492,7 +508,7 @@ public class CoreClientTest {
     
     /**
      * 
-     * {@link CoreClient#getContextsForExpressions(List, int, int, boolean, double)}
+     * {@link FullClient#getContextsForExpressions(List, int, int, boolean, double)}
      * @throws JsonProcessingException      should never be thrown.
      * @throws ApiException     should never be thrown.
      */
@@ -506,16 +522,16 @@ public class CoreClientTest {
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
         when(expressions.getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), 
-            eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(listOfContexts); 
+            eq(FullClient.DEFAULT_SPARSITY))).thenReturn(listOfContexts); 
         List<List<Context>> actualListOfContexts = client.getContextsForExpressions(listOfTerms);
         assertEquals(listOfContexts.size(), actualListOfContexts.size());
         verify(expressions, times(1)).getContextsForExpressions(eq(listOfTerms), eq(0), eq(10), eq(false), 
-            eq(CoreClient.DEFAULT_SPARSITY));
+            eq(FullClient.DEFAULT_SPARSITY));
     }
     
     /**
      * 
-     * {@link CoreClient#getContextsForExpressions(List, int, int, boolean, double)}
+     * {@link FullClient#getContextsForExpressions(List, int, int, boolean, double)}
      * @throws JsonProcessingException      should never be thrown.
      * @throws ApiException     should never be thrown.
      */
@@ -537,7 +553,7 @@ public class CoreClientTest {
     
     /**
      * 
-     * {@link CoreClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
+     * {@link FullClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -549,16 +565,16 @@ public class CoreClientTest {
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
         when(expressions.getSimilarTermsForExpression(eq(TERM_1), eq(0), eq(10), eq(contextId), eq(posType), eq(false),
-            eq(CoreClient.DEFAULT_SPARSITY))).thenReturn(createTerms(count));
+            eq(FullClient.DEFAULT_SPARSITY))).thenReturn(createTerms(count));
         List<Term> actualTerms = client.getSimilarTermsForExpression(TERM_1);
         assertEquals(count, actualTerms.size());
         verify(expressions, times(1)).getSimilarTermsForExpression(eq(TERM_1), eq(0), eq(10), eq(contextId), 
-            eq(posType), eq(false), eq(CoreClient.DEFAULT_SPARSITY));
+            eq(posType), eq(false), eq(FullClient.DEFAULT_SPARSITY));
     }
     
     /**
      * 
-     * {@link CoreClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
+     * {@link FullClient#getSimilarTermsForExpression(Model, int, int, int, PosType, boolean, double)}
      * @throws JsonProcessingException      should never be thrown
      * @throws ApiException     should never be thrown
      */
@@ -579,14 +595,15 @@ public class CoreClientTest {
     
     /**
      * 
-     * {@link CoreClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
-     * @throws JsonProcessingException : should never be thrown
-     * @throws ApiException : should never be thrown
+     * {@link FullClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException  should never be thrown
+     * @throws ApiException     should never be thrown
      */
     @Test
     public void testGetSimilarTermsForExpressions() throws ApiException, JsonProcessingException {
         int count = 5;
         int contextId = Context.ANY_ID;
+        double sparsity = FullClient.DEFAULT_SPARSITY;
         PosType posType = PosType.ANY;
         List<Term> listOfTerms = Arrays.asList(TERM_1, TERM_2);
         List<List<Term>> listOfSimTerms = new ArrayList<>();
@@ -595,19 +612,19 @@ public class CoreClientTest {
         
         when(endpoints.expressionsApi()).thenReturn(expressions);
         when(expressions.getSimilarTermsForExpressions(
-            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02))).
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(sparsity))).
                 thenReturn(listOfSimTerms);
         List<List<Term>> actualTerms = client.getSimilarTermsForExpressions(listOfTerms);
         assertEquals(listOfSimTerms.size(), actualTerms.size());
         verify(expressions, times(1)).getSimilarTermsForExpressions(
-            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(0.02));
+            eq(listOfTerms), eq(0), eq(10), eq(contextId), eq(posType), eq(false), eq(sparsity));
     }
     
     /**
      * 
-     * {@link CoreClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
-     * @throws JsonProcessingException : should never be thrown
-     * @throws ApiException : should never be thrown
+     * {@link FullClient#getSimilarTermsForExpressions(List, int, int, int, PosType, boolean, double)}
+     * @throws JsonProcessingException  should never be thrown
+     * @throws ApiException     should never be thrown
      */
     @Test
     public void testGetSimilarTermsForExpressions_wStartStop() throws ApiException, JsonProcessingException {
@@ -632,9 +649,9 @@ public class CoreClientTest {
     
     /**
      * 
-     * {@link CoreClient#compare(io.cortical.retina.model.Model, io.cortical.retina.model.Model)} method test.
-     * @throws JsonProcessingException : should never be thrown.
-     * @throws ApiException : should never be thrown.
+     * {@link FullClient#compare(io.cortical.retina.model.Model, io.cortical.retina.model.Model)} method test.
+     * @throws JsonProcessingException  should never be thrown.
+     * @throws ApiException     should never be thrown.
      */
     @Test
     public void compareTest_javaModels() throws JsonProcessingException, ApiException {
@@ -647,7 +664,7 @@ public class CoreClientTest {
     
     /**
      * 
-     * {@link Compare#compare(io.cortical.retina.model.Model, io.cortical.retina.model.Model)} method test.
+     * {@link FullClient#compareBulk(List)}
      * @throws JsonProcessingException : should never be thrown.
      * @throws ApiException : should never be thrown.
      */
@@ -665,8 +682,163 @@ public class CoreClientTest {
         Metric[] metrics = new Metric[] { METRIC, METRIC, METRIC };
         when(endpoints.compareApi()).thenReturn(compare);
         when(compare.compareBulk(eq(compareModels))).thenReturn(metrics);
-        Metric[] retVal = compare.compareBulk(compareModels);
+        Metric[] retVal = client.compareBulk(compareModels);
         assertTrue(Arrays.equals(metrics, retVal));
         verify(compare, times(1)).compareBulk(eq(compareModels));
+    }
+    
+    /**
+     * {@link FullClient#getImage(Model)}
+     * 
+     * @throws ApiException : should never be thrown.
+     * @throws IOException 
+     */
+    @Test
+    public void testGetImage() throws ApiException, IOException {
+        ImagePlotShape shape =  ImagePlotShape.CIRCLE;
+        ImageEncoding encoding = ImageEncoding.BASE64_PNG;
+        double sparsity = FullClient.DEFAULT_SPARSITY;
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.getImage(eq(TERM_1), eq(1), eq(shape),
+            eq(encoding), eq(sparsity))).thenReturn(new ByteArrayInputStream(new byte[] { "i".getBytes()[0] }));
+        
+        ByteArrayInputStream stream = client.getImage(TERM_1);
+        assertNotNull(stream);
+        assertEquals(105, stream.read());
+        stream.close();
+        verify(images, times(1)).getImage(eq(TERM_1), eq(1), eq(shape), eq(encoding), eq(sparsity));
+    }
+    
+    /**
+     * {@link FullClient#getImage(Model, Integer, ImagePlotShape, ImageEncoding, double)}
+     * 
+     * @throws ApiException     should never be thrown.
+     * @throws IOException 
+     */
+    @Test
+    public void testGetImage_nonSimple() throws ApiException, IOException {
+        ImagePlotShape shape =  ImagePlotShape.CIRCLE;
+        ImageEncoding encoding = ImageEncoding.BASE64_PNG;
+        double sparsity = 0.02;
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.getImage(eq(TERM_1), eq(1), eq(shape),
+            eq(encoding), eq(sparsity))).thenReturn(new ByteArrayInputStream(new byte[] { "i".getBytes()[0] }));
+        
+        ByteArrayInputStream stream = images.getImage(TERM_1, 1, shape, encoding, sparsity);
+        assertNotNull(stream);
+        assertEquals(105, stream.read());
+        stream.close();
+        verify(images, times(1)).getImage(eq(TERM_1), eq(1), eq(shape), eq(encoding), eq(sparsity));
+    }
+    
+    /**
+     * {@link FullClient#getImages(List)}
+     * 
+     * @throws JsonProcessingException : should never be thrown.
+     * @throws ApiException : should never be thrown.
+     */
+    @Test
+    public void testGetImages() throws ApiException, JsonProcessingException {
+        ImagePlotShape shape = ImagePlotShape.CIRCLE;
+        double sparsity = FullClient.DEFAULT_SPARSITY;
+        List<Term> terms = Arrays.asList(TERM_1, TERM_2);
+        List<Image> expected = Arrays.asList(new Image("i".getBytes(), null), new Image("i".getBytes(), null));
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.getImages(eq(terms), eq(false), eq(1), eq(shape), eq(sparsity))).thenReturn(expected);
+        List<Image> retImages = client.getImages(terms);
+        assertNotNull(retImages);
+        assertEquals(2, retImages.size());
+        verify(images, times(1)).getImages(eq(terms), eq(false), eq(1), eq(shape), eq(sparsity));
+    }
+    
+    /**
+     * {@link FullClient#getImages(List, boolean, int, ImagePlotShape, double)}
+     * 
+     * @throws JsonProcessingException : should never be thrown.
+     * @throws ApiException : should never be thrown.
+     */
+    @Test
+    public void testGetImages_nonSimple() throws ApiException, JsonProcessingException {
+        ImagePlotShape shape = ImagePlotShape.CIRCLE;
+        double sparsity = 0.02;
+        List<Term> terms = Arrays.asList(TERM_1, TERM_2);
+        List<Image> expected = Arrays.asList(new Image("i".getBytes(), null), new Image("i".getBytes(), null));
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.getImages(eq(terms), eq(false), eq(1), eq(shape),
+            eq(sparsity))).thenReturn(expected);
+        List<Image> retImages = client.getImages(terms, false, 1, shape, sparsity);
+        assertNotNull(retImages);
+        assertEquals(2, retImages.size());
+        verify(images, times(1)).getImages(eq(terms), eq(false), eq(1), eq(shape), eq(sparsity));
+    }
+    
+    /**
+     * {@link FullClient#compareImage(List)}
+     * 
+     * @throws ApiException : should never be thrown.
+     * @throws IOException 
+     */
+    @Test
+    public void compareModelTest() throws ApiException, IOException {
+        ImagePlotShape shape =  ImagePlotShape.CIRCLE;
+        ImageEncoding encoding = ImageEncoding.BASE64_PNG;
+        List<Term> terms = Arrays.asList(TERM_1, TERM_2);
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.compareImage(eq(terms), eq(1), eq(shape), eq(encoding))).thenReturn(
+                new ByteArrayInputStream(new byte[] { "i".getBytes()[0] }));
+        ByteArrayInputStream stream = client.compareImage(terms);
+        assertNotNull(stream);
+        assertEquals(105, stream.read());
+        stream.close();
+        verify(images, times(1)).compareImage(eq(terms), eq(1), eq(shape), eq(encoding));
+    }
+    
+    /**
+     * {@link FullClient#compareImage(List, int, ImagePlotShape, ImageEncoding)}
+     * 
+     * @throws ApiException : should never be thrown.
+     * @throws IOException 
+     */
+    @Test
+    public void compareModelTest_nonSimple() throws ApiException, IOException {
+        ImagePlotShape shape =  ImagePlotShape.CIRCLE;
+        ImageEncoding encoding = ImageEncoding.BASE64_PNG;
+        List<Term> terms = Arrays.asList(TERM_1, TERM_2);
+        
+        when(endpoints.imageApi()).thenReturn(images);
+        when(images.compareImage(eq(terms), eq(1), eq(shape), eq(encoding))).thenReturn(
+                new ByteArrayInputStream(new byte[] { "i".getBytes()[0] }));
+        ByteArrayInputStream stream = client.compareImage(terms, 1, shape, encoding);
+        assertNotNull(stream);
+        assertEquals(105, stream.read());
+        stream.close();
+        verify(images, times(1)).compareImage(eq(terms), eq(1), eq(shape), eq(encoding));
+    }
+    
+    /**
+     * {@link FullClient#createCategoryFilter(String, List, List)}
+     *
+     * @throws io.cortical.services.api.client.ApiException : should never be thrown
+     * @throws JsonProcessingException 
+     */
+    @Test
+    public void testCreateCategoryFilter() throws ApiException, JsonProcessingException {
+        List<String> pos = Arrays.asList(
+            "Shoe with a lining to help keep your feet dry and comfortable on wet terrain.",
+            "running shoes providing protective cushioning.");
+        List<String> neg = Arrays.asList(
+            "The most comfortable socks for your feet.",
+            "6 feet USB cable basic white");
+        
+        when(endpoints.classifyApi()).thenReturn(classify);
+        when(classify.createCategoryFilter(eq("12"), eq(pos), eq(neg))).thenReturn(cf);
+        CategoryFilter result = client.createCategoryFilter("12", pos, neg);
+        assertTrue(result.getCategoryName().equals("12"));
+        assertTrue(result.getPositions().size() == 3);
     }
 }

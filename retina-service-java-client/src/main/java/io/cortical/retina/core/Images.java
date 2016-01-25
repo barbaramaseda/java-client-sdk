@@ -7,13 +7,13 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Model;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ImageApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ImageApi;
 
 import java.io.ByteArrayInputStream;
 import java.util.List;
@@ -26,7 +26,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * The Image Retina API implementation.
  * 
  */
-public class Images extends AbstractRetinas {
+public class Images extends AbstractEndpoint {
     /** Rest Service access for the Images endpoint */
     private final ImageApi api;
     
@@ -50,9 +50,6 @@ public class Images extends AbstractRetinas {
         this.api = api;
     }
     
-    //////////////////////////////////////////////////
-    //                   New Methods                //
-    //////////////////////////////////////////////////
     /**
      * Generate an image for the for the model.
      * 

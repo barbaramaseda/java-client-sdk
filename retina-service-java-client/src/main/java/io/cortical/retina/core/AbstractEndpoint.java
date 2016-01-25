@@ -7,8 +7,8 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_MODEL_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_RETINA_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_MODEL_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Text;
@@ -25,13 +25,13 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * Contains validation and default initialization methods.  
  * 
  */
-abstract class AbstractRetinas {
+abstract class AbstractEndpoint {
     /**
      * 
      */
     protected final String retinaName;
     
-    protected AbstractRetinas(String retinaName) {
+    protected AbstractEndpoint(String retinaName) {
         if (isBlank(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
         }
@@ -59,13 +59,6 @@ abstract class AbstractRetinas {
                 throw new IllegalArgumentException(NULL_MODEL_MSG);
             }
         }
-    }
-    
-    protected Pagination initPagination(Pagination pagination) {
-        if (pagination == null) {
-            return new Pagination();
-        }
-        return pagination;
     }
     
     protected List<Text> convertToTextModel(List<String> l) {

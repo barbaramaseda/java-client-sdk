@@ -14,8 +14,8 @@ import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Sample;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ClassifyApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ClassifyApi;
 
 import java.util.ArrayList;
 import java.util.Arrays;

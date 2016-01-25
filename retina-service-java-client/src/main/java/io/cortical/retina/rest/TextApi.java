@@ -5,10 +5,10 @@
  * You shall use it only in accordance with the terms of the
  * license agreement you entered into with cortical.io GmbH.
  ******************************************************************************/
-package io.cortical.retina.service;
+package io.cortical.retina.rest;
 
 import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Language;
 import io.cortical.retina.model.Text;
 
 import java.util.HashMap;
@@ -295,7 +295,7 @@ public class TextApi {
     /** Generated. 
      *@throws ApiException if an error occurs during querying of the API.
      *@return Retina **/
-     public LanguageRest getLanguage (String body) throws ApiException {
+     public Language getLanguage (String body) throws ApiException {
          // verify required params are set
          if(body == null ) {
               throw new ApiException(400, "missing required params");
@@ -314,12 +314,12 @@ public class TextApi {
                  , body, headerParams, contentType);
              if(response != null) {
                  if (response instanceof String) {
-                     LanguageRest result = (LanguageRest) ApiInvoker.deserialize((String) response, "",
-                         LanguageRest.class, null);
+                     Language result = (Language) ApiInvoker.deserialize((String) response, "",
+                         Language.class, null);
                      return result;
                  }
                  else if (response instanceof java.io.ByteArrayInputStream) {
-                     LanguageRest result = (LanguageRest) response;
+                     Language result = (Language) response;
                      return result;
                  }
                  

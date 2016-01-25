@@ -7,13 +7,16 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.ApiInvoker;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.ApiInvoker;
+
 import java.lang.reflect.Field;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
+
 import org.mockito.ArgumentMatcher;
+
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.argThat;
 import static org.mockito.Matchers.eq;

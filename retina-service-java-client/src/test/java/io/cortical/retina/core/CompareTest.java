@@ -21,8 +21,8 @@ import io.cortical.retina.model.Metric;
 import io.cortical.retina.model.Model;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.CompareApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.CompareApi;
 
 import java.util.Arrays;
 import java.util.HashMap;

@@ -21,10 +21,10 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Language;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.TextApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.TextApi;
 
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -164,7 +164,7 @@ public class TextsTest {
     public void testGetLanguageForText() throws ApiException, JsonProcessingException {
         String testText = "Identifies the language of the text and returns it";
         when(textApi.getLanguage(eq(testText))).thenReturn(createLanguage());
-        LanguageRest lr = texts.getLanguageForText(testText);
+        Language lr = texts.getLanguageForText(testText);
         assertEquals("English", lr.getLanguage());
         assertEquals("en", lr.getIso_tag());
         assertEquals("http://en.wikipedia.org/wiki/English_language", lr.getWiki_url());

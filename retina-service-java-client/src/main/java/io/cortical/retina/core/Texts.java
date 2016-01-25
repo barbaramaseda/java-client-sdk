@@ -7,17 +7,17 @@
  ******************************************************************************/
 package io.cortical.retina.core;
 
-import static io.cortical.retina.service.RestServiceConstants.NULL_API_KEY_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_BASE_PATH_MSG;
-import static io.cortical.retina.service.RestServiceConstants.NULL_TEXT_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_BASE_PATH_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_TEXT_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Fingerprint;
-import io.cortical.retina.model.LanguageRest;
+import io.cortical.retina.model.Language;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Text;
-import io.cortical.retina.service.ApiException;
-import io.cortical.retina.service.TextApi;
+import io.cortical.retina.rest.ApiException;
+import io.cortical.retina.rest.TextApi;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +31,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * The Retina's Texts API implementation. 
  */
-public class Texts extends AbstractRetinas {
+public class Texts extends AbstractEndpoint {
     /** Rest Service access for the Texts endpoint */
     private final TextApi api;
     
@@ -139,7 +139,7 @@ public class Texts extends AbstractRetinas {
      * @return a {@link Retina} object.
      * @throws ApiException if there are server or connection issues.
      */
-    public LanguageRest getLanguageForText(String text) throws ApiException {
+    public Language getLanguageForText(String text) throws ApiException {
         if (text == null || isEmpty(text)) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
