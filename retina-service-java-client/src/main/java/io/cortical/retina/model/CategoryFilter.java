@@ -7,8 +7,6 @@
  ******************************************************************************/
 package io.cortical.retina.model;
 
-import java.util.ArrayList;
-import java.util.List;
 
 
 /** Generated. **/
@@ -16,7 +14,7 @@ public class CategoryFilter {
     /* The descriptive label for a CategoryFilter name */
     private String categoryName = null;
     /* The positions of a Fingerprint */
-    private List<Integer> positions = new ArrayList<Integer>();
+    private int[] positions = new int[] {};
     
     public String getCategoryName() {
         return categoryName;
@@ -26,11 +24,11 @@ public class CategoryFilter {
         this.categoryName = categoryName;
     }
     
-    public List<Integer> getPositions() {
+    public int[] getPositions() {
         return positions;
     }
     
-    public void setPositions(List<Integer> positions) {
+    public void setPositions(int[] positions) {
         this.positions = positions;
     }
     
