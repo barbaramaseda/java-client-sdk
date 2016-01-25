@@ -16,8 +16,8 @@ import com.fasterxml.jackson.annotation.JsonProperty;
  * Represents the context for a word.
  */
 public class Context {
-    // The api equates "null" with any or all...
-    public static final Integer ANY_ID = null;
+    // The api equates "-1" with any or all...
+    public static final int ANY_ID = -1;
     
     private int contextId;
     private String contextLabel;

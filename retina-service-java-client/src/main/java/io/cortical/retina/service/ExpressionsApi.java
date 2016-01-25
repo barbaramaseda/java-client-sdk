@@ -54,7 +54,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return Fingerprint **/
-    public Fingerprint resolveExpression (String body, String retina_name, Double sparsity) throws ApiException {
+    public Fingerprint resolveExpression(String body, String retina_name, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -100,7 +100,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Context> **/
-    public List<Context> getContextsForExpression (String body, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results, Double sparsity) throws ApiException {
+    public List<Context> getContextsForExpression (String body, boolean get_fingerprint, String retina_name, int start_index, int max_results, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -154,7 +154,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Term> **/
-    public List<Term> getSimilarTermsForExpressionContext (String body, Integer context_id, String pos_type, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results, Double sparsity) throws ApiException {
+    public List<Term> getSimilarTermsForExpressionContext (String body, int context_id, String pos_type, boolean get_fingerprint, String retina_name, int start_index, int max_results, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -168,7 +168,7 @@ public class ExpressionsApi {
 
         if(!"null".equals(String.valueOf(retina_name)))
             queryParams.put("retina_name", String.valueOf(retina_name));
-        if(!"null".equals(String.valueOf(context_id)))
+        if(context_id != -1)
             queryParams.put("context_id", String.valueOf(context_id));
         if(!"null".equals(String.valueOf(start_index)))
             queryParams.put("start_index", String.valueOf(start_index));
@@ -212,7 +212,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<Fingerprint> **/
-    public List<Fingerprint> resolveBulkExpression (String body, String retina_name, Double sparsity) throws ApiException {
+    public List<Fingerprint> resolveBulkExpression (String body, String retina_name, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -260,7 +260,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<List<Context>> **/
-    public List<List<Context>> getContextsForBulkExpression (String body, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results, Double sparsity) throws ApiException {
+    public List<List<Context>> getContextsForBulkExpression (String body, boolean get_fingerprint, String retina_name, int start_index, int max_results, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -314,7 +314,7 @@ public class ExpressionsApi {
     /** Generated. 
     *@throws ApiException if an error occurs during querying of the API.
     *@return List<List<Term>> **/
-    public List<List<Term>> getSimilarTermsForBulkExpressionContext (String body, Integer context_id, String pos_type, Boolean get_fingerprint, String retina_name, Integer start_index, Integer max_results, Double sparsity) throws ApiException {
+    public List<List<Term>> getSimilarTermsForBulkExpressionContext (String body, int context_id, String pos_type, boolean get_fingerprint, String retina_name, int start_index, int max_results, double sparsity) throws ApiException {
         // verify required params are set
         if(retina_name == null || body == null ) {
              throw new ApiException(400, "missing required params");
@@ -328,7 +328,7 @@ public class ExpressionsApi {
 
         if(!"null".equals(String.valueOf(retina_name)))
             queryParams.put("retina_name", String.valueOf(retina_name));
-        if(!"null".equals(String.valueOf(context_id)))
+        if(context_id != -1)
             queryParams.put("context_id", String.valueOf(context_id));
         if(!"null".equals(String.valueOf(start_index)))
             queryParams.put("start_index", String.valueOf(start_index));

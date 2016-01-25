@@ -1,9 +1,52 @@
 package io.cortical.retina.client;
 
-import static io.cortical.retina.core.PosTag.*;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_BASE_PATH;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_RETINA;
+import static io.cortical.retina.core.PosTag.CC;
+import static io.cortical.retina.core.PosTag.CD;
+import static io.cortical.retina.core.PosTag.DT;
+import static io.cortical.retina.core.PosTag.EX;
+import static io.cortical.retina.core.PosTag.FW;
+import static io.cortical.retina.core.PosTag.IN;
+import static io.cortical.retina.core.PosTag.JJ;
+import static io.cortical.retina.core.PosTag.JJR;
+import static io.cortical.retina.core.PosTag.JJS;
+import static io.cortical.retina.core.PosTag.JJSS;
+import static io.cortical.retina.core.PosTag.LRB;
+import static io.cortical.retina.core.PosTag.LS;
+import static io.cortical.retina.core.PosTag.MD;
+import static io.cortical.retina.core.PosTag.NN;
+import static io.cortical.retina.core.PosTag.NNP;
+import static io.cortical.retina.core.PosTag.NNPS;
+import static io.cortical.retina.core.PosTag.NNS;
+import static io.cortical.retina.core.PosTag.NP;
+import static io.cortical.retina.core.PosTag.NPS;
+import static io.cortical.retina.core.PosTag.PDT;
+import static io.cortical.retina.core.PosTag.POS;
+import static io.cortical.retina.core.PosTag.PP;
+import static io.cortical.retina.core.PosTag.PRP;
+import static io.cortical.retina.core.PosTag.PRP$;
+import static io.cortical.retina.core.PosTag.PRPR$;
+import static io.cortical.retina.core.PosTag.RB;
+import static io.cortical.retina.core.PosTag.RBR;
+import static io.cortical.retina.core.PosTag.RBS;
+import static io.cortical.retina.core.PosTag.RP;
+import static io.cortical.retina.core.PosTag.STAART;
+import static io.cortical.retina.core.PosTag.SYM;
+import static io.cortical.retina.core.PosTag.TO;
+import static io.cortical.retina.core.PosTag.UH;
+import static io.cortical.retina.core.PosTag.VB;
+import static io.cortical.retina.core.PosTag.VBD;
+import static io.cortical.retina.core.PosTag.VBG;
+import static io.cortical.retina.core.PosTag.VBN;
+import static io.cortical.retina.core.PosTag.VBP;
+import static io.cortical.retina.core.PosTag.VBZ;
+import static io.cortical.retina.core.PosTag.WDT;
+import static io.cortical.retina.core.PosTag.WP;
+import static io.cortical.retina.core.PosTag.WP$;
+import static io.cortical.retina.core.PosTag.WRB;
+import static io.cortical.retina.model.TestDataHarness.createFingerprint;
 import static io.cortical.retina.model.TestDataHarness.createFingerprints;
 import static io.cortical.retina.model.TestDataHarness.createLanguage;
 import static io.cortical.retina.model.TestDataHarness.createStrings;
@@ -19,6 +62,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 import static org.mockito.MockitoAnnotations.initMocks;
 import io.cortical.retina.core.Endpoints;
+import io.cortical.retina.core.Expressions;
 import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.Terms;
 import io.cortical.retina.core.Texts;
@@ -52,6 +96,19 @@ public class CoreClientTest {
     /** Test Keywords array */
     private static final String[] KEYWORDS = { "KEY1", "KEY2", "KEY3" };
     
+    private static final Term TERM_1 = new Term("term_1");
+    private static final Term TERM_2 = new Term("term_2");
+    private static final String TERM_1_JSON;
+    
+    static {
+        try {
+            TERM_1_JSON = TERM_1.toJson();
+        }
+        catch (JsonProcessingException e) {
+            throw new IllegalStateException("Impossible to initialize test input data.");
+        }
+    }
+    
     
     @Mock
     private Terms terms;
@@ -59,6 +116,8 @@ public class CoreClientTest {
     private Endpoints endpoints;
     @Mock
     private Texts text;
+    @Mock
+    private Expressions expressions;
     
     private CoreClient client;
     
@@ -290,6 +349,57 @@ public class CoreClientTest {
         assertEquals("en", lr.getIso_tag());
         assertEquals("http://en.wikipedia.org/wiki/English_language", lr.getWiki_url());
         verify(text, times(1)).getLanguageForText(eq(testText));
+    }
+    
+    /**
+     * {@link CoreClient#getFingerprintForExpression(io.cortical.retina.model.Model, double)}
+     * @throws JsonProcessingException      should never be thrown
+     * @throws ApiException     should never be thrown
+     */
+    @Test
+    public void testGetFingerprintForExpression() throws ApiException, JsonProcessingException {
+        double sparsity = 0.02;
+        
+        when(endpoints.expressionsApi()).thenReturn(expressions);
+        when(expressions.getFingerprintForExpression(eq(TERM_1), eq(0.02))).thenReturn(createFingerprint(sparsity));
+        Fingerprint fingerprint = expressions.getFingerprintForExpression(TERM_1, sparsity);
+        assertEquals("[124, 133, 146, 181, 192, 230, 249, 279, 442, 447, 514, 597, 612, "
+            + "659, 785, 858, 861, 895, 1150, 1247, 1262, 1315, 1321, 1485, "
+            + "1496, 1518, 1522, 1535, 1580, 1685, 1701, 1882, 1896, 2054, "
+            + "2068, 2097, 2108, 2115, 2231, 2235, 2290, 2404, 2405, 2432, "
+            + "2466, 2474, 2489, 2502, 2520, 2534, 2599, 2623, 2799, 2800, "
+            + "2821, 2838, 2906, 2937, 2963, 3033, 3092, 3210, 3213, 3261, "
+            + "3286, 3401, 3436, 3596, 3987, 4106, 4123, 4160, 4229, 4263, "
+            + "4352, 4492, 4517, 4539, 4546, 4568, 4596, 4623, 4651, 4666, "
+            + "4752, 4763, 4777, 4778, 4871, 4965, 5006, 5058, 5090, 5163, "
+            + "5166, 5186, 5383, 5444, 5513, 5542, 5566, 5627, 5635, 5649, "
+            + "5864, 5902, 5904, 5922, 5982, 6005, 6042, 6047, 6078, 6124, "
+            + "6133, 6161, 6200, 6252, 6268, 6290, 6301, 6333, 6353, 6429, "
+            + "6467, 6484, 6496, 6513, 6586, 6635, 6843, 6862, 6897, 6933, "
+            + "6938, 6955, 7066, 7090, 7121, 7126, 7148, 7151, 7205, 7236, "
+            + "7253, 7302, 7393, 7492, 7501, 7516, 7526, 7541, 7592, 7596, "
+            + "7678, 7684, 7729, 7744, 7869, 7873, 7886, 7927, 7972, 7998, "
+            + "8148, 8274, 8332, 8335, 8505, 8514, 8544, 8732, 8756, 8758, "
+            + "8845, 8894, 8981, 8983, 8993, 8994, 9115, 9172, 9355, 9365, "
+            + "9396, 9503, 9559, 9624, 9642, 9676, 9737, 9762, 9791, 9811, "
+            + "9877, 10061, 10078, 10096, 10264, 10288, 10313, 10338, 10344, "
+            + "10368, 10405, 10430, 10495, 10527, 10545, 10587, 10629, 10732, "
+            + "10766, 10782, 10800, 10822, 10830, 10904, 10986, 11193, 11235, "
+            + "11276, 11286, 11311, 11371, 11402, 11421, 11423, 11466, 11502, "
+            + "11570, 11595, 11688, 11798, 11885, 11896, 11920, 11953, 12091, "
+            + "12208, 12218, 12286, 12308, 12329, 12342, 12413, 12419, 12472, "
+            + "12486, 12530, 12608, 12623, 12633, 12699, 12704, 12792, 12827, "
+            + "12920, 12954, 13023, 13040, 13042, 13079, 13084, 13108, 13140, "
+            + "13195, 13201, 13256, 13264, 13391, 13398, 13442, 13463, 13487, "
+            + "13532, 13554, 13584, 13659, 13662, 13683, 13884, 13931, 14014, "
+            + "14018, 14136, 14183, 14194, 14283, 14310, 14515, 14559, 14603, "
+            + "14647, 14666, 14706, 14722, 14732, 14800, 14804, 14819, 14820, "
+            + "14886, 14953, 15062, 15081, 15247, 15380, 15403, 15434, 15471, "
+            + "15562, 15580, 15765, 15769, 15835, 15851, 15878, 15889, 15958, "
+            + "15991, 16016, 16032, 16137, 16143, 16318, 16354, 16366]", 
+            Arrays.toString(fingerprint.getPositions()));
+        assertEquals(Math.rint(16384.* 0.02), fingerprint.getPositions().length, 0.001);
+        verify(expressions, times(1)).getFingerprintForExpression(eq(TERM_1), eq(sparsity));
     }
 
 }

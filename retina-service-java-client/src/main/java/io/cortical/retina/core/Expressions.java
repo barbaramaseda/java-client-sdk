@@ -55,7 +55,7 @@ public class Expressions extends AbstractRetinas {
     //                   New Methods                //
     //////////////////////////////////////////////////
     /**
-     * Resolves an expression.
+     * Returns a {@link Fingerprint} for the specified expression.
      * 
      * @param sparsity      a {@link ExpressionModel} used for re-sparsifying the evaluated expression.
      * @param model         a model for which a fingerprint is generated. 
@@ -63,7 +63,7 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public Fingerprint getFingerprintForExpression(Model model, Double sparsity) 
+    public Fingerprint getFingerprintForExpression(Model model, double sparsity) 
         throws JsonProcessingException, ApiException {
         validateRequiredModels(model);
         return this.expressionsApi.resolveExpression(model.toJson(), retinaName, sparsity);
@@ -72,15 +72,15 @@ public class Expressions extends AbstractRetinas {
     /**
      * Resolves a bulk expression call. 
      * 
-     * @param models        {@link ExpressionModel}(s) for which the list of fingerprints is generated.
+     * @param models        {@link Model}(s) for which the list of fingerprints is generated.
      * @param sparsity      a value used for re-sparsifying the evaluated expression.
      * 
      * @return a list of fingerprints generated for each of the input model(s).
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForExpressions(
-        List<Model> expressionModels, Double sparsity) throws JsonProcessingException, ApiException {
+    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(
+        List<T> expressionModels, double sparsity) throws JsonProcessingException, ApiException {
         
         validateRequiredModels(expressionModels);
         return this.expressionsApi.resolveBulkExpression(toJson(expressionModels), retinaName, sparsity);
@@ -91,7 +91,7 @@ public class Expressions extends AbstractRetinas {
      * 
      * @param model                 a {@link Model} for which a list of contexts is generated.
      * @param startIndex            the response item's first result
-     * @param 
+     * @param maxResults            the maximum number of results to return
      * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      *  
@@ -99,8 +99,8 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException : if there are server or connection issues.
      */
-    public List<Context> getContextsForExpression(
-        Model model, int startIndex, int maxResults, Double sparsity, Boolean includeFingerprint)
+    public <T extends Model> List<Context> getContextsForExpression(
+        T model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
             throws JsonProcessingException, ApiException {
         
         validateRequiredModels(model);
@@ -125,9 +125,9 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<List<Context>> getContextsForExpressions(
-        List<Model> expressionModels, int startIndex, int maxResults, 
-            Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
+    public <T extends Model> List<List<Context>> getContextsForExpressions(
+        List<T> expressionModels, int startIndex, int maxResults, 
+            boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
         validateRequiredModels(expressionModels);
         
@@ -152,7 +152,7 @@ public class Expressions extends AbstractRetinas {
      * @throws ApiException     if there are server or connection issues.      
      */
     public List<Term> getSimilarTermsForExpression(Model expressionModel, int startIndex, 
-        int maxResults, Integer contextId, PosType posType, Boolean includeFingerprint, Double sparsity) 
+        int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity) 
             throws JsonProcessingException, ApiException {
         
         String posTypeName = null;
@@ -180,9 +180,9 @@ public class Expressions extends AbstractRetinas {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException if there are server or connection issues.
      */
-    public List<List<Term>> getSimilarTermsForExpressions(
-        List<Model> expressionModels, int startIndex, int maxResults, Integer contextId, PosType posType, 
-            Boolean includeFingerprint, Double sparsity) throws JsonProcessingException, ApiException {
+    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(
+        List<T> expressionModels, int startIndex, int maxResults, int contextId, PosType posType, 
+            boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
         String posTypeName = null;
         if (posType != null) {
@@ -251,14 +251,14 @@ public class Expressions extends AbstractRetinas {
     
     /**
      * Resolves an expression.
-     * 
-     * @param sparsity :  a value used for re-sparsifying the evaluated expression.
      * @param model : a model for which a fingerprint is generated. 
+     * @param sparsity :  a value used for re-sparsifying the evaluated expression.
+     * 
      * @return a fingerprint for the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException : if there are server or connection issues.
      */
-    public Fingerprint resolve(Double sparsity, Model model) throws JsonProcessingException, ApiException {
+    public Fingerprint resolve(Model model, double sparsity) throws JsonProcessingException, ApiException {
         validateRequiredModels(model);
         return this.expressionsApi.resolveExpression(model.toJson(), retinaName, sparsity);
     }
@@ -542,7 +542,7 @@ public class Expressions extends AbstractRetinas {
      * @throws ApiException : if there are server or connection issues.
      */
     public Fingerprint resolve(Model model) throws JsonProcessingException, ApiException {
-        return resolve(null, model);
+        return resolve(model, 1.0);
     }
     
     /**

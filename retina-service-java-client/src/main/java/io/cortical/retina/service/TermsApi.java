@@ -177,7 +177,7 @@ public class TermsApi {
             queryParams.put("retina_name", String.valueOf(retina_name));
         if(!"null".equals(String.valueOf(term)))
             queryParams.put("term", String.valueOf(term));
-        if(!"null".equals(String.valueOf(context_id)))
+        if(context_id != -1)
             queryParams.put("context_id", String.valueOf(context_id));
         if(!"null".equals(String.valueOf(start_index)))
             queryParams.put("start_index", String.valueOf(start_index));
