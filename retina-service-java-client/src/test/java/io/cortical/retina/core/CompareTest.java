@@ -40,7 +40,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
  * 
  * {@link Compare} test class.
  */
-public class TestCompare {
+public class CompareTest {
     /**
      * 
      */
