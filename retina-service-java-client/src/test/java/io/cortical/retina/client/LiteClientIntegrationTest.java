@@ -15,8 +15,12 @@ import org.junit.Test;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 
-
-public class LiteClientTest {
+/**
+ * To run test in Eclipse, go to > Run Configurations... > Arguments (tab) > VM Arguments > 
+ * paste in:
+ * -DapiKey=nnn-nnn-nnn  (where "nnn-nnn-nnn" is your api key) 
+ */
+public class LiteClientIntegrationTest {
     private LiteClient client;
     
     /**
