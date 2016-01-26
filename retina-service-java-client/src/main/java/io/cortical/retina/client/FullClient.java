@@ -1,3 +1,10 @@
+/*******************************************************************************
+ * Copyright (c) cortical.io GmbH. All rights reserved.
+ *
+ * This software is confidential and proprietary information.
+ * You shall use it only in accordance with the terms of the
+ * license agreement you entered into with cortical.io GmbH.
+ ******************************************************************************/
 package io.cortical.retina.client;
 
 import io.cortical.retina.core.Compare.CompareModel;
@@ -8,7 +15,6 @@ import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Context;
-import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Language;
@@ -19,7 +25,6 @@ import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
 
-import java.beans.Expression;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -29,14 +34,17 @@ import java.util.Set;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
+/**
+ * Client for accessing all REST endpoints on Cortical.io's Retina API.
+ */
 public class FullClient {
     /** The default number of results to return */
     private static final int MAX_RESULTS = 10;
-    /** Default scaling factor of images api */
+    /** Default scaling factor of images api. */
     public static final int DEFAULT_SCALING_FACTOR = 1;
-    /** Specifies max percentage of on bits out of the representational whole */
+    /** Specifies max percentage of on bits out of the representational whole. */
     public static final double DEFAULT_SPARSITY = 1.0;
-    /** Helper list to specify all tags */
+    /** Helper list to specify all tags. */
     public static final Set<PosTag> DEFAULT_TAGS = new LinkedHashSet<PosTag>(Arrays.asList(PosTag.any()));
     
     
@@ -48,7 +56,6 @@ public class FullClient {
     
     /** Main server access proxy */
     private Endpoints endpoints;
-    
     
     
     /**
@@ -63,7 +70,7 @@ public class FullClient {
     }
     
     /**
-     * Constructs a new {@code CoreClient} using the specified api key,
+     * Constructs a new {@code FullClient} using the specified api key,
      * server address, and retina name/type.
      * 
      * @param apiKey        authorization key specific to each user
@@ -72,26 +79,26 @@ public class FullClient {
      *                      en_associatiave (default) or en_synonymous).
      */
     public FullClient(String apiKey, String apiServer, String retinaName) {
-        this(apiKey, apiServer, retinaName, 
-            new Endpoints(retinaName, apiServer, apiKey));
+        this(apiKey, apiServer, retinaName, new Endpoints(retinaName, apiServer, apiKey));
     }
     
     /**
-     * 
+     * Constructs a new {@code FullClient} using the specified api key,
+     * server address, retina name/type, and {@link Endpoints} 
      * @param apiKey        authorization key specific to each user
      * @param apiServer     http or ip address
      * @param retinaName    the type of retina to use (must be one of 
      *                      en_associatiave (default) or en_synonymous).
      * @param ep            contains all the endpoints representing the various apis.
      */
-    public FullClient(String apiKey, String apiServer, String retinaName, Endpoints ep) {
+    FullClient(String apiKey, String apiServer, String retinaName, Endpoints ep) {
         this.endpoints = ep;
     }
     
     /**
      * Returns a List of all the {@link Term}s in the retina.
      * @return  a List of all the terms in the retina.
-     * @throws ApiException
+     * @throws ApiException if there are some server or connection issues.
      */
     public List<Term> getTerms() throws ApiException {
         return getTerms(null, 0, MAX_RESULTS, false);
@@ -103,12 +110,13 @@ public class FullClient {
      * @param term                  the term for which to retrieve a term or a list of potential terms.
      * @param startIndex            the index marking the beginning of a page of responses
      * @param maxResults            the number of results to return
-     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @param getFingerprint        true if the fingerprint should be provided in the response.
      * @return term with meta-data of potential terms.
      * @throws ApiException if there are server or connection issues.
      */
-    public List<Term> getTerms(String term, int startIndex, int maxResults, boolean includeFingerprint) throws ApiException {
-        return endpoints.termsApi().getTerms(term, startIndex, maxResults, includeFingerprint);
+    public List<Term> getTerms(String term, int startIndex, int maxResults, boolean getFingerprint)
+            throws ApiException {
+        return endpoints.termsApi().getTerms(term, startIndex, maxResults, getFingerprint);
     }
     
     /**
@@ -127,14 +135,14 @@ public class FullClient {
      * 
      * @param term                  the input term.
      * @param startIndex            the response item's start index.
-     * @param maxResults            the number of results to return
-     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @param maxResults            the number of results to return.
+     * @param getFingerprint        whether the fingerprint should be provided in the response.
      * @return List of contexts for the input term. 
-     * @throws ApiException     if there are server or connection issues.
+     * @throws ApiException         if there are server or connection issues.
      */
-    public List<Context> getContextsForTerm(String term, int startIndex, int maxResults, boolean includeFingerprint)
-        throws ApiException {
-        return endpoints.termsApi().getContextsForTerm(term, startIndex, maxResults, includeFingerprint);
+    public List<Context> getContextsForTerm(String term, int startIndex, int maxResults, boolean getFingerprint)
+            throws ApiException {
+        return endpoints.termsApi().getContextsForTerm(term, startIndex, maxResults, getFingerprint);
     }
     
     /**
@@ -148,12 +156,7 @@ public class FullClient {
      * 
      * <br>Uses pagination 
      * 
-     * @param term                  the input term
-     * @param contextId             the context id
-     * @param posType               the posType used for filtering
-     * @param startIndex            the response item's start index.
-     * @param maxResults            the number of results to return
-     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @param term                  the input term.
      * @return A list of similar terms.
      * @throws ApiException         if there are server or connection issues.
      */
@@ -177,20 +180,20 @@ public class FullClient {
      * @param posType               the posType used for filtering
      * @param startIndex            the response item's start index.
      * @param maxResults            the number of results to return
-     * @param includeFingerprint    true if the fingerprint should be provided in the response.
+     * @param getFingerprint        true if the fingerprint should be provided in the response.
      * @return A list of similar terms.
      * @throws ApiException         if there are server or connection issues.
      */
     public List<Term> getSimilarTermsForTerm(String term, int contextId, PosType posType, int startIndex,
-        int maxResults, boolean includeFingerprint) throws ApiException {
-        return endpoints.termsApi().getSimilarTermsForTerm(term, contextId, posType, 0, maxResults, false);
+            int maxResults, boolean getFingerprint) throws ApiException {
+        return endpoints.termsApi().getSimilarTermsForTerm(term, contextId, posType, 0, maxResults, getFingerprint);
     }
     
     /**
      * Retrieve fingerprint for the input term (text is split and for each item a fingerprint is generated).
      * 
-     * @param model             model for which a fingerprint is generated.
-     * @return fingerprints     generated for the input model.
+     * @param text              text for which a fingerprint is generated.
+     * @return fingerprint      generated for the input text.
      * @throws ApiException     if there are server or connection issues.
      */
     public Fingerprint getFingerprintForText(String text) throws ApiException {
@@ -206,31 +209,30 @@ public class FullClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForTexts(List<String> texts) throws ApiException,
-        JsonProcessingException {
+    public List<Fingerprint> getFingerprintsForTexts(List<String> texts) throws ApiException, JsonProcessingException {
         return getFingerprintsForTexts(texts, DEFAULT_SPARSITY);
     }
     
     /**
      * Retrieve a list of fingerprints obtained from bulk input texts (one fingerprint per text). 
      * 
-     * @param texts             input {@link Text}s.
+     * @param texts             list of input text {@link String}s.
      * @param sparsity          the value used for re-sparsifying the expression. Not used here!
      * 
      * @return a list of fingerprints generated using the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the input model.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Fingerprint> getFingerprintsForTexts(List<String> texts, double sparsity) throws ApiException,
-        JsonProcessingException {
+    public List<Fingerprint> getFingerprintsForTexts(List<String> texts, double sparsity)
+            throws ApiException, JsonProcessingException {
         return endpoints.textApi().getFingerprintsForTexts(texts, sparsity);
     }
     
     /**
      * Retrieve a list of keywords from the input text.
      * 
-     * @param model   the input model text.
-     * @return an array of keywords
+     * @param text              text for which a fingerprint is generated.
+     * @return a list of keywords
      * @throws ApiException     if there are some server or connection issues.
      */
     public List<String> getKeywordsForText(String text) throws ApiException {
@@ -240,11 +242,11 @@ public class FullClient {
     /**
      * Returns tokenized input text.
      * 
-     * (Retrieves a list of lists of tokens for the input model: a list of sentences containing lists of 
+     * (Retrieves a list of lists of tokens for the input text: a list of sentences containing lists of 
      * tokens).
      *  
      * @param text      input text. 
-     * @return : a list of tokens.
+     * @return a list of tokens.
      * @throws ApiException     if there are server or connection issues.
      */
     public List<String> getTokensForText(String text) throws ApiException {
@@ -254,23 +256,22 @@ public class FullClient {
     /**
      * Returns tokenized input text, using the specified {@link PosTag}s.
      * 
-     * (Retrieves a list of lists of tokens for the input model: a list of sentences containing lists of 
+     * (Retrieves a list of lists of tokens for the input text: a list of sentences containing lists of 
      * tokens).
      *  
      * @param text      input text. 
-     * @param posTags   array of pos (Part Of Speech), tags used in the token generation.
-     * @return  a list of tokens.
+     * @param posTags   Set of POS (part of speech), tags used in the token generation.
+     * @return a list of tokens.
      * @throws ApiException if there are server or connection issues.
      */
-    public List<String> getTokensForText(String text, Set<PosTag> tags) throws ApiException {
-        return endpoints.textApi().getTokensForText(text, tags);
+    public List<String> getTokensForText(String text, Set<PosTag> posTags) throws ApiException {
+        return endpoints.textApi().getTokensForText(text, posTags);
     }
     
     /**
      * Slice the text.
      * 
      * @param text                  a text to slice.
-     * @param includeFingerprint    true if a fingerprint should  be provided with the response items.
      * @return list of slices in the text representation.
      * @throws ApiException     if there are server or connection issues.
      */
@@ -286,19 +287,20 @@ public class FullClient {
      * @param text                  a text to slice.
      * @param startIndex            a pagination configuration. 
      * @param maxResults            the maximum number of results to return.
-     * @param includeFingerprint    true if a fingerprint should  be provided with the response items.
+     * @param getFingerprint        true if a fingerprint should  be provided with the response items.
      * @return list of slices in the {@link Text} representation.
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Text> getSlicesForText(String text, int startIndex, int maxResults, boolean includeFingerprint) throws ApiException {
-        return endpoints.textApi().getSlicesForText(text, startIndex, maxResults, includeFingerprint);
+    public List<Text> getSlicesForText(String text, int startIndex, int maxResults, boolean getFingerprint)
+            throws ApiException {
+        return endpoints.textApi().getSlicesForText(text, startIndex, maxResults, getFingerprint);
     }
     
     /**
-     * Identifies the language of the text and returns (if possible) a relevant {@link Retina} object.
+     * Identifies the language of the text and returns (if possible) a relevant {@link Language} object.
      * 
      * @param text the input text
-     * @return a {@link Retina} object.
+     * @return a {@link Language} object.
      * @throws ApiException if there are server or connection issues.
      */
     public Language getLanguageForText(String text) throws ApiException {
@@ -311,7 +313,7 @@ public class FullClient {
      * </p><p>
      * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
      * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
+     * // Where "model" is a {@link Term}, or {@link Text} or {@link Fingerprint} or an expression formed from them:
      * ExpressionModel model = ExpressionFactory.and(Model... model);
      * </pre>
      * 
@@ -323,14 +325,13 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      * 
-     * @param expressionModel     a model for which a fingerprint is generated.
+     * @param model     a model for which a fingerprint is generated.
      *
      * @return a fingerprint for the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public Fingerprint getFingerprintForExpression(Model model) 
-        throws JsonProcessingException, ApiException {
+    public Fingerprint getFingerprintForExpression(Model model) throws JsonProcessingException, ApiException {
         return getFingerprintForExpression(model, DEFAULT_SPARSITY);
     }
     
@@ -352,15 +353,15 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      *  
-     * @param expressionModel       a model for which a fingerprint is generated. 
+     * @param model       a model for which a fingerprint is generated. 
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      * 
      * @return a fingerprint for the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public Fingerprint getFingerprintForExpression(Model model, double sparsity) 
-        throws JsonProcessingException, ApiException {
+    public Fingerprint getFingerprintForExpression(Model model, double sparsity)
+            throws JsonProcessingException, ApiException {
         return endpoints.expressionsApi().getFingerprintForExpression(model, sparsity);
     }
     
@@ -382,14 +383,15 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      * 
-     * @param expressionModels        model(s) for which the list of fingerprints is generated.
+     * @param <T>     subtype of {@link Model}
+     * @param models        model(s) for which the list of fingerprints is generated.
      * 
      * @return a list of fingerprints generated for each of the input model(s).
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> models) 
-        throws JsonProcessingException, ApiException {
+    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> models)
+            throws JsonProcessingException, ApiException {
         return getFingerprintsForExpressions(models, DEFAULT_SPARSITY);
     }
     
@@ -411,6 +413,7 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      *  
+     * @param <T>           subtype of {@link Model}
      * @param models        model(s) for which the list of fingerprints is generated.
      * @param sparsity      a value used for re-sparsifying the evaluated expression.
      * 
@@ -418,9 +421,9 @@ public class FullClient {
      * @throws JsonProcessingException  if it is impossible to generate the request using the model(s).
      * @throws ApiException             if there are server or connection issues.
      */
-    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> expressionModel, double sparsity) 
-        throws JsonProcessingException, ApiException {
-        return endpoints.expressionsApi().getFingerprintsForExpressions(expressionModel, sparsity);
+    public <T extends Model> List<Fingerprint> getFingerprintsForExpressions(List<T> models, double sparsity)
+            throws JsonProcessingException, ApiException {
+        return endpoints.expressionsApi().getFingerprintsForExpressions(models, sparsity);
     }
     
     /**
@@ -441,18 +444,13 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      * 
-     * @param expressionModel                 a model for which a list of contexts is generated.
-     * @param startIndex            the response item's first result
-     * @param 
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
-     * @param sparsity              a value used for re-sparsifying the evaluated expression.
-     *  
+     * @param model                 a model for which a list of contexts is generated.
+     * 
      * @return a list of contexts generated from the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
-     * @throws ApiException : if there are server or connection issues.
+     * @throws ApiException         if there are server or connection issues.
      */
-    public List<Context> getContextsForExpression(Model model)
-        throws JsonProcessingException, ApiException {
+    public List<Context> getContextsForExpression(Model model) throws JsonProcessingException, ApiException {
         
         return getContextsForExpression(model, 0, MAX_RESULTS, DEFAULT_SPARSITY, false);
     }
@@ -475,21 +473,21 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      * 
-     * @param expressionModel                 a model for which a list of contexts is generated.
+     * @param model                 a model for which a list of contexts is generated.
      * @param startIndex            the response item's first result
-     * @param 
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param maxResults            the maximum number of results to return.
+     * @param getFingerprint    true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      *  
      * @return a list of contexts generated from the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public List<Context> getContextsForExpression(
-        Model model, int startIndex, int maxResults, double sparsity, boolean includeFingerprint)
-            throws JsonProcessingException, ApiException {
-        
-        return endpoints.expressionsApi().getContextsForExpression(model, startIndex, maxResults, sparsity, includeFingerprint);
+    public List<Context> getContextsForExpression(Model model, int startIndex, int maxResults, double sparsity,
+            boolean getFingerprint) throws JsonProcessingException, ApiException {
+            
+        return endpoints.expressionsApi().getContextsForExpression(model, startIndex, maxResults, sparsity,
+            getFingerprint);
     }
     
     /**
@@ -513,19 +511,17 @@ public class FullClient {
      * <br>Returns a list of {@link Context} for each one of the input expressions in the bulk, so the returned
      * Response object will contain a list of lists of Contexts.
      * 
-     * @param jsonModel             json model(s) for which a list of contexts is generated. (for each model a list of {@link Context} is generated.) 
-     * @param startIndex            the index of the first response required
-     * @param maxResults            the maximum number of results to return
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
-     * @param sparsity              a value used for re-sparsifying the evaluated expression.
+     * @param <T>               subtype of {@link Model}
+     * @param models            model(s) for which a list of contexts is generated. 
+     *                          (for each model a list of {@link Context} is generated.) 
      * 
      * @return a list of contexts lists generated from the input model(s).
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public <T extends Model> List<List<Context>> getContextsForExpressions(List<T> models) 
-        throws JsonProcessingException, ApiException {
-        
+    public <T extends Model> List<List<Context>> getContextsForExpressions(List<T> models)
+            throws JsonProcessingException, ApiException {
+            
         return getContextsForExpressions(models, 0, MAX_RESULTS, false, DEFAULT_SPARSITY);
     }
     
@@ -550,23 +546,23 @@ public class FullClient {
      * <br>Returns a list of {@link Context} for each one of the input expressions in the bulk, so the returned
      * Response object will contain a list of lists of Contexts.
      * 
+     * @param <T>                     subclass of {@link Model}
      * @param models                model for which a list of contexts is generated. 
      *                              (for each model a list of {@link Context} is generated.) 
      * @param startIndex            the index of the first response required
      * @param maxResults            the maximum number of results to return
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param getFingerprint        true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      * 
      * @return a list of contexts lists generated from the input model(s).
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.
      */
-    public <T extends Model> List<List<Context>> getContextsForExpressions(
-        List<T> models, int startIndex, int maxResults, 
-            boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
-        
-        return endpoints.expressionsApi().getContextsForExpressions(
-            models, startIndex, maxResults, includeFingerprint, sparsity);
+    public <T extends Model> List<List<Context>> getContextsForExpressions(List<T> models, int startIndex,
+            int maxResults, boolean getFingerprint, double sparsity) throws JsonProcessingException, ApiException {
+            
+        return endpoints.expressionsApi().getContextsForExpressions(models, startIndex, maxResults, getFingerprint,
+                sparsity);
     }
     
     /**
@@ -587,17 +583,16 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      *  
-     * @param expressionModel       {@link Model} for which a list of terms is generated. 
+     * @param model             {@link Model} for which a list of terms is generated. 
      * 
      * @return a list of similar terms generated from the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.      
      */
-    public List<Term> getSimilarTermsForExpression(Model model) 
-        throws JsonProcessingException, ApiException {
+    public List<Term> getSimilarTermsForExpression(Model model) throws JsonProcessingException, ApiException {
         
-        return endpoints.expressionsApi().getSimilarTermsForExpression(model, 0, MAX_RESULTS, 
-            Context.ANY_ID, PosType.ANY, false, DEFAULT_SPARSITY);
+        return endpoints.expressionsApi().getSimilarTermsForExpression(model, 0, MAX_RESULTS, Context.ANY_ID,
+                PosType.ANY, false, DEFAULT_SPARSITY);
     }
     
     /**
@@ -623,19 +618,51 @@ public class FullClient {
      * @param maxResults            the maximum number of results to return
      * @param contextId             a context id
      * @param posType               a part of speech type
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param getFingerprint        true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      * 
      * @return a list of similar terms generated from the input model.
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException     if there are server or connection issues.      
      */
-    public List<Term> getSimilarTermsForExpression(Model model, int startIndex, 
-        int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity) 
+    public List<Term> getSimilarTermsForExpression(Model model, int startIndex, int maxResults, int contextId,
+            PosType posType, boolean getFingerprint, double sparsity) throws JsonProcessingException, ApiException {
+            
+        return endpoints.expressionsApi().getSimilarTermsForExpression(model, startIndex, maxResults, contextId,
+                posType, getFingerprint, sparsity);
+    }
+    
+    /**
+     * <p>
+     * Retrieve similar terms for the each item in the model's array.
+     * </p><p> 
+     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * <pre>
+     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
+     * ExpressionModel model = ExpressionFactory.and(Model... model);
+     * </pre>
+     * 
+     * <b>The above could be:</b>
+     * <UL>
+     *  <li> .and(Model... models);  // Use only features present in both</li> 
+     *  <li> .or(Model... models);   // or (combine)</li> 
+     *  <li> .sub(Model... models);  // Subtraction</li>
+     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
+     * </UL>
+     * 
+     * @param <T>               subtype of {@link Model}
+     * @param models            an {@link Model} for which a list of terms is generated. 
+     *                              (for each model a list of {@link Term} is generated.) 
+     * 
+     * @return A list containing a list of terms generated for each item in the models.
+     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
+     * @throws ApiException     if there are server or connection issues.
+     */
+    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> models)
             throws JsonProcessingException, ApiException {
-        
-        return endpoints.expressionsApi().getSimilarTermsForExpression(model, startIndex, maxResults, 
-            contextId, posType, includeFingerprint, sparsity);
+            
+        return getSimilarTermsForExpressions(models, 0, MAX_RESULTS, Context.ANY_ID, PosType.ANY, false,
+                DEFAULT_SPARSITY);
     }
     
     /**
@@ -656,7 +683,8 @@ public class FullClient {
      *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
      * </UL>
      * 
-     * @param expressionModels      an {@link Model} for which a list of terms is generated. 
+     * @param <T>                   subtype of {@link Model}
+     * @param models                an {@link Model} for which a list of terms is generated. 
      *                              (for each model a list of {@link Term} is generated.) 
      * @param startIndex            the index of the first {@link Term} to return
      * @param maxResults            the total number of results to return
@@ -669,49 +697,12 @@ public class FullClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
      * @throws ApiException if there are server or connection issues.
      */
-    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> expressionModels) 
-        throws JsonProcessingException, ApiException {
-        
-        return getSimilarTermsForExpressions(expressionModels, 0, MAX_RESULTS, Context.ANY_ID, PosType.ANY, false, DEFAULT_SPARSITY);
-    }
-    
-    /**
-     * <p>
-     * Retrieve similar terms for the each item in the model's array.
-     * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
-     * 
-     * @param expressionModels      an {@link Model} for which a list of terms is generated. 
-     *                              (for each model a list of {@link Term} is generated.) 
-     * @param startIndex            the index of the first {@link Term} to return
-     * @param maxResults            the total number of results to return
-     * @param contextId             an id identifying a {@link Term}'s context
-     * @param posType               a part of speech type.
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
-     * @param sparsity              a value used for re-sparsifying the evaluated expression.
-     * 
-     * @return A list containing a list of terms generated for each item in the models.
-     * @throws JsonProcessingException if it is impossible to generate the request using the model(s).
-     * @throws ApiException if there are server or connection issues.
-     */
-    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(
-        List<T> models, int startIndex, int maxResults, int contextId, PosType posType, 
-            boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
-        
-        return endpoints.expressionsApi().getSimilarTermsForExpressions(models, startIndex, maxResults, 
-            contextId, posType, includeFingerprint, sparsity);
+    public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> models, int startIndex,
+            int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity)
+                    throws JsonProcessingException, ApiException {
+                    
+        return endpoints.expressionsApi().getSimilarTermsForExpressions(models, startIndex, maxResults, contextId,
+                posType, includeFingerprint, sparsity);
     }
     
     /**
@@ -792,8 +783,8 @@ public class FullClient {
      * @throws ApiException : if there are some server or connection issues.
      */
     public ByteArrayInputStream getImage(Model model) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImage(model, DEFAULT_SCALING_FACTOR,
-            ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG, DEFAULT_SPARSITY);
+        return endpoints.imageApi().getImage(model, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE,
+                ImageEncoding.BASE64_PNG, DEFAULT_SPARSITY);
     }
     
     /**
@@ -837,9 +828,9 @@ public class FullClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException : if there are some server or connection issues.
      */
-    public ByteArrayInputStream getImage(Model model, Integer scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
+    public ByteArrayInputStream getImage(Model model, int scalar, ImagePlotShape shape, ImageEncoding imageEncoding,
             double sparsity) throws JsonProcessingException, ApiException {
-        
+            
         return endpoints.imageApi().getImage(model, scalar, shape, imageEncoding, sparsity);
     }
     
@@ -850,6 +841,7 @@ public class FullClient {
      * <b>For tips on image usage see:</b> {@link #getImage(Model)}
      * </p>
      * 
+     * @param <T>                   subtype of {@link Model}
      * @param models                List of {@link Model}s from which to produce fingerprint images.
      * 
      * @return a list of images generated using the input models.
@@ -858,15 +850,17 @@ public class FullClient {
      * @see #getImage(Model)
      */
     public <T extends Model> List<Image> getImages(List<T> models) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImages(models, false, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, DEFAULT_SPARSITY);
+        return endpoints.imageApi().getImages(models, false, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE,
+                DEFAULT_SPARSITY);
     }
     
     /**
+     * <p>
      * Returns a List of {@link Image}s for the input models.
      * </p><p>
      * <b>For tips on image usage see:</b> {@link #getImage(Model)}
      * </p>
-     * 
+     * @param <T>                   subtype of {@link Model}
      * @param models                List of {@link Model}s from which to produce fingerprint images.
      * @param includeFingerprint    identify if the fingerprint should  be present/provided in the images.
      * @param scalar                scaling factor of the image to generate
@@ -878,8 +872,8 @@ public class FullClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar, ImagePlotShape shape, 
-        Double sparsity) throws JsonProcessingException, ApiException {
+    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar,
+            ImagePlotShape shape, Double sparsity) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().getImages(models, includeFingerprint, scalar, shape, sparsity);
     }
     
@@ -891,18 +885,17 @@ public class FullClient {
      * <p>
      * <b>For tips on image usage see:</b> {@link #getImage(Model)}
      * </p>
+     * @param <T>               subtype of {@link Model}
      * @param models            a List of {@link Model}s (list size = 2), for which the fingerprint's images are 
      *                          generated.
-     * @param scalar            scaling factor of the image to generate
-     * @param shape             the shape of the plots used in the overlay image
-     * @param imageEncoding     the encoding of the image.
      * 
      * @return a byte array holding the image data.
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public <T extends Model> ByteArrayInputStream compareImage(List<T> models) throws JsonProcessingException, ApiException {
+    public <T extends Model> ByteArrayInputStream compareImage(List<T> models)
+            throws JsonProcessingException, ApiException {
         return compareImage(models, DEFAULT_SCALING_FACTOR, ImagePlotShape.CIRCLE, ImageEncoding.BASE64_PNG);
     }
     
@@ -915,6 +908,7 @@ public class FullClient {
      * <b>For tips on image usage see:</b> {@link #getImage(Model)}
      * </p>
      * 
+     * @param <T>               subtype of {@link Model}
      * @param models            a List of {@link Model}s (list size = 2), for which the fingerprint's images are 
      *                          generated.
      * @param scalar            scaling factor of the image to generate
@@ -927,7 +921,7 @@ public class FullClient {
      * @see #getImage(Model)
      */
     public <T extends Model> ByteArrayInputStream compareImage(List<T> models, int scalar, ImagePlotShape shape,
-        ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
+            ImageEncoding imageEncoding) throws JsonProcessingException, ApiException {
         return endpoints.imageApi().compareImage(models, scalar, shape, imageEncoding);
     }
     
@@ -945,16 +939,16 @@ public class FullClient {
      * @throws JsonProcessingException if it is impossible to generate the request using the input model(s).
      * @throws ApiException         if there are some server or connection issues.
      */
-    public CategoryFilter createCategoryFilter(
-        String filterName, List<String> positiveExamples, List<String> negativeExamples) 
-            throws JsonProcessingException, ApiException{
-        
+    public CategoryFilter createCategoryFilter(String filterName, List<String> positiveExamples,
+            List<String> negativeExamples) throws JsonProcessingException, ApiException {
+            
         return endpoints.classifyApi().createCategoryFilter(filterName, positiveExamples, negativeExamples);
     }
     
     /**
      * Retrieve all available retinas.
      * @return all available retinas.
+     * @throws ApiException if there are some server or connection issues.
      */
     public List<Retina> getRetinas() throws ApiException {
         return endpoints.getAllRetinas();
@@ -965,6 +959,7 @@ public class FullClient {
      * @param name  the retina's name.
      * 
      * @return retina found by name or null if there is no such retina.
+     * @throws ApiException if there are some server or connection issues.
      */
     public Retina getRetinas(String name) throws ApiException {
         return endpoints.retinaByName(name);
