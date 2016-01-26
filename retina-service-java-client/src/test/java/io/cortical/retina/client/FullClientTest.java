@@ -103,7 +103,7 @@ import org.mockito.Mock;
 import com.fasterxml.jackson.core.JsonProcessingException;
 
 
-public class CoreClientTest {
+public class FullClientTest {
     /** Test Term */
     private static final String TERM = "term";
     /** Test Text */
@@ -121,19 +121,11 @@ public class CoreClientTest {
     
     private static final Metric METRIC;
     
-    @SuppressWarnings("serial")
     private static final CategoryFilter cf = new CategoryFilter()
     {
         {
             setCategoryName("12");
-            setPositions(new ArrayList<Integer>()
-            {
-                {
-                    add(3);
-                    add(6);
-                    add(7);
-                }
-            });
+            setPositions(new int[] { 3, 6, 7 });
         }
     };
     
@@ -627,7 +619,7 @@ public class CoreClientTest {
      * @throws ApiException     should never be thrown
      */
     @Test
-    public void testGetSimilarTermsForExpressions_wStartStop() throws ApiException, JsonProcessingException {
+    public void testGetSimilarTermsForEnewxpressions_wStartStop() throws ApiException, JsonProcessingException {
         int count = 5;
         int contextId = 0;
         PosType posType = PosType.NOUN;
@@ -839,6 +831,6 @@ public class CoreClientTest {
         when(classify.createCategoryFilter(eq("12"), eq(pos), eq(neg))).thenReturn(cf);
         CategoryFilter result = client.createCategoryFilter("12", pos, neg);
         assertTrue(result.getCategoryName().equals("12"));
-        assertTrue(result.getPositions().size() == 3);
+        assertTrue(result.getPositions().length == 3);
     }
 }

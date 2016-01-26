@@ -63,6 +63,11 @@ abstract class AbstractEndpoint {
     
     protected List<Text> convertToTextModel(List<String> l) {
         List<Text> retVal = new ArrayList<>();
+        
+        if(l == null) {
+            return retVal;
+        }
+        
         for(String s : l) {
             retVal.add(new Text(s));
         }

@@ -17,7 +17,6 @@ import io.cortical.retina.model.Sample;
 import io.cortical.retina.rest.ApiException;
 import io.cortical.retina.rest.ClassifyApi;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -35,19 +34,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public class ClassifyTest {
 
-    @SuppressWarnings("serial")
     private static final CategoryFilter cf = new CategoryFilter()
     {
         {
             setCategoryName("12");
-            setPositions(new ArrayList<Integer>()
-            {
-                {
-                    add(3);
-                    add(6);
-                    add(7);
-                }
-            });
+            setPositions(new int[] { 3, 6, 7 });
         }
     };
     
@@ -98,7 +89,7 @@ public class ClassifyTest {
         when(classifyApi.createCategoryFilter(eq("12"), eq(json), eq("en_associative"))).thenReturn(cf);
         CategoryFilter result = classify.createCategoryFilter("12", pos, neg);
         assertTrue(result.getCategoryName().equals("12"));
-        assertTrue(result.getPositions().size() == 3);
+        assertTrue(result.getPositions().length == 3);
     }
 
 }
