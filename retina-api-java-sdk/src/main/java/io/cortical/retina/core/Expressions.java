@@ -154,8 +154,9 @@ public class Expressions extends AbstractEndpoint {
         int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity) 
             throws JsonProcessingException, ApiException {
         
+        // PosType.ANY translates to null which produces all types on the server
         String posTypeName = null;
-        if (posType != null) {
+        if (posType != null && posType != PosType.ANY) {
             posTypeName = posType.name();
         }
         
@@ -183,8 +184,9 @@ public class Expressions extends AbstractEndpoint {
         List<T> models, int startIndex, int maxResults, int contextId, PosType posType, 
             boolean includeFingerprint, double sparsity) throws JsonProcessingException, ApiException {
         
+        // PosType.ANY translates to null which produces all types on the server
         String posTypeName = null;
-        if (posType != null) {
+        if (posType != null && posType != PosType.ANY) {
             posTypeName = posType.name();
         }
         return this.expressionsApi.getSimilarTermsForBulkExpressionContext(toJson(models), contextId, 
