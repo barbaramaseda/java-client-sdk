@@ -17,6 +17,7 @@ import io.cortical.retina.core.PosType;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
+import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Language;
@@ -26,7 +27,6 @@ import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
-import java.beans.Expression;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
@@ -309,11 +309,12 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression.
+     * Resolves an expression for a {@link Model}.
+     * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
+     * by applying operators on elements.
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@link ExpressionModel}, use the {@link ExpressionFactory} as in:
      * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or {@link Fingerprint} or an expression formed from them:
      * ExpressionModel model = ExpressionFactory.and(Model... model);
      * </pre>
      * 
@@ -337,11 +338,12 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression.
+     * Resolves an expression for a {@link Model}.
+     * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
+     * by applying operators on elements.
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@link ExpressionModel}, use the {@link ExpressionFactory} as in:
      * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
      * </pre>
      * 
@@ -369,7 +371,7 @@ public class FullClient {
      * <p>
      * Resolves a bulk expression call. 
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -399,7 +401,7 @@ public class FullClient {
      * <p>
      * Resolves a bulk expression call. 
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -430,7 +432,7 @@ public class FullClient {
      * <p>
      * Calculate contexts of the result of an expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -459,7 +461,7 @@ public class FullClient {
      * <p>
      * Calculate contexts of the result of an expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -494,7 +496,7 @@ public class FullClient {
      * <p>
      * Calculate contexts for each model.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@expressionession}, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -529,7 +531,7 @@ public class FullClient {
      * <p>
      * Calculate contexts for each model. 
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -569,7 +571,7 @@ public class FullClient {
      * <p>
      * Gets similar terms for the expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -599,7 +601,7 @@ public class FullClient {
      * <p>
      * Gets similar terms for the expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -636,7 +638,7 @@ public class FullClient {
      * <p>
      * Retrieve similar terms for the each item in the model's array.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -669,7 +671,7 @@ public class FullClient {
      * <p>
      * Retrieve similar terms for the each item in the model's array.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
