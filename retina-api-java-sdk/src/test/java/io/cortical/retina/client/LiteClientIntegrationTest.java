@@ -1,19 +1,17 @@
 package io.cortical.retina.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import io.cortical.retina.rest.ApiException;
+import java.util.Arrays;
+import java.util.List;
+import org.junit.Before;
+import org.junit.Test;
 import static io.cortical.retina.core.ApiTestUtils.NOT_NULL_API_KEY;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import io.cortical.retina.rest.ApiException;
 
-import java.util.Arrays;
-import java.util.List;
-
-import org.junit.Before;
-import org.junit.Test;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 /**
  * To run test in Eclipse, go to > Run Configurations... > Arguments (tab) > VM Arguments > 
@@ -29,9 +27,9 @@ public class LiteClientIntegrationTest {
     @Before
     public void before() {
         String key = System.getProperty("apiKey");
-        client = new LiteClient(key, "api.cortical.io", "en_associative");
+        client = new LiteClient(key, "http://api.cortical.io/rest", "en_associative");
     }
-
+    
     @Test
     public void testClientConstruction() {
         // Test optimistic path for two options
@@ -45,7 +43,8 @@ public class LiteClientIntegrationTest {
         try {
             client = new LiteClient(null);
             fail(); // Problem if reached
-        }catch(Exception e) {
+        }
+        catch (Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
             assertEquals("The apiKey cannot be null.", e.getMessage());
         }
@@ -53,20 +52,22 @@ public class LiteClientIntegrationTest {
         try {
             client = new LiteClient(NOT_NULL_API_KEY, null, "en_associative");
             fail(); // Problem if reached
-        }catch(Exception e) {
+        }
+        catch (Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
-            assertEquals("The retina server ip cannot be null.", e.getMessage());
+            assertEquals("The base path cannot be null.", e.getMessage());
         }
         
         try {
             client = new LiteClient(NOT_NULL_API_KEY, "api.cortical.io", null);
             fail(); // Problem if reached
-        }catch(Exception e) {
+        }
+        catch (Exception e) {
             assertEquals(IllegalArgumentException.class, e.getClass());
             assertEquals("The retinaName cannot be null.", e.getMessage());
         }
     }
-
+    
     @Test
     public void testGetSimilarTerms() throws JsonProcessingException, ApiException {
         List<String> similarTerms = client.getSimilarTerms("Jaguar");
@@ -94,7 +95,8 @@ public class LiteClientIntegrationTest {
     
     @Test
     public void testCompare() throws JsonProcessingException, ApiException {
-        double similarity = client.compare("The retina server ip cannot be null.", "The retina server ip cannot be null.");
+        double similarity =
+                client.compare("The retina server ip cannot be null.", "The retina server ip cannot be null.");
         assertTrue(similarity > 0);
         assertEquals(1.0, similarity, 0.0001);
     }
@@ -117,9 +119,9 @@ public class LiteClientIntegrationTest {
     
     @Test
     public void testCreateCategoryFilter() throws JsonProcessingException, ApiException {
-        List<String> pos = Arrays.asList(
-            "Shoe with a lining to help keep your feet dry and comfortable on wet terrain.",
-            "running shoes providing protective cushioning.");
+        List<String> pos =
+                Arrays.asList("Shoe with a lining to help keep your feet dry and comfortable on wet terrain.",
+                        "running shoes providing protective cushioning.");
         int[] fingerprint = client.createCategoryFilter(pos);
         assertNotNull(fingerprint);
         assertTrue(fingerprint.length > 10);
