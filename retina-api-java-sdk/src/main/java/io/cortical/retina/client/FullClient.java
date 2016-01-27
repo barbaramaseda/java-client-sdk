@@ -7,6 +7,7 @@
  ******************************************************************************/
 package io.cortical.retina.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.ImageEncoding;
@@ -15,6 +16,8 @@ import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Context;
+import io.cortical.retina.model.ExpressionFactory;
+import io.cortical.retina.model.ExpressionFactory.ExpressionModel;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Language;
@@ -24,14 +27,11 @@ import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
-
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 /**
@@ -165,7 +165,7 @@ public class FullClient {
     }
     
     /**
-     * Retrieve all similar {@link Term}s for the input.
+     * Retrieve similar {@link Term}s for the input.
      * <br>If any context is specified, only the similar terms related to this context are returned.
      * 
      * <ul>
@@ -190,7 +190,7 @@ public class FullClient {
     }
     
     /**
-     * Retrieve fingerprint for the input term (text is split and for each item a fingerprint is generated).
+     * Retrieve a fingerprint for the input text.
      * 
      * @param text              text for which a fingerprint is generated.
      * @return fingerprint      generated for the input text.
@@ -269,7 +269,7 @@ public class FullClient {
     }
     
     /**
-     * Slice the text.
+     * Divide a text into sub-sections corresponding to semantic changes.
      * 
      * @param text                  a text to slice.
      * @return list of slices in the text representation.
@@ -297,7 +297,7 @@ public class FullClient {
     }
     
     /**
-     * Identifies the language of the text and returns (if possible) a relevant {@link Language} object.
+     * Identifies the language of the text and returns a relevant {@link Language} object.
      * 
      * @param text the input text
      * @return a {@link Language} object.
@@ -309,11 +309,12 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression.
+     * Resolves an expression for a {@link Model}.
+     * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
+     * by applying operators on elements.
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@link ExpressionModel}, use the {@link ExpressionFactory} as in:
      * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or {@link Fingerprint} or an expression formed from them:
      * ExpressionModel model = ExpressionFactory.and(Model... model);
      * </pre>
      * 
@@ -337,11 +338,12 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression.
+     * Resolves an expression for a {@link Model}.
+     * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
+     * by applying operators on elements.
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@link ExpressionModel}, use the {@link ExpressionFactory} as in:
      * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
      * </pre>
      * 
@@ -369,7 +371,7 @@ public class FullClient {
      * <p>
      * Resolves a bulk expression call. 
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -399,7 +401,7 @@ public class FullClient {
      * <p>
      * Resolves a bulk expression call. 
      * </p><p>
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -430,7 +432,7 @@ public class FullClient {
      * <p>
      * Calculate contexts of the result of an expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -459,7 +461,7 @@ public class FullClient {
      * <p>
      * Calculate contexts of the result of an expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -494,7 +496,7 @@ public class FullClient {
      * <p>
      * Calculate contexts for each model.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an {@expressionession}, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -529,7 +531,7 @@ public class FullClient {
      * <p>
      * Calculate contexts for each model. 
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -569,7 +571,7 @@ public class FullClient {
      * <p>
      * Gets similar terms for the expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -599,7 +601,7 @@ public class FullClient {
      * <p>
      * Gets similar terms for the expression.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -636,7 +638,7 @@ public class FullClient {
      * <p>
      * Retrieve similar terms for the each item in the model's array.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -669,7 +671,7 @@ public class FullClient {
      * <p>
      * Retrieve similar terms for the each item in the model's array.
      * </p><p> 
-     * To create an {@link Expression}, use the {@link ExpressionFactory} as in:
+     * To create an expression, use the {@link ExpressionFactory} as in:
      * <pre>
      * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
      * ExpressionModel model = ExpressionFactory.and(Model... model);
@@ -690,7 +692,7 @@ public class FullClient {
      * @param maxResults            the total number of results to return
      * @param contextId             an id identifying a {@link Term}'s context
      * @param posType               a part of speech type.
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param getFingerprint        true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      * 
      * @return A list containing a list of terms generated for each item in the models.
@@ -698,11 +700,11 @@ public class FullClient {
      * @throws ApiException if there are server or connection issues.
      */
     public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> models, int startIndex,
-            int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity)
+            int maxResults, int contextId, PosType posType, boolean getFingerprint, double sparsity)
                     throws JsonProcessingException, ApiException {
                     
         return endpoints.expressionsApi().getSimilarTermsForExpressions(models, startIndex, maxResults, contextId,
-                posType, includeFingerprint, sparsity);
+                posType, getFingerprint, sparsity);
     }
     
     /**
@@ -862,7 +864,7 @@ public class FullClient {
      * </p>
      * @param <T>                   subtype of {@link Model}
      * @param models                List of {@link Model}s from which to produce fingerprint images.
-     * @param includeFingerprint    identify if the fingerprint should  be present/provided in the images.
+     * @param getFingerprint        identify if the fingerprint should  be present/provided in the images.
      * @param scalar                scaling factor of the image to generate
      * @param shape                 shape of the plots used in the overlay image
      * @param sparsity              a sparsity value which can be applied to the image
@@ -872,9 +874,9 @@ public class FullClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar,
-            ImagePlotShape shape, Double sparsity) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImages(models, includeFingerprint, scalar, shape, sparsity);
+    public <T extends Model> List<Image> getImages(List<T> models, boolean getFingerprint, int scalar,
+            ImagePlotShape shape, double sparsity) throws JsonProcessingException, ApiException {
+        return endpoints.imageApi().getImages(models, getFingerprint, scalar, shape, sparsity);
     }
     
     /**

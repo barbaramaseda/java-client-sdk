@@ -7,7 +7,7 @@
  ******************************************************************************/
 package io.cortical.retina.client;
 
-import static org.apache.commons.lang3.StringUtils.isEmpty;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.model.Context;
@@ -19,11 +19,9 @@ import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
-
 import java.util.ArrayList;
 import java.util.List;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
+import static org.apache.commons.lang3.StringUtils.isEmpty;
 
 /**
  * Simple client for accessing the Cortical.io APIs. 
@@ -62,8 +60,7 @@ public class LiteClient {
      *                      en_associatiave (default) or en_synonymous).
      */
     public LiteClient(String apiKey, String apiServer, String retinaName) {
-        this(apiKey, apiServer, retinaName, 
-            new Endpoints(retinaName, apiServer, apiKey));
+        this(apiKey, apiServer, retinaName, new Endpoints(retinaName, apiServer, apiKey));
     }
     
     /**
@@ -82,33 +79,34 @@ public class LiteClient {
     }
     
     /** 
-     * Returns the 20 most similar terms to this input string (text or term).
+     * Returns the 20 most similar terms to this input string.
      * 
-     * @param   string  the term or text to find similar {@link Term}s for.
+     * @param   string  the text to find similar terms for
      * 
      * @return  a list of similar terms
      * @throws ApiException 
      * @throws JsonProcessingException 
      */
     public List<String> getSimilarTerms(String string) throws JsonProcessingException, ApiException {
-        List<Term> terms = delegate.getSimilarTermsForTerm(string, Context.ANY_ID, PosType.ANY, 0, 20, false);
+        List<Term> terms = delegate.getSimilarTermsForExpression(new Text(string), 0, 20, Context.ANY_ID, PosType.ANY, 
+                false, 1.0);
         return termToString(terms);
     }
-
+    
     /** 
      * Returns the 20 most similar terms to this input fingerprint.
      * 
-     * @param fingerprint   the bit vector containing semantic info for the return of similar terms
+     * @param fingerprint the int array to find similar terms for
      * @return  a list of similar terms
      * @throws ApiException 
      * @throws JsonProcessingException 
      */
     public List<String> getSimilarTerms(int[] fingerprint) throws JsonProcessingException, ApiException {
-        List<Term> terms = delegate.getSimilarTermsForExpression(
-            new Fingerprint(fingerprint), 0, 20, Context.ANY_ID, PosType.ANY, false, 1.0);
+        List<Term> terms = delegate.getSimilarTermsForExpression(new Fingerprint(fingerprint), 0, 20, Context.ANY_ID,
+                PosType.ANY, false, 1.0);
         return termToString(terms);
     }
-
+    
     /** 
      * Returns the keywords of the input text.
      * @param text  the text out of which keywords will be returned 
@@ -118,11 +116,11 @@ public class LiteClient {
     public List<String> getKeywords(String text) throws ApiException {
         return delegate.getKeywordsForText(text);
     }
-
+    
     /** 
      * Returns the semantic fingerprint of the input string.
      * @param string    the text for which to return a fingerprint. 
-     * @return fingerprint bit vector
+     * @return fingerprint the positions of the semantic fingerprint
      * @throws ApiException 
      * @throws JsonProcessingException 
      */
@@ -130,16 +128,10 @@ public class LiteClient {
         if (isEmpty(string)) {
             throw new ApiException(400, "Cannot get fingerprint from a null or empty string.");
         }
-        
-        Fingerprint fingerPrint = null;
-        if (string.split("[\\s]+").length > 1) {
-            fingerPrint = delegate.getFingerprintForExpression(ExpressionFactory.text(string));
-        } else {
-            fingerPrint = delegate.getFingerprintForExpression(ExpressionFactory.term(string));
-        }
+        Fingerprint fingerPrint = delegate.getFingerprintForExpression(ExpressionFactory.text(string));
         return fingerPrint == null ? null : fingerPrint.getPositions();
     }
-
+    
     /** 
      * Returns the semantic similarity of two input strings in the range [0,1].
      * @param string1      first element of comparison
@@ -160,7 +152,7 @@ public class LiteClient {
         
         return metric.getCosineSimilarity();
     }
-
+    
     /** 
      * Returns the semantic similarity of two fingerprints in the range [0,1].
      * @param fingerprint1      first element of comparison
@@ -181,7 +173,7 @@ public class LiteClient {
         
         return metric.getCosineSimilarity();
     }
-
+    
     /** 
      * Returns the semantic similarity of a string and a fingerprint in the range [0,1].
      * @param string        first element of comparison
@@ -194,13 +186,7 @@ public class LiteClient {
         if (isEmpty(string) || fingerprint == null) {
             throw new ApiException(400, "Cannot get fingerprint from a null or empty fingerprint.");
         }
-        
-        Model model = null;
-        if (string.split("[\\s]+").length > 1) {
-            model = delegate.getFingerprintForExpression(ExpressionFactory.text(string));
-        } else {
-            model = delegate.getFingerprintForExpression(ExpressionFactory.term(string));
-        }
+        Model model = delegate.getFingerprintForExpression(ExpressionFactory.text(string));
         
         Metric metric = delegate.compare(model, new Fingerprint(fingerprint));
         if (metric == null) {
@@ -209,7 +195,7 @@ public class LiteClient {
         
         return metric.getCosineSimilarity();
     }
-
+    
     /** 
      * Create a fingerprint representing a list of sample texts.
      * @param positiveExamples  text strings containing positive examples.
