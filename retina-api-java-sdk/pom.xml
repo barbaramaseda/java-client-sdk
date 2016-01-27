@@ -44,7 +44,6 @@
 		<jersey-version>1.7</jersey-version>
 		<powermock-version>1.5.4</powermock-version>
 		<scala-maven-plugin-version>3.2.0</scala-maven-plugin-version>
-		<version-lombok>1.12.6</version-lombok>
 		<surefire.version>2.16</surefire.version>
 	</properties>
 

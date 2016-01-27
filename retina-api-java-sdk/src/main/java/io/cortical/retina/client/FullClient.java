@@ -309,7 +309,7 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression for a {@link Model}.
+     * Resolves the fingerprint for a {@link Model}.
      * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
      * by applying operators on elements.
      * </p><p>
@@ -338,7 +338,7 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves an expression for a {@link Model}.
+     * Resolves the fingerprint for a {@link Model}.
      * A {@link Model} is a {@link Term}, or {@link Text} or {@link Fingerprint} or an {@link ExpressionModel} formed 
      * by applying operators on elements.
      * </p><p>
@@ -369,21 +369,7 @@ public class FullClient {
     
     /**
      * <p>
-     * Resolves a bulk expression call. 
-     * </p><p>
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Resolves the {@link Fingerprint} for a list of {@link Model}s.
      * 
      * @param <T>     subtype of {@link Model}
      * @param models        model(s) for which the list of fingerprints is generated.
@@ -398,22 +384,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Resolves a bulk expression call. 
-     * </p><p>
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Resolves the {@link Fingerprint}s for a list of {@link Model}s.
      *  
      * @param <T>           subtype of {@link Model}
      * @param models        model(s) for which the list of fingerprints is generated.
@@ -429,22 +400,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Calculate contexts of the result of an expression.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Calculate contexts of the fingerprint of the {@link Model}.
      * 
      * @param model                 a model for which a list of contexts is generated.
      * 
@@ -458,22 +414,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Calculate contexts of the result of an expression.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Calculate contexts of the fingerprint of the {@link Model}.
      * 
      * @param model                 a model for which a list of contexts is generated.
      * @param startIndex            the response item's first result
@@ -493,22 +434,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Calculate contexts for each model.
-     * </p><p> 
-     * To create an {@expressionession}, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Calculate contexts for a list of {@link Model}s.
      * 
      * <br>Returns a list of {@link Context} for each one of the input expressions in the bulk, so the returned
      * Response object will contain a list of lists of Contexts.
@@ -528,22 +454,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Calculate contexts for each model. 
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Calculate contexts for a list of {@link Model}s.
      *  
      * <br>Returns a list of {@link Context} for each one of the input expressions in the bulk, so the returned
      * Response object will contain a list of lists of Contexts.
@@ -568,22 +479,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Gets similar terms for the expression.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Get similar terms for the resulting fingerprint of the {@link Model}.
      *  
      * @param model             {@link Model} for which a list of terms is generated. 
      * 
@@ -598,22 +494,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Gets similar terms for the expression.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Get similar terms for the resulting fingerprint of the {@link Model}.
      *  
      * @param model                 {@link Model} for which a list of terms is generated. 
      * @param startIndex            the index of the first {@link Term} to return
@@ -635,22 +516,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Retrieve similar terms for the each item in the model's array.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Retrieve similar terms for each item in the list of {@link Model}s.
      * 
      * @param <T>               subtype of {@link Model}
      * @param models            an {@link Model} for which a list of terms is generated. 
@@ -668,22 +534,7 @@ public class FullClient {
     }
     
     /**
-     * <p>
-     * Retrieve similar terms for the each item in the model's array.
-     * </p><p> 
-     * To create an expression, use the {@link ExpressionFactory} as in:
-     * <pre>
-     * // Where "model" is a {@link Term}, or {@link Text} or array of each etc.
-     * ExpressionModel model = ExpressionFactory.and(Model... model);
-     * </pre>
-     * 
-     * <b>The above could be:</b>
-     * <UL>
-     *  <li> .and(Model... models);  // Use only features present in both</li> 
-     *  <li> .or(Model... models);   // or (combine)</li> 
-     *  <li> .sub(Model... models);  // Subtraction</li>
-     *  <li> .xor(Model... models);  // Use only features not present in both (but in one).</li>
-     * </UL>
+     * Retrieve similar terms for each item in the list of {@link Model}s.
      * 
      * @param <T>                   subtype of {@link Model}
      * @param models                an {@link Model} for which a list of terms is generated. 
