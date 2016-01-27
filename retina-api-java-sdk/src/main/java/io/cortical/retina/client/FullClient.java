@@ -690,7 +690,7 @@ public class FullClient {
      * @param maxResults            the total number of results to return
      * @param contextId             an id identifying a {@link Term}'s context
      * @param posType               a part of speech type.
-     * @param includeFingerprint    true if a fingerprint field should  be provided for each of the response items.
+     * @param getFingerprint        true if a fingerprint field should  be provided for each of the response items.
      * @param sparsity              a value used for re-sparsifying the evaluated expression.
      * 
      * @return A list containing a list of terms generated for each item in the models.
@@ -698,11 +698,11 @@ public class FullClient {
      * @throws ApiException if there are server or connection issues.
      */
     public <T extends Model> List<List<Term>> getSimilarTermsForExpressions(List<T> models, int startIndex,
-            int maxResults, int contextId, PosType posType, boolean includeFingerprint, double sparsity)
+            int maxResults, int contextId, PosType posType, boolean getFingerprint, double sparsity)
                     throws JsonProcessingException, ApiException {
                     
         return endpoints.expressionsApi().getSimilarTermsForExpressions(models, startIndex, maxResults, contextId,
-                posType, includeFingerprint, sparsity);
+                posType, getFingerprint, sparsity);
     }
     
     /**
@@ -862,7 +862,7 @@ public class FullClient {
      * </p>
      * @param <T>                   subtype of {@link Model}
      * @param models                List of {@link Model}s from which to produce fingerprint images.
-     * @param includeFingerprint    identify if the fingerprint should  be present/provided in the images.
+     * @param getFingerprint        identify if the fingerprint should  be present/provided in the images.
      * @param scalar                scaling factor of the image to generate
      * @param shape                 shape of the plots used in the overlay image
      * @param sparsity              a sparsity value which can be applied to the image
@@ -872,9 +872,9 @@ public class FullClient {
      * @throws ApiException     if there are some server or connection issues.
      * @see #getImage(Model)
      */
-    public <T extends Model> List<Image> getImages(List<T> models, Boolean includeFingerprint, Integer scalar,
-            ImagePlotShape shape, Double sparsity) throws JsonProcessingException, ApiException {
-        return endpoints.imageApi().getImages(models, includeFingerprint, scalar, shape, sparsity);
+    public <T extends Model> List<Image> getImages(List<T> models, boolean getFingerprint, int scalar,
+            ImagePlotShape shape, double sparsity) throws JsonProcessingException, ApiException {
+        return endpoints.imageApi().getImages(models, getFingerprint, scalar, shape, sparsity);
     }
     
     /**
