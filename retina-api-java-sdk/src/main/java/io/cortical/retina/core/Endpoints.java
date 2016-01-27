@@ -42,9 +42,7 @@ public class Endpoints {
      * @param url
      * @param apiKey
      */
-    public Endpoints(final String retinaName, String url, String apiKey) {
-        String basePath = generateBasepath("http://", url, 80, "/rest");
-        
+    public Endpoints(final String retinaName, String basePath, String apiKey) {
         if (isEmpty(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
         }
