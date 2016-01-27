@@ -49,7 +49,7 @@ public class FullClient {
     
     
     /** The default server address */
-    private static final String DEFAULT_SERVER = "api.cortical.io";
+    private static final String DEFAULT_SERVER = "http://api.cortical.io/rest";
     /** The default retina type */
     private static final String DEFAULT_RETINA = "en_associative";
     

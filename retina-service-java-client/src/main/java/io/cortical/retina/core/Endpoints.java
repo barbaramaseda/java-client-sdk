@@ -9,6 +9,7 @@ package io.cortical.retina.core;
 
 import static io.cortical.retina.rest.RestServiceConstants.NULL_API_KEY_MSG;
 import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
+import static io.cortical.retina.rest.RestServiceConstants.NULL_SERVER_IP_MSG;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.Retina;
 import io.cortical.retina.rest.ApiException;
@@ -38,11 +39,11 @@ public class Endpoints {
      * Creates a new instance of {@link Endpoints}.
      * 
      * @param retinaName
-     * @param ip
+     * @param url
      * @param apiKey
      */
-    public Endpoints(final String retinaName, final String ip, final String apiKey) {
-        String basePath = RetinaUtils.generateBasepath(ip, null);
+    public Endpoints(final String retinaName, String url, String apiKey) {
+        String basePath = generateBasepath("http://", url, 80, "/rest");
         
         if (isEmpty(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
@@ -63,13 +64,14 @@ public class Endpoints {
     /**
      * Creates a new instance of {@link Endpoints}.
      * 
-     * @param retinaName
-     * @param ip
-     * @param port
-     * @param apiKey
+     * @param retinaName    the name of the retina (i.e. en_associative, en_synonymous)
+     * @param protocol      the access protocol (i.e. http, ftp, sftp, https etc.)
+     * @param ip            the ip address or domain
+     * @param port          the port
+     * @param apiKey        your user api key
      */
-    public Endpoints(final String retinaName, final String ip, final Short port, final String apiKey) {
-        String basePath = RetinaUtils.generateBasepath(ip, port);
+    public Endpoints(final String retinaName, String protocol, String ip, int port, String path, String apiKey) {
+        String basePath = generateBasepath(protocol, ip, port, path);
         if (isEmpty(retinaName)) {
             throw new IllegalArgumentException(NULL_RETINA_MSG);
         }
@@ -156,6 +158,24 @@ public class Endpoints {
         return retinas.get(0);
     }
     
+    /**
+     * Generate the base path for the retina.
+     * 
+     * @param ip : retina server ip.
+     * @param port : retina service port. 
+     * @return : the retina's API base path.
+     */
+    public static String generateBasepath(String protocol, String ip, int port, String path) {
+        if (isEmpty(ip)) {
+            throw new IllegalArgumentException(NULL_SERVER_IP_MSG);
+        }
+        if (port == -1) {
+            port = 80;
+        }
+        StringBuilder basePath = new StringBuilder();
+        basePath.append(protocol).append(ip).append(":").append(port).append(path);
+        return basePath.toString();
+    }
     
     //////////////////////////////////
     //      Test Code Only          //

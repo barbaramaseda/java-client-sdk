@@ -11,6 +11,7 @@ import static io.cortical.retina.rest.RestServiceConstants.NULL_MODEL_MSG;
 import static io.cortical.retina.rest.RestServiceConstants.NULL_RETINA_MSG;
 import static org.apache.commons.lang3.StringUtils.isBlank;
 import io.cortical.retina.model.Model;
+import io.cortical.retina.model.Sample;
 import io.cortical.retina.model.Text;
 
 import java.util.ArrayList;
@@ -21,14 +22,12 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 /**
- * A base retina Api.
+ * Base class for all endpoint subtypes.
  * Contains validation and default initialization methods.  
  * 
  */
 abstract class AbstractEndpoint {
-    /**
-     * 
-     */
+    /** the retina's name*/
     protected final String retinaName;
     
     protected AbstractEndpoint(String retinaName) {
@@ -39,6 +38,27 @@ abstract class AbstractEndpoint {
         this.retinaName = retinaName;
     }
     
+    /**
+     * Returns a {@link Sample} object from which correct json can be created.
+     * @param positiveExamples      a list of texts illustrating positive examples.
+     * @param negativeExamples      a list of texts illustrating negative examples.
+     * @return  a constructed sample
+     */
+    protected Sample makeSample(List<String> positiveExamples, List<String> negativeExamples) {
+        List<Text> posEx = convertToTextModel(positiveExamples);
+        List<Text> negEx = convertToTextModel(negativeExamples);
+        
+        Sample sample = new Sample();
+        sample.addAllPositive(posEx);
+        sample.addAllNegative(negEx);
+        
+        return sample;
+    }
+    
+    /**
+     * Executes simple validation on the specified {@link Model} objects.
+     * @param models
+     */
     protected void validateRequiredModels(Model... models) {
         if (models == null || models.length == 0) {
             throw new IllegalArgumentException(NULL_MODEL_MSG);
@@ -50,6 +70,10 @@ abstract class AbstractEndpoint {
         }
     }
     
+    /**
+     * Executes simple validation on the specified {@link Model} objects.
+     * @param models
+     */
     protected <T extends Model> void validateRequiredModels(List<T> models) {
         if (models == null || models.size() == 0) {
             throw new IllegalArgumentException(NULL_MODEL_MSG);
@@ -61,14 +85,19 @@ abstract class AbstractEndpoint {
         }
     }
     
+    /**
+     * Converts from a list of strings to a list of {@link Text} objects.
+     * @param l     the list of strings
+     * @return  a list of text objects
+     */
     protected List<Text> convertToTextModel(List<String> l) {
         List<Text> retVal = new ArrayList<>();
         
-        if(l == null) {
+        if (l == null) {
             return retVal;
         }
         
-        for(String s : l) {
+        for (String s : l) {
             retVal.add(new Text(s));
         }
         return retVal;

@@ -8,17 +8,10 @@
 package io.cortical.retina.model;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+
 import java.util.Map;
+
 import javax.xml.bind.annotation.XmlElement;
-import static io.cortical.retina.model.MetricConstants.COSINE_SIMILARITY;
-import static io.cortical.retina.model.MetricConstants.EUCLIDEAN_DISTANCE;
-import static io.cortical.retina.model.MetricConstants.JACCARD_DISTANCE;
-import static io.cortical.retina.model.MetricConstants.OVERLAPPING_ALL;
-import static io.cortical.retina.model.MetricConstants.OVERLAPPING_LEFT_RIGHT;
-import static io.cortical.retina.model.MetricConstants.OVERLAPPING_RIGHT_LEFT;
-import static io.cortical.retina.model.MetricConstants.SIZE_LEFT;
-import static io.cortical.retina.model.MetricConstants.SIZE_RIGHT;
-import static io.cortical.retina.model.MetricConstants.WEIGHTED_SCORING;
 
 
 /**
@@ -26,6 +19,25 @@ import static io.cortical.retina.model.MetricConstants.WEIGHTED_SCORING;
  * A container for the various distance metrics.
  */
 public class Metric {
+    /** Cosine Similarity. */
+    public static final String COSINE_SIMILARITY = "Cosine-Similarity";
+    /** Euclidean Distance. */
+    public static final String EUCLIDEAN_DISTANCE = "Euclidean-Distance";
+    /** Jaccard Distance. */
+    public static final String JACCARD_DISTANCE = "Jaccard-Distance";
+    /** The total number of overlapping bits of the two fingerprints. **/
+    public static final String OVERLAPPING_ALL = "Overlapping-all";
+    /** The percentage of bits of the left-hand (first) fingerprint which overlap with the right-hand (second) fingerprint. */
+    public static final String OVERLAPPING_LEFT_RIGHT = "Overlapping-left-right";
+    /** The percentage of bits of the right-hand (second) fingerprint which overlap with the left-hand (first) fingerprint. */
+    public static final String OVERLAPPING_RIGHT_LEFT = "Overlapping-right-left";
+    /** Weighted scoring which takes the topology into account. */
+    public static final String WEIGHTED_SCORING = "Weighted-Scoring";
+    /** Size in bits of left fingerprint. */
+    public static final String SIZE_LEFT = "Size-left";
+    /** Size in bits of right fingerprint. */
+    public static final String SIZE_RIGHT = "Size-right";
+    
     /**
      * 
      * Creates a new instance of {@link Metric}.

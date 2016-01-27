@@ -14,16 +14,18 @@ import static org.apache.commons.lang3.StringUtils.isBlank;
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Sample;
-import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
 import io.cortical.retina.rest.ClassifyApi;
 
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonInclude.Include;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-
+/**
+ * Encapsulates access to the Classify endpoint.
+ */
 public class Classify extends AbstractEndpoint {
 
     /** Rest Service access for the Classify end point */
@@ -52,48 +54,29 @@ public class Classify extends AbstractEndpoint {
     /**
      * Endpoint for creating a {@link CategoryFilter} from text inputs.
      * 
-     * @param name the name of the category filter
-     * @param ftostring the json representation of a {@link FilterTrainingObject)
+     * @param filterName            the name of the category filter
+     * @param positiveExamples      list of strings illustrating positive examples.
+     * @param negativeExamples      list of strings illustrating negative examples.
      * @return {@link CategoryFilter}
      * @throws ApiException 
      */
-    public CategoryFilter createCategoryFilter(String filterName, List<String> positiveExamples, List<String> negativeExamples) throws ApiException {
+    public CategoryFilter createCategoryFilter(String filterName, List<String> positiveExamples, 
+        List<String> negativeExamples) throws ApiException {
         if (isEmpty(filterName) || positiveExamples == null || positiveExamples.isEmpty()) {
             throw new IllegalArgumentException(NULL_TEXT_MSG);
         }
         
-        List<Text> posEx = convertToTextModel(positiveExamples);
-        List<Text> negEx = convertToTextModel(negativeExamples);
-        
-        Sample sample = new Sample();
-        sample.addAllPositive(posEx);
-        sample.addAllNegative(negEx);
+        Sample sample = makeSample(positiveExamples, negativeExamples);
         
         String json = null;
         try {
             ObjectMapper mapper = new ObjectMapper();
             mapper.setSerializationInclusion(Include.NON_NULL);
             json = mapper.writeValueAsString(sample);
-        }catch(Exception e) {
+        } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
         
         return this.api.createCategoryFilter(filterName, json, retinaName);
-    }
-
-    /**
-     * Endpoint for creating a {@link CategoryFilter} from text inputs.
-     * 
-     * @param name the name of the category filter
-     * @param ftostring the json representation of a {@link FilterTrainingObject)
-     * @return {@link CategoryFilter}
-     * @throws ApiException 
-     */
-    public CategoryFilter createCategoryFilter(String filter_name, String body) throws ApiException {
-        if (isEmpty(filter_name) || body ==null) {
-            throw new IllegalArgumentException(NULL_TEXT_MSG);
-        }
-        
-        return this.api.createCategoryFilter(filter_name, body, retinaName);
     }
 }
