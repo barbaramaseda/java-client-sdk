@@ -7,6 +7,7 @@
  ******************************************************************************/
 package io.cortical.retina.client;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import io.cortical.retina.core.Compare.CompareModel;
 import io.cortical.retina.core.Endpoints;
 import io.cortical.retina.core.ImageEncoding;
@@ -15,6 +16,7 @@ import io.cortical.retina.core.PosTag;
 import io.cortical.retina.core.PosType;
 import io.cortical.retina.model.CategoryFilter;
 import io.cortical.retina.model.Context;
+import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Image;
 import io.cortical.retina.model.Language;
@@ -24,14 +26,12 @@ import io.cortical.retina.model.Retina;
 import io.cortical.retina.model.Term;
 import io.cortical.retina.model.Text;
 import io.cortical.retina.rest.ApiException;
-
+import java.beans.Expression;
 import java.io.ByteArrayInputStream;
 import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import com.fasterxml.jackson.core.JsonProcessingException;
 
 
 /**
@@ -165,7 +165,7 @@ public class FullClient {
     }
     
     /**
-     * Retrieve all similar {@link Term}s for the input.
+     * Retrieve similar {@link Term}s for the input.
      * <br>If any context is specified, only the similar terms related to this context are returned.
      * 
      * <ul>
@@ -190,7 +190,7 @@ public class FullClient {
     }
     
     /**
-     * Retrieve fingerprint for the input term (text is split and for each item a fingerprint is generated).
+     * Retrieve a fingerprint for the input text.
      * 
      * @param text              text for which a fingerprint is generated.
      * @return fingerprint      generated for the input text.
@@ -269,7 +269,7 @@ public class FullClient {
     }
     
     /**
-     * Slice the text.
+     * Divide a text into sub-sections corresponding to semantic changes.
      * 
      * @param text                  a text to slice.
      * @return list of slices in the text representation.
@@ -297,7 +297,7 @@ public class FullClient {
     }
     
     /**
-     * Identifies the language of the text and returns (if possible) a relevant {@link Language} object.
+     * Identifies the language of the text and returns a relevant {@link Language} object.
      * 
      * @param text the input text
      * @return a {@link Language} object.
