@@ -9,6 +9,8 @@ package io.cortical.retina.client;
 
 import static org.apache.commons.lang3.StringUtils.isEmpty;
 import io.cortical.retina.core.Endpoints;
+import io.cortical.retina.core.PosType;
+import io.cortical.retina.model.Context;
 import io.cortical.retina.model.ExpressionFactory;
 import io.cortical.retina.model.Fingerprint;
 import io.cortical.retina.model.Metric;
@@ -89,7 +91,7 @@ public class LiteClient {
      * @throws JsonProcessingException 
      */
     public List<String> getSimilarTerms(String string) throws JsonProcessingException, ApiException {
-        List<Term> terms = delegate.getSimilarTermsForTerm(string);
+        List<Term> terms = delegate.getSimilarTermsForTerm(string, Context.ANY_ID, PosType.ANY, 0, 20, false);
         return termToString(terms);
     }
 
@@ -102,7 +104,8 @@ public class LiteClient {
      * @throws JsonProcessingException 
      */
     public List<String> getSimilarTerms(int[] fingerprint) throws JsonProcessingException, ApiException {
-        List<Term> terms = delegate.getSimilarTermsForExpression(new Fingerprint(fingerprint));
+        List<Term> terms = delegate.getSimilarTermsForExpression(
+            new Fingerprint(fingerprint), 0, 20, Context.ANY_ID, PosType.ANY, false, 1.0);
         return termToString(terms);
     }
 
