@@ -1,6 +1,6 @@
 # [DEPRECATED] java-client-sdk
 
-This library is deprecated and no longer actively developed. It has been replaced by 
+This library has been deprecated and no longer actively developed. It has been replaced by 
 [retina-api-java-sdk](https://github.com/cortical-io/retina-api-java-sdk).
 
 cortical.io
